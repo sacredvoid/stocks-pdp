@@ -1,3 +1,7 @@
+package view;
+
+import view.PrintHeader;
+
 /**
  * Our "view" class which handles all showing stuff
  */

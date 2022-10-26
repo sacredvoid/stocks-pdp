@@ -1,5 +1,8 @@
+package controller;
+
 import java.io.IOException;
 import java.util.Scanner;
+import view.UserInteraction;
 
 /**
  * Controller Class which accepts input from the terminal and decides what to do accordingly.

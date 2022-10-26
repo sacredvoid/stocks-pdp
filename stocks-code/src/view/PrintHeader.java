@@ -1,3 +1,5 @@
+package view;
+
 public class PrintHeader {
 
   public static void printHeader() {

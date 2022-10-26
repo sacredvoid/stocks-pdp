@@ -1,5 +1,6 @@
-import java.io.IOException;
+import controller.InteractionHandler;
 import java.io.InputStreamReader;
+import view.UserInteraction;
 
 public class Runner {
 
@@ -17,8 +18,5 @@ public class Runner {
         viewer,
         new InputStreamReader(System.in), System.out);
     ih.run();
-
-
-
   }
 }
