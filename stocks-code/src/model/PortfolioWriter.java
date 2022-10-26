@@ -20,10 +20,10 @@ public class PortfolioWriter {
    * @param path string that contains filename
    * @param data string that contains json data
    */
-  public void writeToFile(String path, String data) {
+  public void writeToFile(String filename, String dir, String data) {
 
     try {
-      String newPath = pathResolver(path);
+      String newPath = pathResolver(filename, dir);
       FileWriter myWriter = new FileWriter(newPath);
       myWriter.write(data);
       myWriter.close();
@@ -33,9 +33,9 @@ public class PortfolioWriter {
     }
   }
 
-  private String pathResolver(String inputFilename) {
+  private String pathResolver(String inputFilename, String dir) {
     // Check if inputFilename exists
-    StringBuilder path = new StringBuilder("." + this.osPathSeparator + "PortfolioData");
+    StringBuilder path = new StringBuilder("." + this.osPathSeparator + dir);
     path.append(osPathSeparator).append(inputFilename);
     makeDirs(path.toString());
     return path.toString();
@@ -47,7 +47,7 @@ public class PortfolioWriter {
 
   public static void main(String[] args) {
     PortfolioWriter f = new PortfolioWriter();
-    f.writeToFile("myPort.csv","AAPL,10\nTSLA,20");
+    f.writeToFile("myPort.csv","test","AAPL,10\nTSLA,20");
   }
 
 }
