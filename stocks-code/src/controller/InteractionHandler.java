@@ -14,7 +14,7 @@ public class InteractionHandler {
 
   //Place-holder for model
   private Object model;
-  private UserInteraction ui;
+  private final UserInteraction ui;
 
   public InteractionHandler(Object model, UserInteraction ui, Readable input, Appendable output) {
     this.in = input;
@@ -41,9 +41,6 @@ public class InteractionHandler {
     return this.out.toString();
   }
 
-  // Grey area, unsure of how to proceed (or brain isn't working)
-  // So basically, should we always call getInput() and then validate what the user is entering
-  // /running or like... IDK
   public void run() {
     try {
       this.ui.identifyUser();

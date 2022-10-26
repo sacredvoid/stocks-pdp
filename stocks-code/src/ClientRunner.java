@@ -2,7 +2,7 @@ import controller.InteractionHandler;
 import java.io.InputStreamReader;
 import view.UserInteraction;
 
-public class Runner {
+public class ClientRunner {
 
 
   public static void main(String[] args) {
