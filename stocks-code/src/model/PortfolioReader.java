@@ -44,6 +44,7 @@ public class PortfolioReader {
     if (data.length == 1) {
       if (!data[0].isEmpty()) {
         this.readStatus = "Missing Data: "+data[0];
+
         // Ignoring this stock?
       }
     }
