@@ -3,6 +3,8 @@
 # Log file
 *.log
 
+PortfolioData
+
 # BlueJ files
 *.ctxt
 
