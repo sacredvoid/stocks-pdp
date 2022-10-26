@@ -17,7 +17,7 @@ public class PortfolioWriter {
 
   /**
    * This function expects a Path to File and String data (generally a JSONObject.toString())
-   * @param path string that contains filename
+   * @param filename string that contains filename
    * @param data string that contains json data
    */
   public void writeToFile(String filename, String dir, String data) {
@@ -35,7 +35,11 @@ public class PortfolioWriter {
 
   private String pathResolver(String inputFilename, String dir) {
     // Check if inputFilename exists
-    StringBuilder path = new StringBuilder("." + this.osPathSeparator + dir);
+    StringBuilder path = new StringBuilder("."
+        + this.osPathSeparator
+        + "app_data"
+        + this.osPathSeparator
+        +dir);
     path.append(osPathSeparator).append(inputFilename);
     makeDirs(path.toString());
     return path.toString();
