@@ -12,16 +12,15 @@ public class RequestHandler {
   private String stockSymbol;
   URL url = null;
 
-  public static RequestHandlerBuilder getBuilder(){
-    return new RequestHandlerBuilder();
-  }
-
   private RequestHandler(String stockSymbol){
     this.stockSymbol = stockSymbol;
   }
+
+  public static RequestHandlerBuilder getBuilder(){
+    return new RequestHandlerBuilder();
+  }
   public static class RequestHandlerBuilder{
     private String stockSymbol;
-
     public RequestHandlerBuilder stockSymbol(String stockSymbol){
       this.stockSymbol = stockSymbol;
       return this;
@@ -31,8 +30,8 @@ public class RequestHandler {
       return new RequestHandler(this.stockSymbol);
     }
   }
-  public RequestHandler buildURL() {
-//    this.stockSymbol = stockSymbol;
+  public RequestHandler buildURL(String option) {
+
     try {
       /*
       create the URL. This is the query to the web service. The query string
@@ -41,11 +40,19 @@ public class RequestHandler {
       data (comma-separated values:csv). This service also supports JSON
       which you are welcome to use.
        */
-      url = new URL("https://www.alphavantage"
-          + ".co/query?function=TIME_SERIES_DAILY"
-          + "&outputsize=full"
-          + "&symbol"
-          + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
+
+      if (option.equals("By Date")) {
+        url = new URL("https://www.alphavantage"
+            + ".co/query?function=TIME_SERIES_DAILY"
+            + "&outputsize=full"
+            + "&symbol"
+            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
+      } else {
+        url = new URL("https://www.alphavantage"
+            + ".co/query?function=GLOBAL_QUOTE"
+            + "&symbol"
+            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
+      }
     } catch (MalformedURLException e) {
       throw new RuntimeException("the alphavantage API has either changed or "
           + "no longer works");
@@ -53,7 +60,7 @@ public class RequestHandler {
     return this;
   }
 
-  public void fetchAndSave(){
+  public String fetch(){
   InputStream in = null;
   StringBuilder output = new StringBuilder();
 
@@ -78,10 +85,11 @@ public class RequestHandler {
   IOException e) {
     throw new IllegalArgumentException("No price data found for "+stockSymbol);
   }
-    new PortfolioWriter()
-        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
+//    new PortfolioWriter()
+//        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
 //    System.out.println("Return value: ");
 //    System.out.println(output.toString());
+    return output.toString();
 
   }
 
@@ -89,10 +97,21 @@ public class RequestHandler {
 //    RequestHandler r = new RequestHandler();
 //    r.buildURL("GOOG");
 //    r.fetchAndSave();
-    RequestHandler.getBuilder()
+    String stockData = RequestHandler.getBuilder()
         .stockSymbol("GOOG")
         .build()
-        .buildURL()
-        .fetchAndSave();
+        .buildURL("By Date")
+        .fetch();
+    System.out.println(stockData);
+
+    System.out.println();
+    System.out.println();
+
+    System.out.println("current stock data");
+    System.out.println( RequestHandler.getBuilder()
+        .stockSymbol("GOOG")
+        .build()
+        .buildURL("Current")
+        .fetch());
   }
 }
