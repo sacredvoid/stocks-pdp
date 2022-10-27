@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Reads the user data of the portfolio
  */
-public class PortfolioReader {
+public class PortfolioReader implements CSVReader {
 
   private String readStatus;
 
