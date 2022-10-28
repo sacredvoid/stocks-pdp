@@ -73,8 +73,17 @@ public class CSVFileOps {
       }
     }
     if(data.length > 1) {
+      int count =0;
       csvData.add(List.of(data));
-      csvStringData.append(String.join(",",data[0],data[1])).append("\n");
+      for (String datapoint: data
+      ) {
+        csvStringData.append(datapoint);
+        if(!(count == data.length-1)) {
+          csvStringData.append(",");
+        }
+        count+=1;
+      }
+      csvStringData.append("\n");
     }
   }
 
@@ -96,7 +105,7 @@ public class CSVFileOps {
 
   public static void main(String[] args) throws FileNotFoundException {
     CSVFileOps f = new CSVFileOps();
-    f.writeToFile("test.csv",".\\PortfolioData","AAPL,10\nTSLA,20");
+    f.writeToFile("test.csv",".\\PortfolioData","AAPL,10,adwd\nTSLA,20,d29u");
     System.out.printf(f.readFile("test.csv","PortfolioData"));
   }
 
