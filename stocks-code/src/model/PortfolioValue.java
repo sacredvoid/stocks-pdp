@@ -10,9 +10,10 @@ import model.StockHandler.StockHandlerBuilder;
 
 public class PortfolioValue {
 
-  private List<List<String>> stockCountList;
+//  private List<List<String>> stockCountList;
+  private String stockCountList;
   private Date date = null;
-  private PortfolioValue(List<List<String>> stockCountList, Date date){
+  private PortfolioValue(String stockCountList, Date date){
     this.stockCountList = stockCountList;
     this.date = date;
   }
@@ -22,10 +23,10 @@ public class PortfolioValue {
   }
 
   public static class PortfolioValueBuilder{
-    private List<List<String>> stockCountList;
+    private String stockCountList;
     private Date date;
 
-    public PortfolioValueBuilder stockCountList(List<List<String>> stockCountList){
+    public PortfolioValueBuilder stockCountList(String stockCountList){
       this.stockCountList = stockCountList;
       return this;
     }
@@ -40,35 +41,20 @@ public class PortfolioValue {
     }
   }
 
-  String totalPortfolioValue(){
-    float sum = 0;
-//    StockHandlerBuilder stockPriceListBuilder = StockHandler.getBuilder();
-    for(List<String> l: this.stockCountList){
-//      String name = l.get(0);
-//      int count = Integer.parseInt(l.get(1));
-//      String stockPriceList = stockValueFetcher(name);
-//      int stockPrice = Integer.parseInt(stockPriceList.split(":")[1]);
-//      sum += stockPrice*count;
-      sum += stockCountValue(l);
+  List<String> completePortfolioValue(){
+    List<String> output = new ArrayList<>();
+    String [] lines = stockCountList.split("\n");
+    float sum = 0.0F;
+    for (String line: lines
+    ) {
+      String [] nameAndCount = line.split(",");
+      float result = stockCountValue(nameAndCount);
+      output.add(nameAndCount[0]+":"+String.valueOf(result));
+      sum+=result;
     }
-    return String.valueOf(sum);
-  }
+    output.add("Total Portfolio Value is : " +String.valueOf(sum));
 
-
-  List<List<String>> allStocksValue(){
-    List<List<String>> sepStockValueList = new ArrayList<List<String>>();
-    for(List<String> l: this.stockCountList){
-//      String name = l.get(0);
-//      int count = Integer.parseInt(l.get(1));
-//      String stockPriceList = stockValueFetcher(name);
-//      int stockPrice = Integer.parseInt(stockPriceList.split(":")[1]);
-      List<String> tempList= new ArrayList<String>(2);
-      tempList.add(l.get(0));
-      tempList.add(String.valueOf(stockCountValue(l)));
-      sepStockValueList.add(tempList);
-    }
-
-    return sepStockValueList;
+    return output;
   }
 
   private String stockValueFetcher(String name){
@@ -93,9 +79,9 @@ public class PortfolioValue {
     }
   }
 
-  private float stockCountValue(List<String> stockNameCount){
-    String name = stockNameCount.get(0);
-    int count = Integer.parseInt(stockNameCount.get(1));
+  private float stockCountValue(String[] stockNameCount){
+    String name = stockNameCount[0];
+    int count = Integer.parseInt(stockNameCount[1]);
     String stockPriceString = stockValueFetcher(name);
     if(stockPriceString.equals("")){
       return 0;
@@ -105,70 +91,31 @@ public class PortfolioValue {
   }
 
   public static void main(String args[]) throws ParseException {
-    List<List<String>> tempList = new ArrayList<List<String>>(2);
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
     Date d = formatter.parse("2022-10-25");
-    List<String> l = new ArrayList<String>(2);
-    l.add("GOOG");
-    l.add("10");
-    tempList.add(l);
+    String data = "GOOG,10\nIBM,20\nTSCO.LON,20\nSHOP.TRT,20\nGPV.TRV,20";
 
-    l = new ArrayList<String>(2);
-    l.add("IBM");
-    l.add("20");
-    tempList.add(l);
+//    List<String> output = PortfolioValue.getBuilder()
+//        .stockCountList(data)
+//        .date(d)
+//        .build()
+//        .completePortfolioValue();
+//
+//    for (String s: output
+//    ) {
+//      System.out.println(s);
+//    }
 
-    l = new ArrayList<String>(2);
-    l.add("TSCO.LON");
-    l.add("20");
-    tempList.add(l);
+    List<String> output1 = PortfolioValue.getBuilder()
+        .stockCountList(data)
+        .build()
+        .completePortfolioValue();
 
-    l = new ArrayList<String>(2);
-    l.add("SHOP.TRT");
-    l.add("20");
-    tempList.add(l);
-
-    l = new ArrayList<String>(2);
-    l.add("GPV.TRV");
-    l.add("20");
-    tempList.add(l);
-
-    l = new ArrayList<String>(2);
-    l.add("DAI.DEX");
-    l.add("20");
-    tempList.add(l);
-
-
-
-    List<List<String>> sepSVL ;
-
-    System.out.println("Finding the portfolio values when the date is given\n");
-    PortfolioValue pvb1 = PortfolioValue.getBuilder()
-        .stockCountList(tempList)
-        .date(d)
-        .build();
-
-    System.out.println("Total portfolio Value : "+pvb1.totalPortfolioValue());
-    sepSVL = pvb1.allStocksValue();
-
-    System.out.println("Separate Stock total Value List");
-    for(List<String> svl: sepSVL){
-      System.out.println(svl.get(0)+ ":" + svl.get(1));
+    for (String s: output1
+    ) {
+      System.out.println(s);
     }
 
-    System.out.println("Finding the current portfolio values\n");
-    PortfolioValue pvb2 = PortfolioValue.getBuilder()
-        .stockCountList(tempList)
-        .build();
-
-    System.out.println("Total portfolio Value : "+pvb2.totalPortfolioValue());
-
-    sepSVL = pvb2.allStocksValue();
-
-    System.out.println("Separate Stock total Value List");
-    for(List<String> svl: sepSVL){
-      System.out.println(svl.get(0)+ ":" + svl.get(1));
-    }
 
   }
 }
