@@ -77,25 +77,12 @@ public class StockHandler{
   }
 
   private String stockDataFetcher(String name)  {
-//    try {
-//      BufferedReader br = new BufferedReader`
-//    }
-//    if (new CSVReader().readFile())
 
-    ////// write the code to read the csv file and return the contents as a string
-
-    CSVFileOps csvops = new CSVFileOps();
-    String data;
-    try{
-      data = csvops.readFile(""+name+"Data.csv","StocksData");
-    } catch (FileNotFoundException e){
-      data = RequestHandler.getBuilder()
+    return RequestHandler.getBuilder()
           .stockSymbol(name)
           .build()
           .buildURL()
           .fetch();
-    }
-    return data;
   }
 
   public static void main(String args[]) throws ParseException, FileNotFoundException {

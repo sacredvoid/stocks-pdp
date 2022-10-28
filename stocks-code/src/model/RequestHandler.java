@@ -8,7 +8,9 @@ import javax.sound.sampled.Port;
 
 public class RequestHandler {
 //  private String apiKey = "SK3WEKBCG40DZ73N"; sam's api key
-  private String apiKey = "MDK9ZTZLD3PS0N5K";
+//  private String apiKey = "MDK9ZTZLD3PS0N5K";
+
+  private String apiKey = "W0M1JOKC82EZEQA8";
 //  String stockSymbol = "GOOG"; //ticker symbol for Google
   private String stockSymbol;
   URL url = null;
@@ -42,18 +44,6 @@ public class RequestHandler {
       which you are welcome to use.
        */
 
-//      if (option.equals("By Date")) {
-//        url = new URL("https://www.alphavantage"
-//            + ".co/query?function=TIME_SERIES_DAILY"
-//            + "&outputsize=full"
-//            + "&symbol"
-//            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
-//      } else {
-//        url = new URL("https://www.alphavantage"
-//            + ".co/query?function=GLOBAL_QUOTE"
-//            + "&symbol"
-//            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
-//      }
       url = new URL("https://www.alphavantage"
             + ".co/query?function=TIME_SERIES_DAILY"
             + "&outputsize=full"
@@ -91,8 +81,8 @@ public class RequestHandler {
   IOException e) {
     throw new IllegalArgumentException("No price data found for "+stockSymbol);
   }
-    new PortfolioWriter()
-        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
+//    new PortfolioWriter()
+//        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
 //    System.out.println("Return value: ");
 //    System.out.println(output.toString());
     return output.toString();
