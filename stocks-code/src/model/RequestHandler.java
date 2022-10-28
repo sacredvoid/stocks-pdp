@@ -31,7 +31,7 @@ public class RequestHandler {
       return new RequestHandler(this.stockSymbol);
     }
   }
-  public RequestHandler buildURL(String option) {
+  public RequestHandler buildURL() {
 
     try {
       /*
@@ -42,18 +42,23 @@ public class RequestHandler {
       which you are welcome to use.
        */
 
-      if (option.equals("By Date")) {
-        url = new URL("https://www.alphavantage"
+//      if (option.equals("By Date")) {
+//        url = new URL("https://www.alphavantage"
+//            + ".co/query?function=TIME_SERIES_DAILY"
+//            + "&outputsize=full"
+//            + "&symbol"
+//            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
+//      } else {
+//        url = new URL("https://www.alphavantage"
+//            + ".co/query?function=GLOBAL_QUOTE"
+//            + "&symbol"
+//            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
+//      }
+      url = new URL("https://www.alphavantage"
             + ".co/query?function=TIME_SERIES_DAILY"
             + "&outputsize=full"
             + "&symbol"
             + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
-      } else {
-        url = new URL("https://www.alphavantage"
-            + ".co/query?function=GLOBAL_QUOTE"
-            + "&symbol"
-            + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
-      }
     } catch (MalformedURLException e) {
       throw new RuntimeException("the alphavantage API has either changed or "
           + "no longer works");
@@ -86,8 +91,8 @@ public class RequestHandler {
   IOException e) {
     throw new IllegalArgumentException("No price data found for "+stockSymbol);
   }
-//    new PortfolioWriter()
-//        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
+    new PortfolioWriter()
+        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
 //    System.out.println("Return value: ");
 //    System.out.println(output.toString());
     return output.toString();
@@ -98,21 +103,10 @@ public class RequestHandler {
 //    RequestHandler r = new RequestHandler();
 //    r.buildURL("GOOG");
 //    r.fetchAndSave();
-    String stockData = RequestHandler.getBuilder()
+    System.out.println("Feteched and Saved this Data \n"+RequestHandler.getBuilder()
         .stockSymbol("GOOG")
         .build()
-        .buildURL("By Date")
-        .fetch();
-    System.out.println(stockData);
-
-    System.out.println();
-    System.out.println();
-
-    System.out.println("current stock data");
-    System.out.println( RequestHandler.getBuilder()
-        .stockSymbol("GOOG")
-        .build()
-        .buildURL("Current")
+        .buildURL()
         .fetch());
   }
 }

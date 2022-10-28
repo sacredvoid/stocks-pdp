@@ -1,4 +1,5 @@
 package model;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,7 +9,7 @@ import java.util.Date;
  * StockHandler class defines the methods required for fetching the stock data according
  * to the requirement of the user.(either by date or the current value of the stocks.
  * */
-public class StockHandler {
+public class StockHandler{
   private String name ;
   private Date date;
 
@@ -17,9 +18,14 @@ public class StockHandler {
     this.date = date;
   }
 
+//  private StockHandler(String name){
+//    this.name = name;
+//  }
   public static StockHandlerBuilder getBuilder(){
     return new StockHandlerBuilder();
   }
+
+
   public static class StockHandlerBuilder{
     private String name;
     private Date date = null;
@@ -37,13 +43,16 @@ public class StockHandler {
     public StockHandler build(){
       return new StockHandler(this.name,this.date);
     }
+//    public StockHandler build(){
+//      return new StockHandler(this.name);
+//    }
   }
 
   public String fetchByDate(){
     DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
     String dateString = dateFormat.format(this.date);
-    String stockData = stockDataFetcher("By Date");
-    String [] records = stockData.split(System.lineSeparator());
+    String stockData = stockDataFetcher(this.name);
+    String [] records = stockData.split("\n");
 
     String output ="";
     for (String x : records
@@ -59,27 +68,40 @@ public class StockHandler {
 
   public String fetchCurrentValue(){
     String output ="";
-    String stockData = stockDataFetcher("Current");
-    String [] records = stockData.split(System.lineSeparator());
+    String stockData = stockDataFetcher(this.name);
+//    String [] records = stockData.split(System.lineSeparator());
+    String [] records = stockData.split("\n");
     String [] sepData = records[1].split(",");
     output += this.name + ":" + sepData[4];
     return output;
   }
 
-  private String stockDataFetcher(String option){
-    return RequestHandler.getBuilder()
-        .stockSymbol(this.name)
-        .build()
-        .buildURL(option)
-        .fetch();
+  private String stockDataFetcher(String name)  {
+//    try {
+//      BufferedReader br = new BufferedReader`
+//    }
+//    if (new CSVReader().readFile())
+
+    ////// write the code to read the csv file and return the contents as a string
+
+    CSVFileOps csvops = new CSVFileOps();
+    String data;
+    try{
+      data = csvops.readFile(""+name+"Data.csv","StocksData");
+    } catch (FileNotFoundException e){
+      data = RequestHandler.getBuilder()
+          .stockSymbol(name)
+          .build()
+          .buildURL()
+          .fetch();
+    }
+    return data;
   }
 
-
-
-  public static void main(String args[]) throws ParseException {
+  public static void main(String args[]) throws ParseException, FileNotFoundException {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
     String valueUsingDate = StockHandler.getBuilder()
-        .name("GOOG")
+        .name("IBM")
         .date(formatter.parse("2022-09-30"))
         .build()
         .fetchByDate();
@@ -91,7 +113,7 @@ public class StockHandler {
     }
 
     String currentValue = StockHandler.getBuilder()
-        .name("GOOG")
+        .name("IBM")
         .build()
         .fetchCurrentValue();
 
