@@ -7,7 +7,8 @@ import java.net.URL;
 import javax.sound.sampled.Port;
 
 public class RequestHandler {
-  private String apiKey = "SK3WEKBCG40DZ73N";
+//  private String apiKey = "SK3WEKBCG40DZ73N"; sam's api key
+  private String apiKey = "MDK9ZTZLD3PS0N5K";
 //  String stockSymbol = "GOOG"; //ticker symbol for Google
   private String stockSymbol;
   URL url = null;
