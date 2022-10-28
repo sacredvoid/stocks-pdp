@@ -22,9 +22,10 @@ public class CSVFileOps {
     this.osPathSeparator = OSValidator.getOSSeparator();
   }
 
-  public String readFile(String path) throws FileNotFoundException {
+  public String readFile(String filename, String dir) throws FileNotFoundException {
     csvData = new ArrayList<>();
     csvStringData = new StringBuilder();
+    String path = pathResolver(filename,dir);
     try {
       BufferedReader br = new BufferedReader(new FileReader(path));
       String currentLine = "";
@@ -96,7 +97,7 @@ public class CSVFileOps {
   public static void main(String[] args) throws FileNotFoundException {
     CSVFileOps f = new CSVFileOps();
     f.writeToFile("test.csv",".\\PortfolioData","AAPL,10\nTSLA,20");
-    System.out.printf(f.readFile(".\\app_data\\PortfolioData\\test.csv"));
+    System.out.printf(f.readFile("test.csv","PortfolioData"));
   }
 
 }
