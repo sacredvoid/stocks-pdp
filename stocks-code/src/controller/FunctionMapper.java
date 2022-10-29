@@ -9,17 +9,7 @@ import java.util.Objects;
 
 public class FunctionMapper {
 
-  String currentInput;
-
-  public FunctionMapper() {
-    this.currentInput = "";
-  }
-
-  public FunctionMapper(String s) {
-    this.currentInput = s;
-  }
-
-  public boolean decider() {
+  public static boolean selectedYes(String currentInput) {
     return Objects.equals(currentInput, "y") || Objects.equals(currentInput, "Y");
   }
 }

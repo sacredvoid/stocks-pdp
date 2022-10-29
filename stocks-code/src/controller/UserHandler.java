@@ -1,2 +1,9 @@
-package controller;public class UserHandler {
+package controller;
+
+/**
+ * Checks for the user from database and finds them.
+ */
+
+public class UserHandler {
+
 }

@@ -1,5 +1,7 @@
 package model;
 
+import java.io.FileNotFoundException;
+
 public interface CSVReader {
-  void readFile(String path);
+  String readFile(String path, String dir) throws FileNotFoundException;
 }

@@ -44,7 +44,7 @@ public class CSVFileOps {
     return csvStringData.toString();
   }
 
-  public void writeToFile(String filename, String dir, String data) {
+  public void writeToFile(String filename, String dir, String data) throws IOException {
 
     try {
       String newPath = pathResolver(filename, dir);
@@ -52,8 +52,7 @@ public class CSVFileOps {
       myWriter.write(data);
       myWriter.close();
     } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
+      throw new IOException(e.getMessage());
     }
   }
 
@@ -103,7 +102,7 @@ public class CSVFileOps {
     new File(path).getParentFile().mkdirs();
   }
 
-  public static void main(String[] args) throws FileNotFoundException {
+  public static void main(String[] args) throws IOException {
     CSVFileOps f = new CSVFileOps();
     f.writeToFile("test.csv",".\\PortfolioData","AAPL,10,adwd\nTSLA,20,d29u");
     System.out.printf(f.readFile("test.csv","PortfolioData"));

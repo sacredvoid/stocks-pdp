@@ -43,9 +43,6 @@ public class StockHandler{
     public StockHandler build(){
       return new StockHandler(this.name,this.date);
     }
-//    public StockHandler build(){
-//      return new StockHandler(this.name);
-//    }
   }
 
   public String fetchByDate(){
@@ -59,7 +56,7 @@ public class StockHandler{
     ) {
       if (x.contains(dateString)) {
         String[] sepData = x.split(",");
-        output += this.name + ":" + sepData[4];
+        output += this.name + "," + sepData[4];
         break;
       }
     }
@@ -72,7 +69,7 @@ public class StockHandler{
 //    String [] records = stockData.split(System.lineSeparator());
     String [] records = stockData.split("\n");
     String [] sepData = records[1].split(",");
-    output += this.name + ":" + sepData[4];
+    output += this.name + "," + sepData[4];
     return output;
   }
 

@@ -41,7 +41,7 @@ public class PortfolioValue {
     }
   }
 
-  List<String> completePortfolioValue(){
+  public List<String> completePortfolioValue(){
     List<String> output = new ArrayList<>();
     String [] lines = stockCountList.split("\n");
     float sum = 0.0F;
@@ -49,10 +49,10 @@ public class PortfolioValue {
     ) {
       String [] nameAndCount = line.split(",");
       float result = stockCountValue(nameAndCount);
-      output.add(nameAndCount[0]+":"+String.valueOf(result));
+      output.add(nameAndCount[0]+","+nameAndCount[1]+","+ result);
       sum+=result;
     }
-    output.add("Total Portfolio Value is : " +String.valueOf(sum));
+    output.add("Total,-," + sum);
 
     return output;
   }
@@ -86,7 +86,7 @@ public class PortfolioValue {
     if(stockPriceString.equals("")){
       return 0;
     }
-    float stockPrice = Float.parseFloat(stockPriceString.split(":")[1]);
+    float stockPrice = Float.parseFloat(stockPriceString.split(",")[1]);
     return stockPrice*count;
   }
 
