@@ -18,33 +18,58 @@ public class StockHandler{
     this.date = date;
   }
 
-//  private StockHandler(String name){
-//    this.name = name;
-//  }
+  /**
+   * getBuilder() is a static method which returns a new StockHandlerBuilder object for<p></p>
+   * building the StockHandler object.
+   * @return a StockHandlerBuilder object
+   */
   public static StockHandlerBuilder getBuilder(){
     return new StockHandlerBuilder();
   }
 
-
+  /**
+   * StockHandlerBuilder class is a static class which is used to build the object of<p></p>
+   * StockHandler class.
+   */
   public static class StockHandlerBuilder{
     private String name;
     private String date = null;
 
+    /**
+     * the name() method is a setter method for the name or symbol to the StockHandlerBuilder class.
+     * @param name name or symbol of the stock
+     * @return the same StockHandlerBuilder object with the stock symbol stored as an attribute.
+     */
     public StockHandlerBuilder name(String name){
       this.name = name;
       return this;
     }
 
+    /**
+     * the date() method is a setter method for the date to the StockHandlerBuilder class.
+     * @param date to retrieve the data fo the specific stock on that day
+     * @return the same StockHandlerBuilder object with the date stored as an attribute.
+     */
     public StockHandlerBuilder date(String date){
       this.date = date;
       return this;
     }
 
+    /**
+     * build() method of the StockHandlerBuilder class creates a new object of the <p></p>
+     * StockHandler object with the stock symbol and date.
+     * @return new object of the StockHanlder class
+     */
     public StockHandler build(){
       return new StockHandler(this.name,this.date);
     }
   }
 
+  /**
+   * fetchByDate() fetches the stock data on the specific mentioned date from the API using<p></p>
+   * using the RequestHandler object.
+   * @return Stock data on that particular date as a String.
+   */
   public String fetchByDate(){
 //    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
 //    String dateString = dateFormat.format(this.date);
@@ -64,6 +89,10 @@ public class StockHandler{
     return output;
   }
 
+  /**
+   * fetchCurrentValue() method returns the current stock data using the RequestHandler Object.
+   * @return current data of the stock as a String
+   */
   public String fetchCurrentValue(){
     String output ="";
     String stockData = stockDataFetcher(this.name);

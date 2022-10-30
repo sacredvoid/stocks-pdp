@@ -6,6 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import javax.sound.sampled.Port;
 
+/**
+ * RequestHandler class is responsible for creating requests and fetching the data from the<p></p>
+ * the Alphavantage API.
+ */
 public class RequestHandler {
 //  private String apiKey = "SK3WEKBCG40DZ73N"; sam's api key
 //  private String apiKey = "MDK9ZTZLD3PS0N5K";
@@ -19,20 +23,48 @@ public class RequestHandler {
     this.stockSymbol = stockSymbol;
   }
 
+  /**
+   * getBuilder() is a static method which returns a new RequestHandlerBuilder object for<p></p>
+   * building the RequestHandler object.
+   * @return an RequestHandlerBuilder object
+   */
   public static RequestHandlerBuilder getBuilder(){
     return new RequestHandlerBuilder();
   }
+
+  /**
+   * RequestHandlerBuilder class is a static class which is used to build the object of<p></p>
+   * RequestHandler class.
+   */
   public static class RequestHandlerBuilder{
     private String stockSymbol;
+
+    /**
+     * the stockSymbol method is a setter method for the stockSymbol to the<p></p>
+     * RequestHandlerBuilder class.
+     * @param stockSymbol name or symbol of the stock
+     * @return the same RequestHandlerBuilder object with the stock symbol stored as an attribute.
+     */
     public RequestHandlerBuilder stockSymbol(String stockSymbol){
       this.stockSymbol = stockSymbol;
       return this;
     }
 
+    /**
+     * build() method of the RequestHandlerBuilder class creates a new object of the <p></p>
+     * RequestHandler object with the stock symbol.
+     * @return new object of the RequestHandler class
+     */
     public RequestHandler build(){
       return new RequestHandler(this.stockSymbol);
     }
   }
+
+  /**
+   * buildURL() method creates the URL for the API request using the name and symbol <p></p>
+   * of the stock passed to it.
+   * @return the same RequestHandler object with url built and stored as an attribute
+   */
   public RequestHandler buildURL() {
 
     try {
@@ -56,6 +88,10 @@ public class RequestHandler {
     return this;
   }
 
+  /**
+   * fetch() method fetches the data from the API using the URL.
+   * @return Stock data in the form of String
+   */
   public String fetch(){
   InputStream in = null;
   StringBuilder output = new StringBuilder();
