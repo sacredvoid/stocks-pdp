@@ -11,9 +11,9 @@ import java.util.Date;
  * */
 public class StockHandler{
   private String name ;
-  private Date date;
+  private String date;
 
-  private StockHandler(String name, Date date){
+  private StockHandler(String name, String date){
     this.name = name;
     this.date = date;
   }
@@ -28,14 +28,14 @@ public class StockHandler{
 
   public static class StockHandlerBuilder{
     private String name;
-    private Date date = null;
+    private String date = null;
 
     public StockHandlerBuilder name(String name){
       this.name = name;
       return this;
     }
 
-    public StockHandlerBuilder date(Date date){
+    public StockHandlerBuilder date(String date){
       this.date = date;
       return this;
     }
@@ -46,8 +46,9 @@ public class StockHandler{
   }
 
   public String fetchByDate(){
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-    String dateString = dateFormat.format(this.date);
+//    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+//    String dateString = dateFormat.format(this.date);
+    String dateString = this.date;
     String stockData = stockDataFetcher(this.name);
     String [] records = stockData.split("\n");
 
@@ -83,10 +84,11 @@ public class StockHandler{
   }
 
   public static void main(String args[]) throws ParseException, FileNotFoundException {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+//    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+    String dateValue = "2022-09-30";
     String valueUsingDate = StockHandler.getBuilder()
         .name("IBM")
-        .date(formatter.parse("2022-09-30"))
+        .date(dateValue)
         .build()
         .fetchByDate();
     if( valueUsingDate.equals("")){

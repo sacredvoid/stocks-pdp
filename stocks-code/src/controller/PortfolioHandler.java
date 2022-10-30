@@ -75,11 +75,11 @@ public class PortfolioHandler {
   public String getPortfolioValue(String date, String data) throws ParseException {
     // Takes in portfolio data and returns the value of the portfolio on given date
     StringBuilder finalStockData = new StringBuilder();
-    Date dateNew = DateFormatter.getDate(date);
+//    Date dateNew = DateFormatter.getDate(date);
     List<String> output1;
     output1 = PortfolioValue.getBuilder()
         .stockCountList(data)
-        .date(dateNew)
+        .date(date)
         .build()
         .completePortfolioValue();
 

@@ -12,8 +12,8 @@ public class PortfolioValue {
 
 //  private List<List<String>> stockCountList;
   private String stockCountList;
-  private Date date = null;
-  private PortfolioValue(String stockCountList, Date date){
+  private String date = null;
+  private PortfolioValue(String stockCountList, String date){
     this.stockCountList = stockCountList;
     this.date = date;
   }
@@ -24,14 +24,14 @@ public class PortfolioValue {
 
   public static class PortfolioValueBuilder{
     private String stockCountList;
-    private Date date;
+    private String date;
 
     public PortfolioValueBuilder stockCountList(String stockCountList){
       this.stockCountList = stockCountList;
       return this;
     }
 
-    public PortfolioValueBuilder date(Date date){
+    public PortfolioValueBuilder date(String date){
       this.date = date;
       return this;
     }
