@@ -77,11 +77,20 @@ public class PortfolioHandler {
     StringBuilder finalStockData = new StringBuilder();
 //    Date dateNew = DateFormatter.getDate(date);
     List<String> output1;
-    output1 = PortfolioValue.getBuilder()
-        .stockCountList(data)
-        .date(date)
-        .build()
-        .completePortfolioValue();
+    if (date.isEmpty()) {
+      output1 = PortfolioValue.getBuilder()
+          .stockCountList(data)
+          .build()
+          .completePortfolioValue();
+    }
+    else {
+      output1 = PortfolioValue.getBuilder()
+          .stockCountList(data)
+          .date(date)
+          .build()
+          .completePortfolioValue();
+    }
+
 
     for (String s : output1
     ) {

@@ -22,13 +22,13 @@ public class InteractionHandler {
   private final UserInteraction ui;
   private Scanner scan;
 
-  private final String yesNoRegex = "[YyNn]";
-  private final String portfolioRegex = "[0-9]{6}";
-  private static final String SCRIP_REGEX = "[A-Z]{3,5}";
+  private final String yesNoRegex = "[YyNnqQ]";
+  private final String portfolioRegex = "q|Q|[0-9]{6}";
+  private static final String SCRIP_REGEX = "q|Q|([A-za-z0-9])+([.]([A-za-z])+)?";
   private static final String QUANTITY_REGEX = "[0-9]+";
 
   private static final String VALID_DATE_REGEX =
-      "(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
+      "q|Q|(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
 
   private PortfolioHandler pfH = new PortfolioHandler();
 
@@ -51,36 +51,40 @@ public class InteractionHandler {
 
   public void run() {
       // Get the inputs and decide the flow
-
-    while (true) {
-      String input;
+    String input = "";
+    mainrunner:
+    while (!input.equalsIgnoreCase("q")) {
       this.ui.identifyUser();
       input = getInput(yesNoRegex);
       if(input.equals("q")) {
-        break;
+        break mainrunner;
       }
       if(input.equalsIgnoreCase("y")) {
         this.ui.getPortfolioNumber();
         this.ui.printText("Pick from existing portfolios:");
         this.ui.prettyPrintPortfolios(this.pfH.showExistingPortfolios());
         input = getInput(portfolioRegex);
+        if(input.equalsIgnoreCase("q")) break;
         this.ui.printText("Your portfolio number:"+input);
         try{
           String pfData = this.pfH.getPortfolio(input);
           if(!pfData.isEmpty()) {
             this.ui.printText("Here's your data!");
             this.ui.printPortfolioData(pfData);
-    // Pretty print using tables :
-    // https://stackoverflow.com/questions/15215326/how-can-i-create-table-using-ascii-in-a-console
-            while (!input.equals("b"))
+            while (!input.equalsIgnoreCase("b"))
             {
-              this.ui.printText("Check portfolio value on a given date (YYYY-MM-DD) or exit:'b':");
-              input = getInput("b|"+VALID_DATE_REGEX);
-              try {
-                this.ui.printPortfolioData(this.pfH.getPortfolioValue(input,pfData));
+              this.ui.printText("Check portfolio value on a given date (YYYY-MM-DD) or exit:'b/B':");
+              input = getInput("B|b|"+VALID_DATE_REGEX);
+              if(input.equalsIgnoreCase("q")) break mainrunner;
+              if(!input.equalsIgnoreCase("b")) {
+                try {
+                  this.ui.printPortfolioData(this.pfH.getPortfolioValue(input, pfData));
+                } catch (ParseException e) {
+                  this.ui.printText("Couldn't parse text!");
+                }
               }
-              catch (ParseException e){
-                this.ui.printText("Couldn't parse text!");
+              else {
+                this.ui.printText("Thank you for using our platform! Taking you back...\n");
               }
             }
 
@@ -96,19 +100,25 @@ public class InteractionHandler {
         this.ui.printText("Welcome to our platform, would you like to create a new Portfolio?"
             + "Y/y/N/n");
         input = getInput(yesNoRegex);
+        if(input.equalsIgnoreCase("q")) break;
         if(input.equalsIgnoreCase("y")) {
           input = "";
           StringBuilder stockData = new StringBuilder();
           while(!input.equals("f")) {
-            this.ui.printText("Enter 'f' to finish entering stock details");
+            this.ui.printText("Enter 'F/f' to finish entering stock details");
             this.ui.printText("Please enter the details like so: Stock,Quantity:");
             this.ui.printText("Example: AAPL,20");
             stockData.append(input).append("\n");
             this.ui.printText(stockData.toString());
-            input = getInput("f|"+SCRIP_REGEX + "," + QUANTITY_REGEX);
+            input = getInput("F|f|"+SCRIP_REGEX + "," + QUANTITY_REGEX);
+            if(input.equalsIgnoreCase("q")) break mainrunner;
           }
           String message = this.pfH.createPortfolio(stockData.toString());
           this.ui.printText(message);
+        }
+        else {
+          this.ui.printText("Thank you for using our platform!");
+          this.ui.printText("If you are looking for a better platform, checkout Groww!\n\n");
         }
       }
     }

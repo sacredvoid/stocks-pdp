@@ -121,6 +121,7 @@ public class RequestHandler {
 //        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
 //    System.out.println("Return value: ");
 //    System.out.println(output.toString());
+
     return output.toString();
 
   }

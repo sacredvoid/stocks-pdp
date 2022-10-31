@@ -80,10 +80,15 @@ public class PortfolioValue {
     ) {
       String [] nameAndCount = line.split(",");
       float result = stockCountValue(nameAndCount);
-      output.add(nameAndCount[0]+","+nameAndCount[1]+","+ result);
+      if(result==0){
+        output.add(nameAndCount[0]+","+nameAndCount[1]+","+ "NA");
+      }
+      else {
+        output.add(String.format(nameAndCount[0]+","+nameAndCount[1]+",%.2f",result));
+      }
       sum+=result;
     }
-    output.add("Total,-," + sum);
+    output.add(String.format("Total,-,%.2f",sum));
 
     return output;
   }

@@ -73,19 +73,39 @@ public class CSVFileOps {
     }
     if(data.length > 1) {
       int count =0;
-      csvData.add(List.of(data));
-      for (String datapoint: data
-      ) {
-        csvStringData.append(datapoint);
-        if(!(count == data.length-1)) {
-          csvStringData.append(",");
+
+      if(!isStockScrip(data[0]) && isNumeric(data[1])) {
+        data[1] = String.valueOf(Math.round(Float.parseFloat(data[1])));
+        csvData.add(List.of(data));
+        for (String datapoint: data
+        ) {
+          csvStringData.append(datapoint.strip());
+          if(!(count == data.length-1)) {
+            csvStringData.append(",");
+          }
+          count+=1;
         }
-        count+=1;
+        csvStringData.append("\n");
       }
-      csvStringData.append("\n");
+      else {
+        this.readStatus+=String.format("Invalid Data Group: %s,%s\n",data[0],data[1]);
+      }
     }
   }
 
+  private boolean isNumeric(String str) {
+    try {
+      Double.parseDouble(str);
+      return true;
+    } catch(NumberFormatException e){
+      return false;
+    }
+  }
+
+  private boolean isStockScrip(String str){
+    String SCRIP_REGEX = "([A-za-z0-9])+([.]([A-za-z])+)?";
+    return !str.matches(SCRIP_REGEX);
+  }
   private String pathResolver(String inputFilename, String dir) {
     // Check if inputFilename exists
     StringBuilder path = new StringBuilder("."

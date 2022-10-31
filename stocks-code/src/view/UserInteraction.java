@@ -43,32 +43,40 @@ public class UserInteraction {
     String leftAlignF = "";
 
     for(int i=0;i<rowCount;i++) {
-      System.out.print("+------------");
+      System.out.print("+-------------");
     }
-    System.out.format("%n");
+    System.out.print("+\n");
     if(rowCount == 2){
-      leftAlignF = "| %-10s | %-10s | %n";
-      System.out.format("| Stock Name | Quantity   |%n");
+      leftAlignF = "| %-11s | %-11s | %n";
+      System.out.format("| Stock Name  | Quantity    |%n");
       for(int i=0;i<rowCount;i++) {
-        System.out.print("+------------");
+        System.out.print("+-------------");
       }
-      System.out.println();
+      System.out.print("+\n");
       for (String column : columns) {
         String[] stockQtVal = column.split(",");
         System.out.format(leftAlignF, stockQtVal[0], stockQtVal[1]);
       }
+      for(int i=0;i<rowCount;i++) {
+        System.out.print("+-------------");
+      }
+      System.out.print("+\n");
     }
     else if(rowCount == 3) {
-      leftAlignF = "| %-10s | %-10s | %-10s |%n";
-      System.out.format("| Stock Name | Quantity   | Value      |%n");
+      leftAlignF = "| %-11s | %-11s | %-11s |%n";
+      System.out.format("| Stock Name  | Quantity    | Value       |%n");
       for(int i=0;i<rowCount;i++) {
-        System.out.print("+------------");
+        System.out.print("+-------------");
       }
-      System.out.println();
+      System.out.print("+\n");
       for (String column : columns) {
         String[] stockQtVal = column.split(",");
         System.out.format(leftAlignF, stockQtVal[0], stockQtVal[1], stockQtVal[2]);
       }
+      for(int i=0;i<rowCount;i++) {
+        System.out.print("+-------------");
+      }
+      System.out.print("+\n");
     }
   }
 }
