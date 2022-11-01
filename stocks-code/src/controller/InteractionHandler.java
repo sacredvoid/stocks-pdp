@@ -49,7 +49,7 @@ public class InteractionHandler implements Handler{
 
   private void validateInput(String regex, Scanner scan) {
     while (!scan.hasNext(regex)) {
-      this.ui.printText("Sorry, input did not match requirements!");
+      this.ui.printText("Sorry, input did not match requirements!","R");
       scan.next();
     }
   }
@@ -66,16 +66,16 @@ public class InteractionHandler implements Handler{
     // Just naming the loop to break to
     mainrunner:
     while (!input.equalsIgnoreCase("q")) {
-      this.ui.printText("Select from '1/2':");
-      this.ui.printText("1. Load External Portfolio");
-      this.ui.printText("2. Access existing Portfolio");
-      this.ui.printText("3. Create new Portfolio");
+      this.ui.printText("Select from '1/2/3':","Y");
+      this.ui.printText("1. Load External Portfolio","Y");
+      this.ui.printText("2. Access existing Portfolio","Y");
+      this.ui.printText("3. Create new Portfolio","Y");
       input = getInput("q|Q|1|2|3");
       if (input.equalsIgnoreCase("q")) {
         break;
       }
       if (input.equals("1")) {
-        this.ui.printText("Please provide the path to load a CSV");
+        this.ui.printText("Please provide the path to load a CSV","Y");
         input = getInput("");
         if (input.equalsIgnoreCase("q")) {
           break;
@@ -85,29 +85,29 @@ public class InteractionHandler implements Handler{
           message = this.modelOrch.loadExternalCSV(input);
         }
         catch (FileNotFoundException f) {
-          this.ui.printText("File not found, please enter a correct path");
+          this.ui.printText("File not found, please enter a correct path","R");
         }
-        this.ui.printText("File read successful: "+message+".csv");
+        this.ui.printText("File read successful: "+message+".csv","G");
       } else if(input.equals("2")) {
           if (this.modelOrch.showExistingPortfolios() != null) {
             this.ui.getPortfolioNumber();
-            this.ui.printText("Pick from existing portfolios:");
+            this.ui.printText("Pick from existing portfolios:","Y");
             this.ui.prettyPrintPortfolios(this.modelOrch.showExistingPortfolios());
           } else {
-            this.ui.printText("Sorry, no existing portfolios found!");
+            this.ui.printText("Sorry, no existing portfolios found!","R");
             continue;
           }
           input = getInput(portfolioRegex);
           if (input.equalsIgnoreCase("q")) break;
-          this.ui.printText("Your portfolio number:" + input);
+          this.ui.printText("Your portfolio number:" + input,"G");
           try {
             String pfData = this.modelOrch.getPortfolio(input);
             if (!pfData.isEmpty()) {
-              this.ui.printText("Here's your data!");
+              this.ui.printText("Here's your data!","Y");
               this.ui.printPortfolioData(pfData);
               dateLoop:
               while (!input.equalsIgnoreCase("b")) {
-                this.ui.printText("Check portfolio value on a given date (YYYY-MM-DD) [avoid weekends] or exit:'b/B':");
+                this.ui.printText("Check portfolio value on a given date (YYYY-MM-DD) [avoid weekends] or exit:'b/B':","Y");
                 input = getInput("B|b|" + VALID_DATE_REGEX);
                 if (input.equalsIgnoreCase("q")) break mainrunner;
                 if (!input.equalsIgnoreCase("b")) {
@@ -116,36 +116,43 @@ public class InteractionHandler implements Handler{
                     if (!(pfValue == null)) {
                       this.ui.printPortfolioData(pfValue);
                     } else {
-                      this.ui.printText("Sorry, the date entered is a weekend, please re-enter:");
+                      this.ui.printText("Sorry, the date entered is a weekend, please re-enter:","Y");
                     }
                   } catch (ParseException e) {
-                    this.ui.printText("Couldn't parse text!");
+                    this.ui.printText("Couldn't parse text!","R");
                   }
                 } else {
-                  this.ui.printText("Thank you for using our platform! Taking you back...\n");
+                  this.ui.printFooter();
                 }
               }
 
-            } else this.ui.printText("Nothing found in your portfolio file. Please try again!");
+            } else this.ui.printText("Nothing found in your portfolio file. Please try again!","Y");
           } catch (FileNotFoundException f) {
-            this.ui.printText(String.format("Given portfolio ID: %s doesn't exist!", input));
+            this.ui.printText(String.format("Given portfolio ID: %s doesn't exist!", input),"R");
           }
         } else {
           // New user, needs to make a portfolio!
-          this.ui.printText("Welcome to our platform!");
+          this.ui.printText("Welcome to our platform!","G");
             input = "";
             StringBuilder stockData = new StringBuilder();
             while (!input.equals("f")) {
-              this.ui.printText("Enter 'F/f' to finish entering stock details");
-              this.ui.printText("Please enter the details like so: Stock,Quantity:");
-              this.ui.printText("Example: AAPL,20");
+              this.ui.printText("Enter 'F/f' to finish entering stock details","Y");
+              this.ui.printText("Please enter the details like so: Stock,Quantity:","Y");
+              this.ui.printText("Example: AAPL,20","Y");
               stockData.append(input).append("\n");
-              this.ui.printText(stockData.toString());
+              this.ui.printText(stockData.toString(),"");
               input = getInput("F|f|" + SCRIP_REGEX + "," + QUANTITY_REGEX);
               if (input.equalsIgnoreCase("q")) break mainrunner;
             }
-            String message = this.modelOrch.createPortfolio(stockData.toString());
-            this.ui.printText(message);
+            String message = "";
+            if (!stockData.toString().equals("\n")) {
+              message = this.modelOrch.createPortfolio(stockData.toString());
+            }
+            else {
+              message = "No data entered, exiting...";
+            }
+            this.ui.printText(message,"");
+            this.ui.printFooter();
         }
       }
     }
