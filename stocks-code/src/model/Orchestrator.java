@@ -11,5 +11,6 @@ public interface Orchestrator {
     String getPortfolioValue(String date, String data) throws ParseException;
     String[] showExistingPortfolios();
 
+    String loadExternalCSV(String path) throws FileNotFoundException;
 
 }

@@ -108,13 +108,17 @@ public class CSVFileOps {
   }
   private String pathResolver(String inputFilename, String dir) {
     // Check if inputFilename exists
-    StringBuilder path = new StringBuilder("."
-        + this.osPathSeparator
-        + "app_data"
-        + this.osPathSeparator
-        +dir);
-    path.append(osPathSeparator).append(inputFilename);
-    makeDirs(path.toString());
+    StringBuilder path = new StringBuilder();
+
+    if(!dir.isEmpty()) {
+      path.append(".").append(this.osPathSeparator).append("app_data").append(this.osPathSeparator).append(dir);
+      path.append(osPathSeparator).append(inputFilename);
+      makeDirs(path.toString());
+    }
+    else {
+      path.append(inputFilename);
+    }
+
     return path.toString();
   }
 

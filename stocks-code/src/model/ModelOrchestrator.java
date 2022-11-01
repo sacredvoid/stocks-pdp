@@ -112,4 +112,16 @@ public class ModelOrchestrator implements Orchestrator {
         int day = cal.get(Calendar.DAY_OF_WEEK);
         return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
     }
+
+    public String loadExternalCSV(String path) throws FileNotFoundException {
+        String readCSVData = pw.readFile(path,"");
+        String portfolioID = generatePortfolioID();
+        try {
+            pw.writeToFile(portfolioID+".csv",PORTFOLIO_DATA_PATH,readCSVData.strip());
+        }
+        catch (IOException e) {
+            return "Failed to load";
+        }
+        return portfolioID;
+    }
 }
