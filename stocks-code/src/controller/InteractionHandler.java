@@ -70,9 +70,15 @@ public class InteractionHandler implements Handler{
       this.ui.printText("1. Load External CSV as guest");
       this.ui.printText("2. Access existing CSV as member");
       input = getInput("q|Q|1|2");
+      if (input.equalsIgnoreCase("q")) {
+        break;
+      }
       if (input.equals("1")) {
         this.ui.printText("Please provide the path to load a CSV");
         input = getInput("");
+        if (input.equalsIgnoreCase("q")) {
+          break;
+        }
         String message ="";
         try {
           message = this.modelOrch.loadExternalCSV(input);
@@ -84,7 +90,7 @@ public class InteractionHandler implements Handler{
       } else {
         this.ui.identifyUser();
         input = getInput(yesNoRegex);
-        if (input.equals("q")) {
+        if (input.equalsIgnoreCase("q")) {
           break;
         }
         if (input.equalsIgnoreCase("y")) {
