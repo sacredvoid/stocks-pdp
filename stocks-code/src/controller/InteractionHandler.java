@@ -7,18 +7,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+
+import model.ModelOrchestrator;
+import model.Orchestrator;
 import view.UserInteraction;
 
 /**
  * Controller Class which accepts input from the terminal and decides what to do accordingly.
  * This class talks to the Runner class which is the main program orchestrator.
  */
-public class InteractionHandler {
+public class InteractionHandler implements Handler{
   private final Readable in;
   private final Appendable out;
-
-  //Place-holder for model
-  private Object model;
   private final UserInteraction ui;
   private Scanner scan;
 
@@ -30,55 +30,78 @@ public class InteractionHandler {
   private static final String VALID_DATE_REGEX =
       "q|Q|(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
 
-  private PortfolioHandler pfH = new PortfolioHandler();
+  private Orchestrator modelOrch;
 
-  public InteractionHandler(Object model, UserInteraction ui, Readable input, Appendable output) {
+  public InteractionHandler(Orchestrator model, UserInteraction ui, Readable input, Appendable output) {
     this.in = input;
     this.out = output;
-    this.model = model;
+    this.modelOrch = model;
     this.ui = ui;
     this.scan = new Scanner(this.in);
   }
 
-  public String getInput(String regex) {
+  private String getInput(String regex) {
     validateInput(regex, scan);
     return scan.next();
   }
+
+  private void validateInput(String regex, Scanner scan) {
+    while (!scan.hasNext(regex)) {
+      this.ui.printText("Sorry, input did not match requirements!");
+      scan.next();
+    }
+  }
+
 
   public String getOutput() {
     return this.out.toString();
   }
 
+  @Override
   public void run() {
       // Get the inputs and decide the flow
     String input = "";
+    // Just naming the loop to break to
     mainrunner:
     while (!input.equalsIgnoreCase("q")) {
       this.ui.identifyUser();
       input = getInput(yesNoRegex);
       if(input.equals("q")) {
-        break mainrunner;
+        break;
       }
       if(input.equalsIgnoreCase("y")) {
-        this.ui.getPortfolioNumber();
-        this.ui.printText("Pick from existing portfolios:");
-        this.ui.prettyPrintPortfolios(this.pfH.showExistingPortfolios());
+        if(this.modelOrch.showExistingPortfolios() != null) {
+          this.ui.getPortfolioNumber();
+          this.ui.printText("Pick from existing portfolios:");
+          this.ui.prettyPrintPortfolios(this.modelOrch.showExistingPortfolios());
+        }
+        else {
+          this.ui.printText("Sorry, no existing portfolios found!");
+          continue;
+        }
         input = getInput(portfolioRegex);
         if(input.equalsIgnoreCase("q")) break;
         this.ui.printText("Your portfolio number:"+input);
         try{
-          String pfData = this.pfH.getPortfolio(input);
+          String pfData = this.modelOrch.getPortfolio(input);
           if(!pfData.isEmpty()) {
             this.ui.printText("Here's your data!");
             this.ui.printPortfolioData(pfData);
+            dateLoop:
             while (!input.equalsIgnoreCase("b"))
             {
-              this.ui.printText("Check portfolio value on a given date (YYYY-MM-DD) or exit:'b/B':");
+              this.ui.printText("Check portfolio value on a given date (YYYY-MM-DD) [avoid weekends] or exit:'b/B':");
               input = getInput("B|b|"+VALID_DATE_REGEX);
               if(input.equalsIgnoreCase("q")) break mainrunner;
               if(!input.equalsIgnoreCase("b")) {
                 try {
-                  this.ui.printPortfolioData(this.pfH.getPortfolioValue(input, pfData));
+                  String pfValue = this.modelOrch.getPortfolioValue(input, pfData);
+                  if(!(pfValue ==null)) {
+                    this.ui.printPortfolioData(pfValue);
+                  }
+                  else {
+                    this.ui.printText("Sorry, the date entered is a weekend, please re-enter:");
+                  }
                 } catch (ParseException e) {
                   this.ui.printText("Couldn't parse text!");
                 }
@@ -113,23 +136,14 @@ public class InteractionHandler {
             input = getInput("F|f|"+SCRIP_REGEX + "," + QUANTITY_REGEX);
             if(input.equalsIgnoreCase("q")) break mainrunner;
           }
-          String message = this.pfH.createPortfolio(stockData.toString());
+          String message = this.modelOrch.createPortfolio(stockData.toString());
           this.ui.printText(message);
         }
         else {
-          this.ui.printText("Thank you for using our platform!");
+          this.ui.printFooter();
           this.ui.printText("If you are looking for a better platform, checkout Groww!\n\n");
         }
       }
-    }
-  }
-
-
-
-  private void validateInput(String regex, Scanner scan) {
-    while (!scan.hasNext(regex)) {
-      this.ui.printText("Sorry, input did not match requirements!");
-      scan.next();
     }
   }
 

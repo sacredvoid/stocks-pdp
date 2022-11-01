@@ -14,8 +14,8 @@ public class UserInteraction {
   }
 
   public void identifyUser() {
-    printText("Are you an existing customer?");
-    printText("Enter 'Y' or 'y' for yes and 'N' or 'n' for no: ");
+    printText("Are you an existing Account Holder?");
+    printText("Enter 'Y/y' for YES and 'N/n' for NO: ");
   }
 
   public void printFooter() {

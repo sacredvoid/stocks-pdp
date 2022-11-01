@@ -1,5 +1,9 @@
+import controller.Handler;
 import controller.InteractionHandler;
 import java.io.InputStreamReader;
+
+import model.ModelOrchestrator;
+import model.Orchestrator;
 import view.UserInteraction;
 
 public class ClientRunner {
@@ -8,13 +12,13 @@ public class ClientRunner {
   public static void main(String[] args) {
 
     // Model Initialization
-    Object o = new Object();
+    Orchestrator model = new ModelOrchestrator();
 
     // View Initialization
     UserInteraction viewer = new UserInteraction();
 
-    InteractionHandler ih = new InteractionHandler(
-        o,
+    Handler ih = new InteractionHandler(
+        model,
         viewer,
         new InputStreamReader(System.in), System.out);
     ih.run();
