@@ -94,13 +94,6 @@ public class PortfolioValue {
   }
 
   private String stockValueFetcher(String name){
-//    if( this.date == null){
-//      return StockHandler.getBuilder()
-//          .name(name)
-//          .build()
-//          .fetchCurrentValue();
-//    }
-//    else {
     String nameValue =StockHandler.getBuilder()
         .name(name)
         .date(date)

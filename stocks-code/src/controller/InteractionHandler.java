@@ -88,6 +88,7 @@ public class InteractionHandler implements Handler{
           this.ui.printText("File not found, please enter a correct path","R");
         }
         this.ui.printText("File read successful: "+message+".csv","G");
+
       } else if(input.equals("2")) {
           if (this.modelOrch.showExistingPortfolios() != null) {
             this.ui.getPortfolioNumber();
@@ -135,7 +136,7 @@ public class InteractionHandler implements Handler{
           this.ui.printText("Welcome to our platform!","G");
             input = "";
             StringBuilder stockData = new StringBuilder();
-            while (!input.equals("f")) {
+            while (!input.equalsIgnoreCase("f")) {
               this.ui.printText("Enter 'F/f' to finish entering stock details","Y");
               this.ui.printText("Please enter the details like so: Stock,Quantity:","Y");
               this.ui.printText("Example: AAPL,20","Y");
