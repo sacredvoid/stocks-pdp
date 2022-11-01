@@ -121,12 +121,17 @@ public class RequestHandler {
 //        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
 //    System.out.println("Return value: ");
 //    System.out.println(output.toString());
-
+    try {
+      CSVFileOps f = new CSVFileOps();
+      f.writeToFile("" + stockSymbol + "Data.csv", "StocksData", output.toString());
+    } catch(IOException e){
+      e.printStackTrace();
+    }
     return output.toString();
 
   }
 
-  public static void main(String args[]){
+  public static void main(String args[]) throws IOException{
 //    RequestHandler r = new RequestHandler();
 //    r.buildURL("GOOG");
 //    r.fetchAndSave();

@@ -94,25 +94,25 @@ public class PortfolioValue {
   }
 
   private String stockValueFetcher(String name){
-    if( this.date == null){
-      return StockHandler.getBuilder()
-          .name(name)
-          .build()
-          .fetchCurrentValue();
+//    if( this.date == null){
+//      return StockHandler.getBuilder()
+//          .name(name)
+//          .build()
+//          .fetchCurrentValue();
+//    }
+//    else {
+    String nameValue =StockHandler.getBuilder()
+        .name(name)
+        .date(date)
+        .build()
+        .fetchByDate();
+    if (!nameValue.equals("")) {
+      return nameValue;
     }
-    else {
-      String nameValue =StockHandler.getBuilder()
-          .name(name)
-          .date(date)
-          .build()
-          .fetchByDate();
-      if (!nameValue.equals("")) {
-        return nameValue;
-      }
-      else{
-        return "";
-      }
+    else{
+      return "";
     }
+//    }
   }
 
   private float stockCountValue(String[] stockNameCount){
