@@ -67,9 +67,10 @@ public class InteractionHandler implements Handler{
     mainrunner:
     while (!input.equalsIgnoreCase("q")) {
       this.ui.printText("Select from '1/2':");
-      this.ui.printText("1. Load External CSV as guest");
-      this.ui.printText("2. Access existing CSV as member");
-      input = getInput("q|Q|1|2");
+      this.ui.printText("1. Load External Portfolio");
+      this.ui.printText("2. Access existing Portfolio");
+      this.ui.printText("3. Create new Portfolio");
+      input = getInput("q|Q|1|2|3");
       if (input.equalsIgnoreCase("q")) {
         break;
       }
@@ -87,13 +88,7 @@ public class InteractionHandler implements Handler{
           this.ui.printText("File not found, please enter a correct path");
         }
         this.ui.printText("File read successful: "+message+".csv");
-      } else {
-        this.ui.identifyUser();
-        input = getInput(yesNoRegex);
-        if (input.equalsIgnoreCase("q")) {
-          break;
-        }
-        if (input.equalsIgnoreCase("y")) {
+      } else if(input.equals("2")) {
           if (this.modelOrch.showExistingPortfolios() != null) {
             this.ui.getPortfolioNumber();
             this.ui.printText("Pick from existing portfolios:");
@@ -137,11 +132,7 @@ public class InteractionHandler implements Handler{
           }
         } else {
           // New user, needs to make a portfolio!
-          this.ui.printText("Welcome to our platform, would you like to create a new Portfolio?"
-                  + "Y/y/N/n");
-          input = getInput(yesNoRegex);
-          if (input.equalsIgnoreCase("q")) break;
-          if (input.equalsIgnoreCase("y")) {
+          this.ui.printText("Welcome to our platform!");
             input = "";
             StringBuilder stockData = new StringBuilder();
             while (!input.equals("f")) {
@@ -155,13 +146,8 @@ public class InteractionHandler implements Handler{
             }
             String message = this.modelOrch.createPortfolio(stockData.toString());
             this.ui.printText(message);
-          } else {
-            this.ui.printFooter();
-            this.ui.printText("If you are looking for a better platform, checkout Groww!\n\n");
-          }
         }
       }
     }
-  }
 
 }
