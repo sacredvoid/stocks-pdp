@@ -5,7 +5,7 @@
 The following are the steps to run our Stocks Application! Enjoy :)
 
 1. `cd res` (Move to res folder/open a terminal in res folder)
-2. `java -jar *.jar` (Run the command )
+2. `java -jar STOCKS-PDP-AAKASH-SAMANVYA.jar` (Run the command )
 
 Basically, make sure `app_data` and the `jar` file are in the same folder.
 
@@ -38,7 +38,7 @@ MSFT,30
   added. To stop adding stocks to your portfolio simply press 'f' or 'F' in the console.
 - You can take these three stocks if you want: AAPL,20;MSFT,30;TSLA,10. The ';' indicates you have
   to press enter. The application will reject more than one stock,quantity entry in one line.
-- Once you are done press 'f/F'. Note you portfolio ID (should be printed in the console). It should
+- Once you are done press 'f/F'. Note your portfolio ID (should be printed in the console). It should
   take you back to the starting menu choices.
 - Select option '2' now and you should be able to see your Portfolio ID in the list.
 - Type in the portfolio ID and hit enter. It should neatly display the stocks and quantity.
@@ -114,3 +114,15 @@ consider using the given list of stocks and date equal to or less than "2022-11-
 - Coco Cola (KO)
 - McDonald's Corp (MCD)
 - Bank of America (BAC)
+- AbbVie Inc (ABBV)
+- Accenture (ACN)
+- Conoco Philips (COP)
+- Cisco (CSCO)
+- ProShares (CSM)
+- Chevron Corp (CVX)
+- Johnson and Johnson (JNJ)
+- Netflix (NFLX)
+- Nvidia (NVDA)
+- Meta (META)
+- Texas Instruments Inc. (TXN)
+- HomeDepot (HD)
