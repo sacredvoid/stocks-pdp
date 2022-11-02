@@ -109,6 +109,7 @@ public class StockHandler {
 
     try {
       todayTime = sdf.parse(todayDateAndTime.split(" ")[1]);
+
     } catch (ParseException ignored) {
     }
     String output = "";
@@ -166,12 +167,5 @@ public class StockHandler {
     } else {
       System.out.println(valueUsingDate);
     }
-
-    //    String currentValue = StockHandler.getBuilder()
-    //        .name("IBM")
-    //        .build()
-    //        .fetchCurrentValue();
-
-    //    System.out.println(currentValue);
   }
 }
