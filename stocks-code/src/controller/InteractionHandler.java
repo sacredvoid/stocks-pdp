@@ -149,7 +149,8 @@ public class InteractionHandler implements Handler {
                                 this.ui.printPortfolioData(pfValue);
                             } else {
                                 this.ui.printText(
-                                    "Sorry, the date entered is a weekend, please re-enter:",
+                                    "Sorry, the date entered is either a "
+                                        + "weekend or a future date, please re-enter:",
                                     "Y");
                             }
                         } catch (ParseException e) {

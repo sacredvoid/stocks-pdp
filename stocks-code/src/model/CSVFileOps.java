@@ -114,7 +114,7 @@ public class CSVFileOps {
       int count = 0;
 
       if (!isStockScrip(data[0]) && isNumeric(data[1])) {
-        data[1] = String.valueOf(Math.round(Float.parseFloat(data[1])));
+        data[1] = String.valueOf(Math.abs(Math.round(Float.parseFloat(data[1]))));
         csvData.add(List.of(data));
         for (String datapoint : data
         ) {
@@ -155,7 +155,7 @@ public class CSVFileOps {
    * @return true/false if the ticker symbol matches the regex
    */
   private boolean isStockScrip(String str) {
-    String SCRIP_REGEX = "([A-za-z0-9])+([.]([A-za-z])+)?";
+    String SCRIP_REGEX = "([A-Z])+([.]([A-Z])+)?";
     return !str.matches(SCRIP_REGEX);
   }
 

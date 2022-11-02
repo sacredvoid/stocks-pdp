@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.Date;
@@ -152,7 +153,8 @@ public class ModelOrchestrator implements Orchestrator {
   private boolean isValidDate(String date) throws ParseException {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     Date inputDate = formatter.parse(date);
-    Date baseDate = formatter.parse(acceptableDateLimit);
+    LocalDateTime now = LocalDateTime.now();
+    Date baseDate = formatter.parse(String.valueOf(now));
     return !(isWeekend(inputDate) || isFuture(baseDate,inputDate));
   }
 
