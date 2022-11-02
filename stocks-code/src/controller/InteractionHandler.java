@@ -22,7 +22,7 @@ public class InteractionHandler implements Handler{
   private final UserInteraction ui;
   private Scanner scan;
 
-  private final String yesNoRegex = "[YyNnqQ]";
+  private Orchestrator modelOrch;
   private final String portfolioRegex = "q|Q|[0-9]{6}";
   private static final String SCRIP_REGEX = "q|Q|([A-za-z0-9])+([.]([A-za-z])+)?";
   private static final String QUANTITY_REGEX = "[0-9]+";
@@ -30,7 +30,6 @@ public class InteractionHandler implements Handler{
   private static final String VALID_DATE_REGEX =
       "q|Q|(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
 
-  private Orchestrator modelOrch;
 
   public InteractionHandler(Orchestrator model, UserInteraction ui, Readable input, Appendable output) {
     this.in = input;
@@ -83,12 +82,17 @@ public class InteractionHandler implements Handler{
         String message ="";
         try {
           message = this.modelOrch.loadExternalCSV(input);
+          if(message.contains("Not")) {
+            this.ui.printText(message,"R");
+          }
+          else {
+            this.ui.printText("File read successful: "+message+".csv","G");
+          }
         }
         catch (FileNotFoundException f) {
           this.ui.printText("File not found, please enter a correct path","R");
         }
-        this.ui.printText("File read successful: "+message+".csv","G");
-
+        this.ui.printText("File read successful. Portfolio ID: "+message,"G");
       } else if(input.equals("2")) {
           if (this.modelOrch.showExistingPortfolios() != null) {
             this.ui.getPortfolioNumber();

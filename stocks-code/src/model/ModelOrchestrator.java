@@ -96,6 +96,9 @@ public class ModelOrchestrator implements Orchestrator {
 
     public String[] showExistingPortfolios() {
         File f = new File("."+osSep+"app_data"+osSep+PORTFOLIO_DATA_PATH);
+        if(!f.isDirectory()) {
+            f.mkdirs();
+        }
         String[] filesList = f.list();
         if(filesList.length==0) {
             return null;
@@ -116,12 +119,17 @@ public class ModelOrchestrator implements Orchestrator {
     public String loadExternalCSV(String path) throws FileNotFoundException {
         String readCSVData = pw.readFile(path,"");
         String portfolioID = generatePortfolioID();
-        try {
-            pw.writeToFile(portfolioID+".csv",PORTFOLIO_DATA_PATH,readCSVData.strip());
+        int fileExtInd = path.lastIndexOf(".");
+        if(path.substring(fileExtInd+1).equals("csv")) {
+            try {
+                pw.writeToFile(portfolioID+".csv",PORTFOLIO_DATA_PATH,readCSVData.strip());
+            }
+            catch (IOException e) {
+                return "Failed to load";
+            }
+            return portfolioID;
         }
-        catch (IOException e) {
-            return "Failed to load";
-        }
-        return portfolioID;
+        else
+            return "File Not a CSV";
     }
 }
