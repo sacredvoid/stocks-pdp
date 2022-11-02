@@ -11,7 +11,7 @@ import java.util.Date;
  * StockHandler class defines the methods required for fetching the stock data according to the
  * requirement of the user.(either by date or the current value of the stocks.
  */
-public class StockHandler {
+class StockHandler {
 
   private String name;
   private String date;
@@ -37,7 +37,7 @@ public class StockHandler {
    *
    * @return a StockHandlerBuilder object
    */
-  public static StockHandlerBuilder getBuilder() {
+  static StockHandlerBuilder getBuilder() {
     return new StockHandlerBuilder();
   }
 
@@ -45,7 +45,7 @@ public class StockHandler {
    * StockHandlerBuilder class is a static class which is used to build the object of<p></p>
    * StockHandler class.
    */
-  public static class StockHandlerBuilder {
+  static class StockHandlerBuilder {
 
     private String name;
     private String date = null;
@@ -57,7 +57,7 @@ public class StockHandler {
      * @param name name or symbol of the stock
      * @return the same StockHandlerBuilder object with the stock symbol stored as an attribute.
      */
-    public StockHandlerBuilder name(String name) {
+    StockHandlerBuilder name(String name) {
       this.name = name;
       return this;
     }
@@ -68,7 +68,7 @@ public class StockHandler {
      * @param date to retrieve the data fo the specific stock on that day
      * @return the same StockHandlerBuilder object with the date stored as an attribute.
      */
-    public StockHandlerBuilder date(String date) {
+    StockHandlerBuilder date(String date) {
       this.date = date;
       return this;
     }
@@ -79,7 +79,7 @@ public class StockHandler {
      *
      * @return new object of the StockHanlder class
      */
-    public StockHandler build() {
+    StockHandler build() {
       return new StockHandler(this.name, this.date);
     }
   }
@@ -90,26 +90,20 @@ public class StockHandler {
    *
    * @return Stock data on that particular date as a String.
    */
-  public String fetchByDate() {
+  String fetchByDate() {
     String stockData;
-    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     LocalDateTime now = LocalDateTime.now();
     Date stockUpdateTime = null;
     Date todayTime = null;
 
-    try {
-      stockUpdateTime = sdf.parse("21:00");
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
     String todayDateAndTime = dtf.format(now);
     String todayDate = todayDateAndTime.split(" ")[0];
 
     try {
-      todayTime = sdf.parse(todayDateAndTime.split(" ")[1]);
-
+      stockUpdateTime = sdf.parse(todayDate + " 17:00");
+      todayTime = sdf.parse(todayDateAndTime);
     } catch (ParseException ignored) {
     }
     String output = "";
@@ -145,7 +139,6 @@ public class StockHandler {
     return output;
   }
 
-
   private String stockDataFetcher(String name) {
 
     return RequestHandler.getBuilder()
@@ -155,17 +148,4 @@ public class StockHandler {
         .fetch();
   }
 
-  public static void main(String args[]) {
-    String dateValue = "2022-11-01";
-    String valueUsingDate = StockHandler.getBuilder()
-        .name("IBM")
-        .date(dateValue)
-        .build()
-        .fetchByDate();
-    if (valueUsingDate.equals("")) {
-      System.out.println("No record of stock exchange on that day");
-    } else {
-      System.out.println(valueUsingDate);
-    }
-  }
 }

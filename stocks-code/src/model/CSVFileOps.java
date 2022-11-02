@@ -13,7 +13,7 @@ import java.util.List;
  * The CSVFileOps class which is used to Read/Write CSV files and perform data check operations
  * (like validating the Stock,Quantity which our application ingests.
  */
-public class CSVFileOps {
+class CSVFileOps {
 
   private String readStatus;
   final String splitBy = ",";
@@ -26,7 +26,7 @@ public class CSVFileOps {
    * The default constructor for our class which just initializes the current OS's path separator
    * (\\ for windows and / for linux).
    */
-  public CSVFileOps() {
+  CSVFileOps() {
     this.osPathSeparator = OSValidator.getOSSeparator();
   }
 
@@ -40,7 +40,7 @@ public class CSVFileOps {
    * @return the contents of the CSV file as String
    * @throws FileNotFoundException throws when file not found in the given directory
    */
-  public String readFile(String filename, String dir) throws FileNotFoundException {
+  String readFile(String filename, String dir) throws FileNotFoundException {
     csvData = new ArrayList<>();
     csvStringData = new StringBuilder();
     String path = pathResolver(filename, dir);
@@ -74,7 +74,7 @@ public class CSVFileOps {
    * @param data     CSV data in a String datatype you want to write
    * @throws IOException throws when it's unable to save the CSV file
    */
-  public void writeToFile(String filename, String dir, String data) throws IOException {
+  void writeToFile(String filename, String dir, String data) throws IOException {
 
     try {
       String newPath = pathResolver(filename, dir);
@@ -91,7 +91,7 @@ public class CSVFileOps {
    *
    * @return a list of list of string of CSV Data
    */
-  public List<List<String>> getCsvData() {
+  List<List<String>> getCsvData() {
     return this.csvData;
   }
 

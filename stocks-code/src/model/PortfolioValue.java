@@ -9,9 +9,8 @@ import java.util.List;
 /**
  * PortfolioValue class defines methods to perform operations and find the values of the stocks.
  */
-public class PortfolioValue {
+class PortfolioValue {
 
-  //  private List<List<String>> stockCountList;
   private String stockCountList;
   private String date = null;
 
@@ -21,11 +20,11 @@ public class PortfolioValue {
   }
 
   /**
-   * getBuilder() is a static public method create a new PortfolioValueBuilder object.
+   * getBuilder() is a static  method create a new PortfolioValueBuilder object.
    *
    * @return PortfolioValueBuilder objecty
    */
-  public static PortfolioValueBuilder getBuilder() {
+  static PortfolioValueBuilder getBuilder() {
     return new PortfolioValueBuilder();
   }
 
@@ -33,7 +32,7 @@ public class PortfolioValue {
    * PortfolioValueBuilder class is a static class which is used to build the object of <p></p>
    * PortfolioValue class.
    */
-  public static class PortfolioValueBuilder {
+  static class PortfolioValueBuilder {
 
     private String stockCountList;
     private String date;
@@ -44,7 +43,7 @@ public class PortfolioValue {
      * @param stockCountList is a list of stock names and quantities.
      * @return the same PortfolioValueBuilder class with stockCountList stored as an attribute.
      */
-    public PortfolioValueBuilder stockCountList(String stockCountList) {
+    PortfolioValueBuilder stockCountList(String stockCountList) {
       this.stockCountList = stockCountList;
       return this;
     }
@@ -55,7 +54,7 @@ public class PortfolioValue {
      * @param date to retrieve the data of the stock on that specific day.
      * @return the same PortfolioValueBuilder class with date stored as an attribute.
      */
-    public PortfolioValueBuilder date(String date) {
+    PortfolioValueBuilder date(String date) {
       this.date = date;
       return this;
     }
@@ -66,7 +65,7 @@ public class PortfolioValue {
      *
      * @return PortfolioValue object.
      */
-    public PortfolioValue build() {
+    PortfolioValue build() {
       return new PortfolioValue(this.stockCountList, this.date);
     }
   }
@@ -77,7 +76,7 @@ public class PortfolioValue {
    *
    * @return a list of individual and total stock values.
    */
-  public List<String> completePortfolioValue() {
+  List<String> completePortfolioValue() {
     List<String> output = new ArrayList<>();
     String[] lines = stockCountList.split("\n");
     float sum = 0.0F;
@@ -125,23 +124,5 @@ public class PortfolioValue {
     }
     float stockPrice = Float.parseFloat(stockPriceString.split(",")[1]);
     return stockPrice * count;
-  }
-
-  public static void main(String args[]) throws ParseException {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-    Date d = formatter.parse("2022-10-25");
-    String data = "GOOG,10\nIBM,20\nTSCO.LON,20\nSHOP.TRT,20\nGPV.TRV,20";
-
-    List<String> output1 = PortfolioValue.getBuilder()
-        .stockCountList(data)
-        .build()
-        .completePortfolioValue();
-
-    for (String s : output1
-    ) {
-      System.out.println(s);
-    }
-
-
   }
 }
