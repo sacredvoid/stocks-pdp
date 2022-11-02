@@ -17,6 +17,14 @@ public class StockHandler{
   private String name ;
   private String date;
 
+  private final String apiHitLimitMsg = "{\n"
+      + "    \"Note\": \"Thank you for using Alpha Vantage! Our standard API call frequency is "
+      + "5 calls per minute and 500 calls per day. Please visit "
+      + "https://www.alphavantage.co/premium/"
+      + " if you would like to target a higher API call frequency.\"\n"
+      + "}";
+
+
   private StockHandler(String name, String date){
     this.name = name;
     this.date = date;
@@ -76,12 +84,13 @@ public class StockHandler{
    */
   public String fetchByDate() {
     String stockData;
-    String dateString = this.date;
+//    String dateString = this.date;
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     LocalDateTime now = LocalDateTime.now();
     Date stockUpdateTime = null;
     Date todayTime = null;
+
     try{
       stockUpdateTime = sdf.parse("21:00");
     } catch(ParseException e){
@@ -90,6 +99,7 @@ public class StockHandler{
 
     String todayDateAndTime = dtf.format(now);
     String todayDate = todayDateAndTime.split(" ")[0];
+
     try {
       todayTime = sdf.parse(todayDateAndTime.split(" ")[1]);
     } catch(ParseException e){
@@ -110,6 +120,9 @@ public class StockHandler{
       stockData = this.stockDataFetcher(this.name);
     }
 
+    if(stockData.equals(apiHitLimitMsg)){
+      return "API hit limit reached!!!";
+    }
     records = stockData.split("\n");
 
     if(this.date.equals(todayDate)){

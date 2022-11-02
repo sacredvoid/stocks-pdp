@@ -19,6 +19,7 @@ public class RequestHandler {
   private String stockSymbol;
   URL url = null;
 
+
   private RequestHandler(String stockSymbol){
     this.stockSymbol = stockSymbol;
   }
@@ -106,21 +107,18 @@ public class RequestHandler {
 
       This is printed below.
        */
-    in = url.openStream();
-    int b;
+      in = url.openStream();
+      int b;
 
-    while ((b=in.read())!=-1) {
-      output.append((char)b);
+      while ((b=in.read())!=-1) {
+        output.append((char)b);
+      }
     }
-  }
-    catch (
-  IOException e) {
-    throw new IllegalArgumentException("No price data found for "+stockSymbol);
-  }
-//    new PortfolioWriter()
-//        .writeToFile(""+stockSymbol+"Data.csv","StocksData", output.toString());
-//    System.out.println("Return value: ");
-//    System.out.println(output.toString());
+    catch (IOException e) {
+      throw new IllegalArgumentException("No price data found for "+stockSymbol);
+    }
+
+
     try {
       CSVFileOps f = new CSVFileOps();
       f.writeToFile("" + stockSymbol + "Data.csv", "StocksData", output.toString());
