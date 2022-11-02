@@ -1,9 +1,13 @@
 package model;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 /**
  * StockHandler class defines the methods required for fetching the stock data according
@@ -70,38 +74,59 @@ public class StockHandler{
    * using the RequestHandler object.
    * @return Stock data on that particular date as a String.
    */
-  public String fetchByDate(){
-//    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-//    String dateString = dateFormat.format(this.date);
+  public String fetchByDate() {
+    String stockData;
     String dateString = this.date;
-    String stockData = stockDataFetcher(this.name);
-    String [] records = stockData.split("\n");
+    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    LocalDateTime now = LocalDateTime.now();
+    Date stockUpdateTime = null;
+    Date todayTime = null;
+    try{
+      stockUpdateTime = sdf.parse("21:00");
+    } catch(ParseException e){
+      e.printStackTrace();
+    }
 
+    String todayDateAndTime = dtf.format(now);
+    String todayDate = todayDateAndTime.split(" ")[0];
+    try {
+      todayTime = sdf.parse(todayDateAndTime.split(" ")[1]);
+    } catch(ParseException e){
+      //
+    }
     String output ="";
-    for (String x : records
-    ) {
-      if (x.contains(dateString)) {
-        String[] sepData = x.split(",");
-        output += this.name + "," + sepData[4];
-        break;
+    String [] records;
+
+
+    try{
+      stockData = new CSVFileOps().readFile(""+this.name+"Data.csv","StocksData");
+      if(!stockData.contains(todayDate) && todayTime.after(stockUpdateTime)){
+        stockData = stockDataFetcher(this.name);
+      }
+
+    } catch( FileNotFoundException e){
+
+      stockData = this.stockDataFetcher(this.name);
+    }
+
+    records = stockData.split("\n");
+
+    if(this.date.equals(todayDate)){
+      output+= this.name + "," + records[1].split(",")[4];
+    }
+    else{
+      for (String r: records
+      ) {
+        if(r.contains(this.date)) {
+          String[] sepData = r.split(",");
+          output += this.name + "," + sepData[4];
+        }
       }
     }
     return output;
   }
 
-  /**
-   * fetchCurrentValue() method returns the current stock data using the RequestHandler Object.
-   * @return current data of the stock as a String
-   */
-  public String fetchCurrentValue(){
-    String output ="";
-    String stockData = stockDataFetcher(this.name);
-//    String [] records = stockData.split(System.lineSeparator());
-    String [] records = stockData.split("\n");
-    String [] sepData = records[1].split(",");
-    output += this.name + "," + sepData[4];
-    return output;
-  }
 
   private String stockDataFetcher(String name)  {
 
@@ -114,7 +139,7 @@ public class StockHandler{
 
   public static void main(String args[]) throws ParseException, FileNotFoundException {
 //    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-    String dateValue = "2022-09-30";
+    String dateValue = "2022-11-01";
     String valueUsingDate = StockHandler.getBuilder()
         .name("IBM")
         .date(dateValue)
@@ -127,11 +152,11 @@ public class StockHandler{
       System.out.println(valueUsingDate);
     }
 
-    String currentValue = StockHandler.getBuilder()
-        .name("IBM")
-        .build()
-        .fetchCurrentValue();
+//    String currentValue = StockHandler.getBuilder()
+//        .name("IBM")
+//        .build()
+//        .fetchCurrentValue();
 
-    System.out.println(currentValue);
+//    System.out.println(currentValue);
   }
 }

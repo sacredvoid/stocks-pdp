@@ -33,9 +33,11 @@ public class CSVFileOps {
       {
         String[] data = currentLine.split(splitBy);    // use comma as separator
         // Check data
-        if(!(data.length <
-                2)) {
+        if(data.length <= 2) {
           dataCheck(data);
+        }
+        else{
+          csvStringData.append(currentLine).append("\n");
         }
       }
       this.readStatus = "Success";
