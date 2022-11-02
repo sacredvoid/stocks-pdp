@@ -90,20 +90,14 @@ public class ModelOrchestrator implements Orchestrator {
     if (!isWeekend(date)) {
       // Takes in portfolio data and returns the value of the portfolio on given date
       StringBuilder finalStockData = new StringBuilder();
-//    Date dateNew = DateFormatter.getDate(date);
+
       List<String> output1;
-      if (date.isEmpty()) {
-        output1 = PortfolioValue.getBuilder()
-            .stockCountList(data)
-            .build()
-            .completePortfolioValue();
-      } else {
-        output1 = PortfolioValue.getBuilder()
-            .stockCountList(data)
-            .date(date)
-            .build()
-            .completePortfolioValue();
-      }
+      output1 = PortfolioValue.getBuilder()
+          .stockCountList(data)
+          .date(date)
+          .build()
+          .completePortfolioValue();
+
 
       for (String s : output1
       ) {

@@ -9,7 +9,7 @@ import java.net.URL;
  * RequestHandler class is responsible for creating requests and fetching the data from the<p></p>
  * the Alphavantage API.
  */
-public class RequestHandler {
+class RequestHandler {
 
   //sam's api key
   private String apiKey = "SK3WEKBCG40DZ73N";
@@ -31,7 +31,7 @@ public class RequestHandler {
    *
    * @return an RequestHandlerBuilder object
    */
-  public static RequestHandlerBuilder getBuilder() {
+  static RequestHandlerBuilder getBuilder() {
     return new RequestHandlerBuilder();
   }
 
@@ -39,7 +39,7 @@ public class RequestHandler {
    * RequestHandlerBuilder class is a static class which is used to build the object of<p></p>
    * RequestHandler class.
    */
-  public static class RequestHandlerBuilder {
+  static class RequestHandlerBuilder {
 
     private String stockSymbol;
 
@@ -50,7 +50,7 @@ public class RequestHandler {
      * @param stockSymbol name or symbol of the stock
      * @return the same RequestHandlerBuilder object with the stock symbol stored as an attribute.
      */
-    public RequestHandlerBuilder stockSymbol(String stockSymbol) {
+    RequestHandlerBuilder stockSymbol(String stockSymbol) {
       this.stockSymbol = stockSymbol;
       return this;
     }
@@ -61,7 +61,7 @@ public class RequestHandler {
      *
      * @return new object of the RequestHandler class
      */
-    public RequestHandler build() {
+    RequestHandler build() {
       return new RequestHandler(this.stockSymbol);
     }
   }
@@ -72,7 +72,7 @@ public class RequestHandler {
    *
    * @return the same RequestHandler object with url built and stored as an attribute
    */
-  public RequestHandler buildURL() {
+  RequestHandler buildURL() {
 
     try {
       /*
@@ -100,7 +100,7 @@ public class RequestHandler {
    *
    * @return Stock data in the form of String
    */
-  public String fetch() {
+  String fetch() {
     InputStream in = null;
     StringBuilder output = new StringBuilder();
 
@@ -134,11 +134,4 @@ public class RequestHandler {
 
   }
 
-  public static void main(String args[]) {
-    System.out.println("Feteched and Saved this Data \n" + RequestHandler.getBuilder()
-        .stockSymbol("GOOG")
-        .build()
-        .buildURL()
-        .fetch());
-  }
 }
