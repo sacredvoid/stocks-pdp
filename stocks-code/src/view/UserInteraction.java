@@ -92,12 +92,13 @@ public class UserInteraction implements ViewHandler {
     int rowCount = columns[0].split(",").length;
     String leftAlignF = "";
 
-    for (int i = 0; i < rowCount; i++) {
-      this.outStream.print("+-------------");
-    }
-    this.outStream.print("+\n");
+
     if (rowCount == 2) {
-      leftAlignF = "| %-11s | %-11s | %n";
+      for (int i = 0; i < rowCount; i++) {
+        this.outStream.print("+-------------");
+      }
+      this.outStream.print("+\n");
+      leftAlignF = "| %-11s | %-11s |%n";
       this.outStream.format("| Stock Name  | Quantity    |%n");
       for (int i = 0; i < rowCount; i++) {
         this.outStream.print("+-------------");
@@ -112,10 +113,14 @@ public class UserInteraction implements ViewHandler {
       }
       this.outStream.print("+\n");
     } else if (rowCount == 3) {
-      leftAlignF = "| %-11s | %-11s | %-11s |%n";
-      this.outStream.format("| Stock Name  | Quantity    | Value       |%n");
       for (int i = 0; i < rowCount; i++) {
-        this.outStream.print("+-------------");
+        this.outStream.print("+-----------------");
+      }
+      this.outStream.print("+\n");
+      leftAlignF = "| %-15s | %-15s | %-15s |%n";
+      this.outStream.format("| Stock Name      | Quantity        | Value           |%n");
+      for (int i = 0; i < rowCount; i++) {
+        this.outStream.print("+-----------------");
       }
       this.outStream.print("+\n");
       for (String column : columns) {
@@ -123,7 +128,7 @@ public class UserInteraction implements ViewHandler {
         this.outStream.format(leftAlignF, stockQtVal[0], stockQtVal[1], stockQtVal[2]);
       }
       for (int i = 0; i < rowCount; i++) {
-        this.outStream.print("+-------------");
+        this.outStream.print("+-----------------");
       }
       this.outStream.print("+\n");
     }
