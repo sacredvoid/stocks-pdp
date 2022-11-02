@@ -87,7 +87,7 @@ public class InteractionHandler implements Handler{
         catch (FileNotFoundException f) {
           this.ui.printText("File not found, please enter a correct path","R");
         }
-        this.ui.printText("File read successful: "+message+".csv","G");
+        this.ui.printText("File read successful. Portfolio ID: "+message,"G");
 
       } else if(input.equals("2")) {
           if (this.modelOrch.showExistingPortfolios() != null) {
