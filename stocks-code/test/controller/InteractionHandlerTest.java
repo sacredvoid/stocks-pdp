@@ -45,7 +45,7 @@ public class InteractionHandlerTest {
         ih.run();
 
         String expected =
-                "Welcome To Aaka-Sam Stock Trading!\n" +
+                "\u001B[32mWelcome To Aaka-Sam Stock Trading!\n" +
                 "You can always quit the platform by pressing 'q'\n" +
                 "Select from '1/2/3':\n" +
                 "1. Load External Portfolio\n" +
