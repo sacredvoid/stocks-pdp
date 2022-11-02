@@ -2,6 +2,8 @@ package controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,7 @@ import view.UserInteraction;
  */
 public class InteractionHandler implements Handler{
   private final Readable in;
-  private final Appendable out;
+  private final PrintStream out;
   private final UserInteraction ui;
   private Scanner scan;
 
@@ -31,11 +33,11 @@ public class InteractionHandler implements Handler{
       "q|Q|(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
 
 
-  public InteractionHandler(Orchestrator model, UserInteraction ui, Readable input, Appendable output) {
+  public InteractionHandler(Readable input, PrintStream output) {
     this.in = input;
     this.out = output;
-    this.modelOrch = model;
-    this.ui = ui;
+    this.modelOrch = new ModelOrchestrator();
+    this.ui = new UserInteraction(this.out);
     this.scan = new Scanner(this.in);
   }
 
@@ -60,6 +62,7 @@ public class InteractionHandler implements Handler{
 
   @Override
   public void run() {
+    this.ui.printHeader();
     // Get the inputs and decide the flow
     String input = "";
     // Just naming the loop to break to

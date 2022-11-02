@@ -1,7 +1,6 @@
 package view;
 
-import java.util.List;
-import view.PrintHeader;
+import java.io.PrintStream;
 
 /**
  * Our "view" class which handles all showing stuff
@@ -14,13 +13,15 @@ public class UserInteraction implements ViewHandler{
   private final String green = "\u001B[32m";
   private final String resetColor = "\u001B[0m";
 
-  public UserInteraction() {
-    PrintHeader.printHeader();
+  private PrintStream outStream;
+
+  public UserInteraction(PrintStream out) {
+    this.outStream = out;
   }
 
-  public void identifyUser() {
-    printText("Are you an existing Account Holder?","");
-    printText("Enter 'Y/y' for YES and 'N/n' for NO: ","");
+  public void printHeader() {
+    printText("Welcome To Aaka-Sam Stock Trading!","G");
+    printText("You can always quit the platform by pressing 'q'","Y");
   }
 
   public void printFooter() {
@@ -30,17 +31,18 @@ public class UserInteraction implements ViewHandler{
 
   public void printText(String s, String color) {
     if(color.equals("R")) {
-      System.out.println(red+s+resetColor);
+      this.outStream.print(red+s+resetColor);
     }
     else if(color.equals("G")) {
-      System.out.println(green+s+resetColor);
+      this.outStream.print(green+s+resetColor);
     }
     else if(color.equals("Y")) {
-      System.out.println(yellow+s+resetColor);
+      this.outStream.print(yellow+s+resetColor);
     }
     else {
-      System.out.println(s);
+      this.outStream.print(s);
     }
+    this.outStream.println();
   }
 
   public void getPortfolioNumber() {
@@ -60,40 +62,40 @@ public class UserInteraction implements ViewHandler{
     String leftAlignF = "";
 
     for(int i=0;i<rowCount;i++) {
-      System.out.print("+-------------");
+      this.outStream.print("+-------------");
     }
-    System.out.print("+\n");
+    this.outStream.print("+\n");
     if(rowCount == 2){
       leftAlignF = "| %-11s | %-11s | %n";
-      System.out.format("| Stock Name  | Quantity    |%n");
+      this.outStream.format("| Stock Name  | Quantity    |%n");
       for(int i=0;i<rowCount;i++) {
-        System.out.print("+-------------");
+        this.outStream.print("+-------------");
       }
-      System.out.print("+\n");
+      this.outStream.print("+\n");
       for (String column : columns) {
         String[] stockQtVal = column.split(",");
-        System.out.format(leftAlignF, stockQtVal[0], stockQtVal[1]);
+        this.outStream.format(leftAlignF, stockQtVal[0], stockQtVal[1]);
       }
       for(int i=0;i<rowCount;i++) {
-        System.out.print("+-------------");
+        this.outStream.print("+-------------");
       }
-      System.out.print("+\n");
+      this.outStream.print("+\n");
     }
     else if(rowCount == 3) {
       leftAlignF = "| %-11s | %-11s | %-11s |%n";
-      System.out.format("| Stock Name  | Quantity    | Value       |%n");
+      this.outStream.format("| Stock Name  | Quantity    | Value       |%n");
       for(int i=0;i<rowCount;i++) {
-        System.out.print("+-------------");
+        this.outStream.print("+-------------");
       }
-      System.out.print("+\n");
+      this.outStream.print("+\n");
       for (String column : columns) {
         String[] stockQtVal = column.split(",");
-        System.out.format(leftAlignF, stockQtVal[0], stockQtVal[1], stockQtVal[2]);
+        this.outStream.format(leftAlignF, stockQtVal[0], stockQtVal[1], stockQtVal[2]);
       }
       for(int i=0;i<rowCount;i++) {
-        System.out.print("+-------------");
+        this.outStream.print("+-------------");
       }
-      System.out.print("+\n");
+      this.outStream.print("+\n");
     }
   }
 }

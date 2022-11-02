@@ -96,9 +96,9 @@ public class ModelOrchestratorTest {
                 "GOOG,20,29720.40\n" +
                 "TSLA,0,NA\n" +
                 "MSFT,20,4207.60\n" +
-                "GPV.TRV,31,NA\n" +
-                "CNA.LON,2001,NA\n" +
-                "Total,-,63150256.00",portfolioValue.strip());
+                        "GPV.TRV,31,532.27\n" +
+                "CNA.LON,2001,82481.22\n" +
+                "Total,-,63233268.00",portfolioValue.strip());
     }
 
     @Test

@@ -10,17 +10,7 @@ public class ClientRunner {
 
 
   public static void main(String[] args) {
-
-    // Model Initialization
-    Orchestrator model = new ModelOrchestrator();
-
-    // View Initialization
-    UserInteraction viewer = new UserInteraction();
-
-    Handler ih = new InteractionHandler(
-        model,
-        viewer,
-        new InputStreamReader(System.in), System.out);
+    Handler ih = new InteractionHandler(new InputStreamReader(System.in), System.out);
     ih.run();
   }
 }

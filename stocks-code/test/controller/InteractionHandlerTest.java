@@ -12,13 +12,10 @@ import static org.junit.Assert.assertEquals;
 
 public class InteractionHandlerTest {
 
-    ModelOrchestrator morch;
     UserInteraction ui;
     InteractionHandler ih;
     @Before
     public void setup() {
-        morch = new ModelOrchestrator();
-        ui = new UserInteraction();
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -27,8 +24,6 @@ public class InteractionHandlerTest {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bytes);
         ih = new InteractionHandler(
-                morch,
-                ui,
                 in,
                 out
         );
@@ -40,18 +35,23 @@ public class InteractionHandlerTest {
 
     @Test
     public void testLoadPortfolio() {
-        Reader in = new StringReader("1");
+        Reader in = new StringReader("1 q");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(bytes);
         ih = new InteractionHandler(
-                morch,
-                ui,
                 in,
                 out
         );
         ih.run();
 
-        String expected = "";
-        assertEquals(expected, bytes.toString());
+        String expected =
+                "Welcome To Aaka-Sam Stock Trading!\n" +
+                "You can always quit the platform by pressing 'q'\n" +
+                "Select from '1/2/3':\n" +
+                "1. Load External Portfolio\n" +
+                "2. Access existing Portfolio\n" +
+                "3. Create new Portfolio\n" +
+                "Please provide the path to load a CSV";
+        assertEquals(expected, new String(bytes.toByteArray()));
     }
 }
