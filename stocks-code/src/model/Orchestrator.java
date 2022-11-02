@@ -27,7 +27,7 @@ public interface Orchestrator {
   String createPortfolio(String portfolioData);
 
   /**
-   * generate a 6 digit random portfolio number for the application
+   * generate a 6 digit random portfolio number for the application.
    *
    * @return 6-digit long string
    */

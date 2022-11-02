@@ -61,7 +61,7 @@ public class ModelOrchestrator implements Orchestrator {
   }
 
   /**
-   * generate a 6 digit random portfolio number for the application
+   * generate a 6 digit random portfolio number for the application.
    *
    * @return 6-digit long string
    */
@@ -87,7 +87,7 @@ public class ModelOrchestrator implements Orchestrator {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  public String getPortfolioValue(String date, String data) throws ParseException {
+  public String getPortfolioValue(String date, String data) throws ParseException  {
 
     // Check if Date is a weekend
     if (isValidDate(date)) {
@@ -100,7 +100,6 @@ public class ModelOrchestrator implements Orchestrator {
           .date(date)
           .build()
           .completePortfolioValue();
-
 
       for (String s : output1
       ) {
@@ -124,11 +123,11 @@ public class ModelOrchestrator implements Orchestrator {
       f.mkdirs();
     }
     String[] filesList = f.list();
-      if (filesList.length == 0) {
-          return null;
-      } else {
-          return filesList;
-      }
+    if (filesList.length == 0) {
+      return null;
+    } else {
+      return filesList;
+    }
   }
 
   /**
@@ -149,7 +148,7 @@ public class ModelOrchestrator implements Orchestrator {
     Date inputDate = formatter.parse(date);
     LocalDateTime now = LocalDateTime.now();
     Date baseDate = formatter.parse(String.valueOf(now));
-    return !(isWeekend(inputDate) || isFuture(baseDate,inputDate));
+    return !(isWeekend(inputDate) || isFuture(baseDate, inputDate));
   }
 
   private boolean isFuture(Date limit, Date input) {
@@ -168,15 +167,15 @@ public class ModelOrchestrator implements Orchestrator {
     String readCSVData = pw.readFile(path, "");
     String portfolioID = generatePortfolioID();
     int fileExtInd = path.lastIndexOf(".");
-      if (path.substring(fileExtInd + 1).equals("csv")) {
-          try {
-              pw.writeToFile(portfolioID + ".csv", PORTFOLIO_DATA_PATH, readCSVData.strip());
-          } catch (IOException e) {
-              return "Failed to load";
-          }
-          return portfolioID;
-      } else {
-          return "File Not a CSV";
+    if (path.substring(fileExtInd + 1).equals("csv")) {
+      try {
+        pw.writeToFile(portfolioID + ".csv", PORTFOLIO_DATA_PATH, readCSVData.strip());
+      } catch (IOException e) {
+        return "Failed to load";
       }
+      return portfolioID;
+    } else {
+      return "File Not a CSV";
+    }
   }
 }

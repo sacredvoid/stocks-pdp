@@ -1,9 +1,6 @@
 package model;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -109,7 +106,6 @@ class PortfolioValue {
     } else {
       return "";
     }
-//    }
   }
 
   private float stockCountValue(String[] stockNameCount) {

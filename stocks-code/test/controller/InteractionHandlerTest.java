@@ -1,15 +1,12 @@
 package controller;
 
-import model.ModelOrchestrator;
-import org.junit.Before;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
 import org.junit.Test;
-import view.UserInteraction;
-
-import java.io.*;
 import java.util.NoSuchElementException;
 
-//import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -24,10 +21,6 @@ public class InteractionHandlerTest {
   private final String green = "\u001B[32m";
   private final String resetColor = "\u001B[0m";
   private final String eol = "\r\n";
-
-  @Before
-  public void setup() {
-  }
 
   @Test(expected = NoSuchElementException.class)
   public void testHomePage() {

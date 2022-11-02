@@ -71,10 +71,10 @@ public class UserInteraction implements ViewHandler {
   /**
    * Method that takes in a list of strings (portfolio data) and prints it neatly.
    *
-   * @param portfolio_list list of strings (Stock,Quantity)
+   * @param portfolioList list of strings (Stock,Quantity)
    */
-  public void prettyPrintPortfolios(String[] portfolio_list) {
-    for (String file : portfolio_list
+  public void prettyPrintPortfolios(String[] portfolioList) {
+    for (String file : portfolioList
     ) {
       printText(file, "");
     }
@@ -91,7 +91,6 @@ public class UserInteraction implements ViewHandler {
     String[] columns = pfData.split("\n");
     int rowCount = columns[0].split(",").length;
     String leftAlignF = "";
-
 
     if (rowCount == 2) {
       for (int i = 0; i < rowCount; i++) {

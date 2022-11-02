@@ -47,8 +47,7 @@ class CSVFileOps {
     try {
       BufferedReader br = new BufferedReader(new FileReader(path));
       String currentLine = "";
-      while ((currentLine = br.readLine()) != null)   //returns a Boolean value
-      {
+      while ((currentLine = br.readLine()) != null) {
         String[] data = currentLine.split(splitBy);    // use comma as separator
         // Check data
         if (data.length <= 2) {
@@ -119,7 +118,7 @@ class CSVFileOps {
         for (String datapoint : data
         ) {
           csvStringData.append(datapoint.strip());
-          if (!(count == data.length - 1)) {
+          if (count != data.length - 1) {
             csvStringData.append(",");
           }
           count += 1;
@@ -155,8 +154,8 @@ class CSVFileOps {
    * @return true/false if the ticker symbol matches the regex
    */
   private boolean isStockScrip(String str) {
-    String SCRIP_REGEX = "([A-Z])+([.]([A-Z])+)?";
-    return !str.matches(SCRIP_REGEX);
+    String scripRegex = "([A-Z])+([.]([A-Z])+)?";
+    return !str.matches(scripRegex);
   }
 
   /**

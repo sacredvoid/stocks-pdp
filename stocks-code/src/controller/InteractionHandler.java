@@ -15,8 +15,6 @@ import view.UserInteraction;
  */
 public class InteractionHandler implements Handler {
 
-  private final Readable in;
-  private final PrintStream out;
   private final UserInteraction ui;
   private Scanner scan;
 
@@ -37,11 +35,9 @@ public class InteractionHandler implements Handler {
    * @param output Prinstream type output object
    */
   public InteractionHandler(Readable input, PrintStream output) {
-    this.in = input;
-    this.out = output;
     this.modelOrch = new ModelOrchestrator();
-    this.ui = new UserInteraction(this.out);
-    this.scan = new Scanner(this.in);
+    this.ui = new UserInteraction(output);
+    this.scan = new Scanner(input);
   }
 
   /**
@@ -124,48 +120,52 @@ public class InteractionHandler implements Handler {
           continue;
         }
         input = getInput(portfolioRegex);
-          if (input.equalsIgnoreCase("q")) {
-              break;
-          }
+        if (input.equalsIgnoreCase("q")) {
+          break;
+        }
         this.ui.printText("Your portfolio number:" + input, "G");
         try {
           String pfData = this.modelOrch.getPortfolio(input);
-            if (!pfData.isEmpty()) {
-                this.ui.printText("Here's your data!", "Y");
-                this.ui.printPortfolioData(pfData);
-                dateLoop:
-                while (!input.equalsIgnoreCase("b")) {
+          if (!pfData.isEmpty()) {
+            this.ui.printText("Here's your data!", "Y");
+            this.ui.printPortfolioData(pfData);
+            dateLoop:
+            while (!input.equalsIgnoreCase("b")) {
+              this.ui.printText(
+                  "Check portfolio value on a given date (YYYY-MM-DD) [avoid weekends] "
+                      + "or exit:'b/B':", "Y");
+              input = getInput("B|b|" + VALID_DATE_REGEX);
+              if (input.equalsIgnoreCase("q")) {
+                break mainrunner;
+              }
+              if (!input.equalsIgnoreCase("b")) {
+                try {
+                  String pfValue = this.modelOrch.getPortfolioValue(input, pfData);
+                  if (pfValue != null) {
+                    this.ui.printPortfolioData(pfValue);
+                  } else {
                     this.ui.printText(
-                        "Check portfolio value on a given date (YYYY-MM-DD) [avoid weekends] "
-                            + "or exit:'b/B':", "Y");
-                    input = getInput("B|b|" + VALID_DATE_REGEX);
-                    if (input.equalsIgnoreCase("q")) {
-                        break mainrunner;
-                    }
-                    if (!input.equalsIgnoreCase("b")) {
-                        try {
-                            String pfValue = this.modelOrch.getPortfolioValue(input, pfData);
-                            if (!(pfValue == null)) {
-                                this.ui.printPortfolioData(pfValue);
-                            } else {
-                                this.ui.printText(
-                                    "Sorry, the date entered is either a "
-                                        + "weekend or a future date, please re-enter:",
-                                    "Y");
-                            }
-                        } catch (ParseException e) {
-                            this.ui.printText("Couldn't parse text!", "R");
-                        }
-                    } else {
-                        this.ui.printFooter();
-                    }
+                        "Sorry, the date entered is either a "
+                            + "weekend or a future date, please re-enter:",
+                        "Y");
+                  }
+                } catch (ParseException e) {
+                  this.ui.printText("Couldn't parse text!", "R");
                 }
-
-            } else {
-                this.ui.printText("Nothing found in your portfolio file. Please try again!", "Y");
+              } else {
+                this.ui.printFooter();
+              }
             }
+
+          } else {
+            this.ui.printText(
+                "Nothing found in your portfolio file. Please try again!", "Y"
+            );
+          }
         } catch (FileNotFoundException f) {
-          this.ui.printText(String.format("Given portfolio ID: %s doesn't exist!", input), "R");
+          this.ui.printText(String.format(
+              "Given portfolio ID: %s doesn't exist!", input), "R"
+          );
         }
       } else {
         // New user, needs to make a portfolio!
@@ -179,9 +179,9 @@ public class InteractionHandler implements Handler {
           stockData.append(input).append("\n");
           this.ui.printText(stockData.toString(), "");
           input = getInput("F|f|" + SCRIP_REGEX + "," + QUANTITY_REGEX);
-            if (input.equalsIgnoreCase("q")) {
-                break mainrunner;
-            }
+          if (input.equalsIgnoreCase("q")) {
+            break mainrunner;
+          }
         }
         String message = "";
         if (!stockData.toString().equals("\n")) {

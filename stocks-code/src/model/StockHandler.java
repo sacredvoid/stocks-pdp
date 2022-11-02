@@ -16,7 +16,7 @@ class StockHandler {
   private String name;
   private String date;
 
-  private String STATIC_STOCK_DATA_DIR = "StocksData";
+  private String staticStockDataDir = "StocksData";
 
   private final String apiHitLimitMsg = "{\n"
       + "    \"Note\": \"Thank you for using Alpha Vantage! Our standard API call frequency is "
@@ -110,7 +110,7 @@ class StockHandler {
     String[] records;
 
     try {
-      stockData = new CSVFileOps().readFile(this.name + "Data.csv", STATIC_STOCK_DATA_DIR);
+      stockData = new CSVFileOps().readFile(this.name + "Data.csv", staticStockDataDir);
       if (!stockData.contains(todayDate) && todayTime.after(stockUpdateTime)) {
         stockData = stockDataFetcher(this.name);
       }

@@ -7,7 +7,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Tests the model.
@@ -63,11 +67,11 @@ public class ModelOrchestratorTest {
       System.out.println("File not found");
     }
     assertEquals(data.strip(), savedData.strip());
-      if (deleteFile(portID)) {
-          System.out.println("Deleted test file");
-      } else {
-          System.out.println("Could not delete test file");
-      }
+    if (deleteFile(portID)) {
+      System.out.println("Deleted test file");
+    } else {
+      System.out.println("Could not delete test file");
+    }
   }
 
   @Test
