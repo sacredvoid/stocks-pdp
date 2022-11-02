@@ -112,7 +112,7 @@ public class StockHandler{
 
 
     try{
-      stockData = new CSVFileOps().readFile(""+this.name+"Data.csv",STATIC_STOCK_DATA_DIR);
+      stockData = new CSVFileOps().readFile(this.name+"Data.csv",STATIC_STOCK_DATA_DIR);
       if(!stockData.contains(todayDate) && todayTime.after(stockUpdateTime)){
         stockData = stockDataFetcher(this.name);
       }
