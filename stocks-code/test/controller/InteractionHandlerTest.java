@@ -10,10 +10,14 @@ import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the controller.
+ */
 public class InteractionHandlerTest {
 
     UserInteraction ui;
     InteractionHandler ih;
+
     @Before
     public void setup() {
     }
@@ -46,12 +50,12 @@ public class InteractionHandlerTest {
 
         String expected =
                 "\u001B[32mWelcome To Aaka-Sam Stock Trading!\n" +
-                "You can always quit the platform by pressing 'q'\n" +
-                "Select from '1/2/3':\n" +
-                "1. Load External Portfolio\n" +
-                "2. Access existing Portfolio\n" +
-                "3. Create new Portfolio\n" +
-                "Please provide the path to load a CSV";
+                        "You can always quit the platform by pressing 'q'\n" +
+                        "Select from '1/2/3':\n" +
+                        "1. Load External Portfolio\n" +
+                        "2. Access existing Portfolio\n" +
+                        "3. Create new Portfolio\n" +
+                        "Please provide the path to load a CSV";
         assertEquals(expected, new String(bytes.toByteArray()));
     }
 }

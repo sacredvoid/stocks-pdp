@@ -9,9 +9,13 @@ import java.text.ParseException;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests the model.
+ */
 public class ModelOrchestratorTest {
 
     ModelOrchestrator morch;
+
     @Before
     public void setup() {
         morch = new ModelOrchestrator();
@@ -19,7 +23,7 @@ public class ModelOrchestratorTest {
 
     private boolean deleteFile(String portID) {
         String osSep = OSValidator.getOSSeparator();
-        String basePath = "."+osSep+"app_data"+osSep+"PortfolioData"+osSep+portID+".csv";
+        String basePath = "." + osSep + "app_data" + osSep + "PortfolioData" + osSep + portID + ".csv";
         File f = new File(basePath);
         return f.delete();
     }
@@ -29,21 +33,19 @@ public class ModelOrchestratorTest {
         String out = "";
         try {
             out = morch.getPortfolio("321123");
-        }
-        catch (FileNotFoundException ignored) {
+        } catch (FileNotFoundException ignored) {
         }
         assertEquals(
                 "AAPL,20\n" +
-                "MSFT,300000\n" +
-                "GOOG,20\n" +
-                "TSLA,0\n" +
-                "MSFT,20\n" +
-                "GPV.TRV,31\n" +
-                "CNA.LON,2001", out.strip());
+                        "MSFT,300000\n" +
+                        "GOOG,20\n" +
+                        "TSLA,0\n" +
+                        "MSFT,20\n" +
+                        "GPV.TRV,31\n" +
+                        "CNA.LON,2001", out.strip());
         try {
             out = morch.getPortfolio("777777");
-        }
-        catch (FileNotFoundException f) {
+        } catch (FileNotFoundException f) {
             System.out.println("File not found as expected");
         }
     }
@@ -57,22 +59,20 @@ public class ModelOrchestratorTest {
         String portID = message.split(":")[1].split(" ")[1];
         try {
             savedData = morch.getPortfolio(portID);
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("File not found");
         }
-        assertEquals(data.strip(),savedData.strip());
-        if(deleteFile(portID)){
+        assertEquals(data.strip(), savedData.strip());
+        if (deleteFile(portID)) {
             System.out.println("Deleted test file");
-        }
-        else System.out.println("Could not delete test file");
+        } else System.out.println("Could not delete test file");
     }
 
     @Test
     public void testGeneratePortfolioID() {
         String generatedID = morch.generatePortfolioID();
         String digitRegex = "[0-9]{6}";
-        assertEquals(6,generatedID.length());
+        assertEquals(6, generatedID.length());
         assertTrue(generatedID.matches(digitRegex));
     }
 
@@ -81,33 +81,31 @@ public class ModelOrchestratorTest {
         // Weekend test
         String portfolioValue = "";
         try {
-            portfolioValue = morch.getPortfolioValue("2022-10-15",morch.getPortfolio("321123"));
-        }
-        catch (FileNotFoundException | ParseException ignored){
+            portfolioValue = morch.getPortfolioValue("2022-10-15", morch.getPortfolio("321123"));
+        } catch (FileNotFoundException | ParseException ignored) {
         }
         assertNull(portfolioValue);
         try {
-            portfolioValue = morch.getPortfolioValue("2020-10-05",morch.getPortfolio("321123"));
-        }
-        catch (ParseException | FileNotFoundException ignored){
+            portfolioValue = morch.getPortfolioValue("2020-10-05", morch.getPortfolio("321123"));
+        } catch (ParseException | FileNotFoundException ignored) {
         }
         assertEquals("AAPL,20,2330.00\n" +
                 "MSFT,300000,63114000.00\n" +
                 "GOOG,20,29720.40\n" +
                 "TSLA,0,NA\n" +
                 "MSFT,20,4207.60\n" +
-                        "GPV.TRV,31,532.27\n" +
+                "GPV.TRV,31,532.27\n" +
                 "CNA.LON,2001,82481.22\n" +
-                "Total,-,63233268.00",portfolioValue.strip());
+                "Total,-,63233268.00", portfolioValue.strip());
     }
 
     @Test
     public void testShowExistingPortfolios() {
-       String[] message = morch.showExistingPortfolios();
-       File f = new File(".\\app_data\\PortfolioData");
-       String[] expected = f.list();
+        String[] message = morch.showExistingPortfolios();
+        File f = new File(".\\app_data\\PortfolioData");
+        String[] expected = f.list();
         assert expected != null;
-        assertEquals(expected[0],message[0]);
+        assertEquals(expected[0], message[0]);
     }
 
     @Test
@@ -116,12 +114,11 @@ public class ModelOrchestratorTest {
         String message = "";
         try {
             message = morch.loadExternalCSV(path);
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("File not found!");
             fail();
         }
-        assertNotEquals(message,"Failed to load");
+        assertNotEquals(message, "Failed to load");
         deleteFile(message);
     }
 
