@@ -23,6 +23,8 @@ public class ModelOrchestrator implements Orchestrator {
       "%sPortfolioData%s", osSep, osSep
   );
 
+  private final String acceptableDateLimit = "2022-11-01";
+
   private CSVFileOps pw = new CSVFileOps();
 
   /**
@@ -87,7 +89,7 @@ public class ModelOrchestrator implements Orchestrator {
   public String getPortfolioValue(String date, String data) throws ParseException {
 
     // Check if Date is a weekend
-    if (!isWeekend(date)) {
+    if (isValidDate(date)) {
       // Takes in portfolio data and returns the value of the portfolio on given date
       StringBuilder finalStockData = new StringBuilder();
 //    Date dateNew = DateFormatter.getDate(date);
@@ -137,18 +139,25 @@ public class ModelOrchestrator implements Orchestrator {
   /**
    * Checks if the given date (YYYY-MM-DD) is a weekend and returns true if it is, false otherwise.
    *
-   * @param date string type date in YYYY-MM-DD format
+   * @param inputDate Date type date in YYYY-MM-DD format
    * @return true/false given if the date is weekend or not
-   * @throws ParseException throws when date is in wrong format
    */
-  private boolean isWeekend(String date) throws ParseException {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Date ddate = formatter.parse(date);
+  private boolean isWeekend(Date inputDate) {
     Calendar cal = Calendar.getInstance();
-    cal.setTime(ddate);
-
+    cal.setTime(inputDate);
     int day = cal.get(Calendar.DAY_OF_WEEK);
     return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
+  }
+
+  private boolean isValidDate(String date) throws ParseException {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    Date inputDate = formatter.parse(date);
+    Date baseDate = formatter.parse(acceptableDateLimit);
+    return !(isWeekend(inputDate) || isFuture(baseDate,inputDate));
+  }
+
+  private boolean isFuture(Date limit, Date input) {
+    return input.after(limit);
   }
 
   /**
