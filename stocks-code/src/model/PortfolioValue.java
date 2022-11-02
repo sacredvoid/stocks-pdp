@@ -81,7 +81,10 @@ public class PortfolioValue {
       String [] nameAndCount = line.split(",");
       float result = stockCountValue(nameAndCount);
       if(result==0){
-        output.add(nameAndCount[0]+","+nameAndCount[1]+","+ "NA");
+        output.add(nameAndCount[0]+","+nameAndCount[1]+","+ "No Data Available");
+      }
+      else if(result == -1){
+        output.add(nameAndCount[0]+","+nameAndCount[1]+","+ "API Limit Reached");
       }
       else {
         output.add(String.format(nameAndCount[0]+","+nameAndCount[1]+",%.2f",result));
@@ -114,6 +117,9 @@ public class PortfolioValue {
     String stockPriceString = stockValueFetcher(name);
     if(stockPriceString.equals("")){
       return 0;
+    }
+    if(stockPriceString.equals("API hit limit reached!!!")){
+      return -1;
     }
     float stockPrice = Float.parseFloat(stockPriceString.split(",")[1]);
     return stockPrice*count;
