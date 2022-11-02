@@ -1,35 +1,43 @@
 package model;
 
+/**
+ * Helper class to identify the OS that is being used to help out with determining which file
+ * separator to use for read/write operations.
+ */
 public class OSValidator {
 
   private static String OS = System.getProperty("os.name").toLowerCase();
 
+  /**
+   * Helps determine which file separator to use.
+   *
+   * @return returns the respective file separator for windows (\\) and other OSes(/).
+   */
   public static String getOSSeparator() {
     if (isWindows()) {
       return "\\";
-    }
-    else {
+    } else {
       return "/";
     }
   }
 
-  public static boolean isWindows() {
+  private static boolean isWindows() {
     return OS.contains("win");
   }
 
-  public static boolean isMac() {
+  private static boolean isMac() {
     return OS.contains("mac");
   }
 
-  public static boolean isUnix() {
+  private static boolean isUnix() {
     return (OS.contains("nix") || OS.contains("nux") || OS.contains("aix"));
   }
 
-  public static boolean isSolaris() {
+  private static boolean isSolaris() {
     return OS.contains("sunos");
   }
 
-  public static String getOS(){
+  private static String getOS() {
     if (isWindows()) {
       return "win";
     } else if (isMac()) {

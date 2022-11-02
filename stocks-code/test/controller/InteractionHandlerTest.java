@@ -12,9 +12,11 @@ import java.util.NoSuchElementException;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests the controller.
+ */
 public class InteractionHandlerTest {
 
-    UserInteraction ui;
     InteractionHandler ih;
 
     private final String yellow = "\u001B[33m";
@@ -22,42 +24,33 @@ public class InteractionHandlerTest {
     private final String green = "\u001B[32m";
     private final String resetColor = "\u001B[0m";
     private final String eol = "\r\n";
+  @Before
+  public void setup() {
+  }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testHomePage() {
-        Reader in = new StringReader(" ");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(bytes);
-        ih = new InteractionHandler(
-                in,
-                out
-        );
-        ih.run();
+  @Test(expected = NoSuchElementException.class)
+  public void testHomePage() {
+    Reader in = new StringReader(" ");
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    PrintStream out = new PrintStream(bytes);
+    ih = new InteractionHandler(
+        in,
+        out
+    );
+    ih.run();
 
-        String expected = "";
-        assertEquals(expected, bytes.toString());
-    }
+    String expected = "";
+    assertEquals(expected, bytes.toString());
 
-    @Test
-    public void testLoadPortfolio() {
-        Reader in = new StringReader("1 q");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(bytes);
-        ih = new InteractionHandler(
-                in,
-                out
-        );
-        ih.run();
-
-        String expected =""+
-                green+"Welcome To Aaka-Sam Stock Trading!"+resetColor+eol+
-                yellow+"You can always quit the platform by pressing 'q'"+resetColor+eol+
-                yellow+"Select from '1/2/3':"+resetColor+eol+
-                yellow+"1. Load External Portfolio"+resetColor+eol+
-                yellow+"2. Access existing Portfolio"+resetColor+eol+
-                yellow+"3. Create new Portfolio"+resetColor+eol+
-                yellow+"Please provide the path to load a CSV"+resetColor;
-        assertEquals(expected, new String(bytes.toByteArray()).strip());
+    expected =""+
+            green+"Welcome To Aaka-Sam Stock Trading!"+resetColor+eol+
+            yellow+"You can always quit the platform by pressing 'q'"+resetColor+eol+
+            yellow+"Select from '1/2/3':"+resetColor+eol+
+            yellow+"1. Load External Portfolio"+resetColor+eol+
+            yellow+"2. Access existing Portfolio"+resetColor+eol+
+            yellow+"3. Create new Portfolio"+resetColor+eol+
+            yellow+"Please provide the path to load a CSV"+resetColor;
+    assertEquals(expected, new String(bytes.toByteArray()).strip());
     }
 
     @Test
@@ -239,5 +232,4 @@ public class InteractionHandlerTest {
         assertEquals(expected,new String(bytes.toByteArray()).strip());
 
     }
-
 }
