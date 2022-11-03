@@ -133,6 +133,7 @@ class StockHandler {
         if (r.contains(this.date)) {
           String[] sepData = r.split(",");
           output += this.name + "," + sepData[4];
+          break;
         }
       }
     }
