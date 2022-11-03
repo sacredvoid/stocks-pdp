@@ -79,8 +79,8 @@ is free to add whichever stock they want, if the API limit is reached, we will s
 it on the table like `API Limit Reached`, and if the user tries again later, they can access any
 stock supported by AlphaVantage. <br>
 We also have a smart feature where we fetch the latest stock data (and store it in our Static Stock
-Data Repo) from AlphaVantage after 6pm (usually the time when it is available for current day given
-it's not weekend). This does run into API Hit but we have an idea to get around it for the next
+Data Repo) from AlphaVantage after 5pm (usually the time when it is available for current day given
+it's not weekend). This does run into API Hit Limit but we have an idea to get around it for the next
 part of the assignment.
 
 ### Data Validators
