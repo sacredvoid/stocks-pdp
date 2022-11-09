@@ -2,15 +2,35 @@ package model.portfolio;
 
 import java.util.List;
 
-public class PortfolioData implements PortfolioInterface{
+public class PortfolioDataData implements PortfolioDataInterface {
   private List<StockData> stockData;
   private float totalInvested;
   private float totalCommission;
 
-  public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission) {
+  public PortfolioDataData(List<StockData> sd, float totalInvested, float totalCommission) {
     this.stockData = sd;
     this.totalCommission = totalCommission;
     this.totalInvested = totalInvested;
+  }
+
+  @Override
+  public float getTotalInvested() {
+    return this.totalInvested;
+  }
+
+  @Override
+  public void setTotalInvested(float newInvested) {
+    this.totalInvested = newInvested;
+  }
+
+  @Override
+  public float getTotalCommission() {
+    return this.totalCommission;
+  }
+
+  @Override
+  public void setTotalCommission(float newCommission) {
+    this.totalCommission = newCommission;
   }
 
   @Override

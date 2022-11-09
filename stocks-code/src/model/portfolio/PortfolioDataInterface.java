@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Defines the structure and methods on a Portfolio Object
  */
-public interface PortfolioInterface {
+public interface PortfolioDataInterface {
 
   List<StockData> getStockList();
   String addStock(StockData newStock);
@@ -13,4 +13,10 @@ public interface PortfolioInterface {
   float getQuantity(String stockName);
   String setQuantity(String stockName, float quantity);
 
+  float getTotalInvested();
+
+  void setTotalInvested(float newInvested);
+
+  float getTotalCommission();
+  void setTotalCommission(float newCommission);
 }

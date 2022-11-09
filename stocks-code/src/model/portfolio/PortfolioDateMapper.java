@@ -1,19 +1,21 @@
 package model.portfolio;
 
-public class PortfolioDateMapper {
+public class PortfolioDateMapper implements PortfolioDateMapperInterface {
   private String date;
-  private PortfolioData pfData;
+  private PortfolioDataData pfData;
 
-  public PortfolioDateMapper(String date, PortfolioData p) {
+  public PortfolioDateMapper(String date, PortfolioDataData p) {
     this.date = date;
     this.pfData = p;
   }
 
+  @Override
   public String getDate() {
     return this.date;
   }
 
-  public PortfolioData getPortfolioObject() {
+  @Override
+  public PortfolioDataData getPortfolioObject() {
     return this.pfData;
   }
 
