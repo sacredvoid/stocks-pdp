@@ -6,6 +6,11 @@ import model.Orchestrator;
 
 public class CreatePortfolio implements IPortfolioCommands {
 
+  private String stockData;
+
+  public CreatePortfolio(String data) {
+    this.stockData = data;
+  }
   @Override
   public void go(Orchestrator m) {
 

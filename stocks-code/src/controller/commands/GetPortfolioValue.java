@@ -6,6 +6,13 @@ import model.Orchestrator;
 
 public class GetPortfolioValue implements IPortfolioCommands {
 
+  private String pfID;
+  private String date;
+
+  public GetPortfolioValue(String pfID, String date) {
+    this.pfID = pfID;
+    this.date = date;
+  }
   @Override
   public void go(Orchestrator m) {
 

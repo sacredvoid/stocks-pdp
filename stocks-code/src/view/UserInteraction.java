@@ -132,4 +132,14 @@ public class UserInteraction implements ViewHandler {
       this.outStream.print("+\n");
     }
   }
+
+  public void printMenu() {
+    this.printText("Choose from the following:","G");
+    this.printText("1 - Load External Portfolio","Y");
+    this.printText("2 - View Portfolio Composition","Y");
+    this.printText("3 - Modify existing Portfolio","Y");
+    this.printText("4 - Get Portfolio Value","Y");
+    this.printText("5 - Create New Portfolio","Y");
+    this.printText("q/Q - Quit Application","Y");
+  }
 }

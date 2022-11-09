@@ -1,13 +1,12 @@
 package controller.commands;
 
 import controller.IPortfolioCommands;
-import model.ModelOrchestrator;
 import model.Orchestrator;
 
-public class ViewPortfolio implements IPortfolioCommands {
+public class ViewExistingPortfolios implements IPortfolioCommands {
 
   @Override
   public void go(Orchestrator m) {
-
+    System.out.println("Showing Portfolios");
   }
 }

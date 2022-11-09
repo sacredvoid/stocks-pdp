@@ -4,7 +4,8 @@ import controller.commands.CreatePortfolio;
 import controller.commands.GetPortfolioValue;
 import controller.commands.LoadExternalPortfolio;
 import controller.commands.ModifyPortfolio;
-import controller.commands.ViewPortfolio;
+import controller.commands.ViewExistingPortfolios;
+import controller.commands.ViewPortfolioComposition;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,18 +32,45 @@ public class InteractionHandlerV2 extends AbstractHandler {
   }
 
   private void initializeCommands() {
-    acceptedCommands.put("1",s-> new LoadExternalPortfolio(s.next()));
-    acceptedCommands.put("2",s-> new ViewPortfolio());
-    acceptedCommands.put("3",s-> new ModifyPortfolio());
-    acceptedCommands.put("4",s-> new GetPortfolioValue());
-    acceptedCommands.put("5",s-> new CreatePortfolio());
+    acceptedCommands.put("1",s-> {
+      this.ui.printText("Enter path to JSON:","Y");
+      String input = this.getInput("");
+      return new LoadExternalPortfolio(input);
+    });
+    acceptedCommands.put("2",s-> {
+      new ViewExistingPortfolios().go(this.modelOrch);
+      this.ui.printText("Enter your portfolio ID:","Y");
+      String input = this.getInput("");
+      return new ViewPortfolioComposition(input);
+    });
+    acceptedCommands.put("3",s-> {
+      this.ui.printText("Enter Portfolio ID you want to edit shares for:","Y");
+      String pfID = this.getInput("");
+      this.ui.printText("Enter CALL,STOCK,QUANTITY,DATE","Y");
+      this.ui.printText("Example: BUY,AAPL,20,2020-10-13","G");
+      String stockData = this.getInput("");
+      return new ModifyPortfolio(pfID, stockData);
+    });
+    acceptedCommands.put("4",s-> {
+      this.ui.printText("Enter portfolio ID you want to get value for:","Y");
+      String pfID = this.getInput("");
+      this.ui.printText("Enter date you want to see value for","Y");
+      String date = this.getInput("");
+      return new GetPortfolioValue(pfID,date);
+    });
+    acceptedCommands.put("5",s-> {
+      this.ui.printText("Enter STOCK, QUANTITY, DATE","Y");
+      String data = this.getInput("");
+      return new CreatePortfolio(data);
+    });
   }
 
   @Override
   public void run() {
     IPortfolioCommands commandObject;
     // Write the new flow here
-    while (scan.hasNext()) {
+    while (true) {
+      this.ui.printMenu();
       String input = scan.next();
       if(input.equalsIgnoreCase("q")) {
         return;
