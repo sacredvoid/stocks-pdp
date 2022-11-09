@@ -1,0 +1,25 @@
+{
+  "2022-11-06": {
+    "composition": [
+      ["AAPL","26","243253"],
+      ["TSLA","40",""],
+      ["GOOG","10",""]
+      ],
+    "user_invested": 12345,
+    "commission": 123,
+//    "transaction": {
+//      "SELL": {"TSLA": [3,4305],
+//              "GOOG": [1,3213]},
+//      "BUY": {"AAPL":[14,2324]}
+//    }
+  },
+
+  "2022-11-05": {
+    "AAPL": 12,
+    "TSLA": 43,
+    "GOOG": 11,
+    "total_buy": 143321,
+    "user_invested": 12345,
+    "commission": 123
+  }
+}

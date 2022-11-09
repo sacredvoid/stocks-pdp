@@ -49,7 +49,7 @@ class CSVFileOps {
       String currentLine = "";
       while ((currentLine = br.readLine()) != null) {
         String[] data = currentLine.split(splitBy);    // use comma as separator
-        // Check data
+        // Check data !!! Modification required
         if (data.length <= 2) {
           dataCheck(data);
         } else {
@@ -102,6 +102,8 @@ class CSVFileOps {
    * @param data a list of String of data containing comma separated column values (Stock,Quantity
    *             generally)
    */
+
+  // !!!! Needs modification
   private void dataCheck(String[] data) {
     if (data.length == 1) {
       if (!data[0].isEmpty()) {
