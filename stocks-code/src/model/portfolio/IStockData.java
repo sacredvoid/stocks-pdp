@@ -1,6 +1,6 @@
 package model.portfolio;
 
-public interface StockDataInterface {
+public interface IStockData {
 
   String getStockName();
 

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Defines the structure and methods on a Portfolio Object
  */
-public interface PortfolioDataInterface {
+public interface IPortfolioData {
 
   List<StockData> getStockList();
   String addStock(StockData newStock);

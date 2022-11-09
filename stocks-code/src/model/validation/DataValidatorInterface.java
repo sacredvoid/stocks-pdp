@@ -1,4 +1,4 @@
-package validation;
+package model.validation;
 
 public interface DataValidatorInterface {
 

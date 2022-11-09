@@ -13,7 +13,7 @@ import view.UserInteraction;
  * Controller Class which accepts input from the terminal and decides what to do accordingly. This
  * class is the bridge between the model and view and defines our Stock Platform's logical flow.
  */
-public class InteractionHandler implements Handler {
+public class InteractionHandler extends AbstractHandler {
 
   private final UserInteraction ui;
   private Scanner scan;
@@ -38,36 +38,6 @@ public class InteractionHandler implements Handler {
     this.modelOrch = new ModelOrchestrator();
     this.ui = new UserInteraction(output);
     this.scan = new Scanner(input);
-  }
-
-  /**
-   * Function to accept inputs and returns the input from console as a String. Takes a Regular
-   * Expression as parameter which is used to check and accept/reject input from console as per
-   * application requirements.
-   *
-   * @param regex a string which describes the input pattern to match
-   * @return a string with the validated input from console
-   */
-  private String getInput(String regex) {
-    if (!regex.isEmpty()) {
-      validateInput(regex, scan);
-    }
-    return scan.next();
-  }
-
-  /**
-   * Function which checks if input from user matches our specifications or not, like pre-defined
-   * inputs, Stock Ticker Regex and Quantity regex.
-   *
-   * @param regex a string which describes the input pattern to match
-   * @param scan  an Object of type Scanner which is used to check console input with
-   *              scan.hasNext()
-   */
-  private void validateInput(String regex, Scanner scan) {
-    while (!scan.hasNext(regex)) {
-      this.ui.printText("Sorry, input did not match requirements!", "R");
-      scan.next();
-    }
   }
 
   /**

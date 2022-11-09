@@ -2,12 +2,12 @@ package model.portfolio;
 
 import java.util.List;
 
-public class PortfolioDataData implements PortfolioDataInterface {
+public class PortfolioData implements IPortfolioData {
   private List<StockData> stockData;
   private float totalInvested;
   private float totalCommission;
 
-  public PortfolioDataData(List<StockData> sd, float totalInvested, float totalCommission) {
+  public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission) {
     this.stockData = sd;
     this.totalCommission = totalCommission;
     this.totalInvested = totalInvested;

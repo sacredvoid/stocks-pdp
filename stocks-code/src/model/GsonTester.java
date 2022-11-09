@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import model.portfolio.PortfolioDateMapper;
-import model.portfolio.PortfolioDataData;
+import model.portfolio.PortfolioData;
 import model.portfolio.StockData;
 
 public class GsonTester {
@@ -26,14 +26,14 @@ public class GsonTester {
     List<StockData> s = new ArrayList<>();
     s.add(s1);
     s.add(s2);
-    PortfolioDataData p = new PortfolioDataData(s,123,234);
+    PortfolioData p = new PortfolioData(s,123,234);
     System.out.printf("Portfolio stuff: %s",p.getQuantity("AAPL"));
     System.out.printf("Portfolio stuff: %s",p.getStockList());
     System.out.printf("%s",p.setQuantity("MSFT",30));
     p.addStock(new StockData("MSFT",32));
     System.out.printf("%s",p.getQuantity("LOVE"));
     System.out.printf("%s",p.setQuantity("MSFT",30));
-    HashMap<String, PortfolioDataData> datePFmap = new HashMap<>();
+    HashMap<String, PortfolioData> datePFmap = new HashMap<>();
     datePFmap.put("2020-10-11",p);
     datePFmap.put("2021-10-02",p);
     String fileName = "p1.json";

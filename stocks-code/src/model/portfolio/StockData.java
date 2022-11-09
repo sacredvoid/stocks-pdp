@@ -1,6 +1,6 @@
 package model.portfolio;
 
-public class StockData implements StockDataInterface {
+public class StockData implements IStockData {
 
   private String stockName;
   private float quantity;
