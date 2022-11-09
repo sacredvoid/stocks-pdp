@@ -1,11 +1,8 @@
 package controller.commands;
 
-import controller.IPortfolioCommands;
-import java.util.Scanner;
-import model.ModelOrchestrator;
 import model.Orchestrator;
 
-public class LoadExternalPortfolio implements IPortfolioCommands {
+public class LoadExternalPortfolio extends APortfolioCommands {
 
   private String path;
 

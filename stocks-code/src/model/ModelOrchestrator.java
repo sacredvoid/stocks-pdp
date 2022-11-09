@@ -17,7 +17,7 @@ import java.util.Locale;
  * internal model classes and provide abstraction to the functionalities of our application. It
  * implements the Orchestrator interface.
  */
-public class ModelOrchestrator implements Orchestrator {
+public class ModelOrchestrator extends AOrchestrator {
 
   private final String osSep = OSValidator.getOSSeparator();
   private final String PORTFOLIO_DATA_PATH = String.format(
@@ -60,22 +60,7 @@ public class ModelOrchestrator implements Orchestrator {
     return String.format("Portfolio ID: %s Saved!", newPortfolioID);
   }
 
-  /**
-   * generate a 6 digit random portfolio number for the application.
-   *
-   * @return 6-digit long string
-   */
-  public String generatePortfolioID() {
-    int leftLimit = 48; // letter 'a'
-    int rightLimit = 57; // letter 'z'
-    int targetStringLength = 6;
-    Random random = new Random();
 
-    return random.ints(leftLimit, rightLimit + 1)
-        .limit(targetStringLength)
-        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-        .toString();
-  }
 
   /**
    * Fetches Portfolio Value as CSV Data in string format (stock,quantity,value) given a date and
@@ -111,49 +96,11 @@ public class ModelOrchestrator implements Orchestrator {
     }
   }
 
-  /**
-   * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed
-   * to store all Portfolios. Also creates the mentioned directory if not present.
-   *
-   * @return List of string containing the portfolio names/null if no portfolios found
-   */
+  @Override
   public String[] showExistingPortfolios() {
-    File f = new File("." + osSep + "app_data" + osSep + PORTFOLIO_DATA_PATH);
-    if (!f.isDirectory()) {
-      f.mkdirs();
-    }
-    String[] filesList = f.list();
-    if (filesList.length == 0) {
-      return null;
-    } else {
-      return filesList;
-    }
+    return new String[0];
   }
 
-  /**
-   * Checks if the given date (YYYY-MM-DD) is a weekend and returns true if it is, false otherwise.
-   *
-   * @param inputDate Date type date in YYYY-MM-DD format
-   * @return true/false given if the date is weekend or not
-   */
-  private boolean isWeekend(Date inputDate) {
-    Calendar cal = Calendar.getInstance();
-    cal.setTime(inputDate);
-    int day = cal.get(Calendar.DAY_OF_WEEK);
-    return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
-  }
-
-  private boolean isValidDate(String date) throws ParseException {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Date inputDate = formatter.parse(date);
-    LocalDateTime now = LocalDateTime.now();
-    Date baseDate = formatter.parse(String.valueOf(now));
-    return !(isWeekend(inputDate) || isFuture(baseDate, inputDate));
-  }
-
-  private boolean isFuture(Date limit, Date input) {
-    return input.after(limit);
-  }
 
   /**
    * Loads an external CSV: firstly reads the given path to CSV file and then writes it into the
@@ -163,7 +110,8 @@ public class ModelOrchestrator implements Orchestrator {
    * @return Success/error message depending on if the CSV load was successful or not
    * @throws FileNotFoundException throws when the given CSV file is not found/unable to reach it
    */
-  public String loadExternalCSV(String path) throws FileNotFoundException {
+  @Override
+  public String loadExternalPortfolio(String path) throws FileNotFoundException {
     String readCSVData = pw.readFile(path, "");
     String portfolioID = generatePortfolioID();
     int fileExtInd = path.lastIndexOf(".");

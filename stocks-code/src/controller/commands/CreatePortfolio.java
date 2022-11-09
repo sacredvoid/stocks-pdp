@@ -4,7 +4,7 @@ import controller.IPortfolioCommands;
 import model.ModelOrchestrator;
 import model.Orchestrator;
 
-public class CreatePortfolio implements IPortfolioCommands {
+public class CreatePortfolio extends APortfolioCommands {
 
   private String stockData;
 

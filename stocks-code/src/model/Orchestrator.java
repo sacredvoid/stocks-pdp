@@ -61,6 +61,6 @@ public interface Orchestrator {
    * @return Success/error message depending on if the CSV load was successful or not
    * @throws FileNotFoundException throws when the given CSV file is not found/unable to reach it
    */
-  String loadExternalCSV(String path) throws FileNotFoundException;
+  String loadExternalPortfolio(String path) throws FileNotFoundException;
 
 }

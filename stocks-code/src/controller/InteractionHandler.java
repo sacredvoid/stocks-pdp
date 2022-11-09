@@ -69,7 +69,7 @@ public class InteractionHandler extends AbstractHandler {
         }
         String message = "";
         try {
-          message = this.modelOrch.loadExternalCSV(input);
+          message = this.modelOrch.loadExternalPortfolio(input);
           if (message.contains("Not")) {
             this.ui.printText(message, "R");
           } else {
