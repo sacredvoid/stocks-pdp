@@ -3,14 +3,14 @@ package controller.commands;
 import controller.IPortfolioCommands;
 
 public abstract class APortfolioCommands implements IPortfolioCommands {
-  protected String statusMessage;
+  protected String statusMessage = "";
 
 
-  protected void setStatusMessage(String message) {
+  public void setStatusMessage(String message) {
     this.statusMessage = message;
   }
 
-  protected String getStatusMessage() {
+  public String getStatusMessage() {
     return this.statusMessage;
   }
 }

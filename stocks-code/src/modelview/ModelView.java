@@ -19,4 +19,9 @@ public class ModelView implements IModelView{
   public String getPortfolioValue(String date, String portfolioID) {
     return null;
   }
+
+  @Override
+  public String[] getExistingPortfolios() {
+    return this.morch.getExistingPortfolios();
+  }
 }

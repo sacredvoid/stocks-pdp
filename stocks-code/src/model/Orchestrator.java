@@ -52,7 +52,7 @@ public interface Orchestrator extends IModelView {
    *
    * @return List of string containing the portfolio names/null if no portfolios found
    */
-  String[] showExistingPortfolios();
+  String[] getExistingPortfolios();
 
   /**
    * Loads an external CSV: firstly reads the given path to CSV file and then writes it into the

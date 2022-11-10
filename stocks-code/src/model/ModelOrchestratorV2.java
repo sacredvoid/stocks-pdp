@@ -2,12 +2,16 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import modelview.ModelView;
+import model.fileops.FileOps;
+import model.fileops.JSONFileOps;
 
 public class ModelOrchestratorV2 extends AOrchestrator{
 
+  private FileOps jsonParser;
+
   @Override
   public String getPortfolio(String portfolioID) throws FileNotFoundException {
+    String pfData; // How to get PortfolioDataMapper here????????
     return null;
   }
 
@@ -19,11 +23,6 @@ public class ModelOrchestratorV2 extends AOrchestrator{
   @Override
   public String getPortfolioValue(String date, String data) throws ParseException {
     return null;
-  }
-
-  @Override
-  public String[] showExistingPortfolios() {
-    return new String[0];
   }
 
   @Override

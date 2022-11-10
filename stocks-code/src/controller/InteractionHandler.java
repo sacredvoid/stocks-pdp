@@ -2,7 +2,6 @@ package controller;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.text.ParseException;
 import java.util.Scanner;
 
 import model.ModelOrchestrator;
@@ -81,10 +80,10 @@ public class InteractionHandler extends AbstractHandler {
         this.ui.printText("File read successful. Portfolio ID: " + message, "G");
       } else if (input.equals("2")) {
         // User trying to access an existing portfolio
-        if (this.modelOrch.showExistingPortfolios() != null) {
+        if (this.modelOrch.getExistingPortfolios() != null) {
           this.ui.getPortfolioNumber();
           this.ui.printText("Pick from existing portfolios:", "Y");
-          this.ui.prettyPrintPortfolios(this.modelOrch.showExistingPortfolios());
+          this.ui.getExistingPortfolios();
         } else {
           this.ui.printText("Sorry, no existing portfolios found!", "R");
           continue;

@@ -1,7 +1,6 @@
 package view;
 
 import java.io.PrintStream;
-import model.ModelOrchestrator;
 import model.Orchestrator;
 import modelview.ModelView;
 
@@ -76,10 +75,9 @@ public class UserInteraction implements ViewHandler {
   /**
    * Method that takes in a list of strings (portfolio data) and prints it neatly.
    *
-   * @param portfolioList list of strings (Stock,Quantity)
    */
-  public void prettyPrintPortfolios(String[] portfolioList) {
-    for (String file : portfolioList
+  public void getExistingPortfolios() {
+    for (String file : this.modelView.getExistingPortfolios()
     ) {
       printText(file, "");
     }

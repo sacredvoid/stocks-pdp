@@ -1,17 +1,17 @@
 package controller;
 
 import controller.commands.CreatePortfolio;
+import controller.commands.GetPortfolioComposition;
 import controller.commands.GetPortfolioValue;
 import controller.commands.LoadExternalPortfolio;
 import controller.commands.ModifyPortfolio;
-import controller.commands.ViewExistingPortfolios;
-import controller.commands.ViewPortfolioComposition;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 import model.ModelOrchestrator;
+import model.Orchestrator;
 import view.UserInteraction;
 
 public class InteractionHandlerV2 extends AbstractHandler {
@@ -38,10 +38,11 @@ public class InteractionHandlerV2 extends AbstractHandler {
       return new LoadExternalPortfolio(input);
     });
     acceptedCommands.put("2",s-> {
-      new ViewExistingPortfolios().go(this.modelOrch);
+      // Using view to pull data from model using model-view
+      this.ui.getExistingPortfolios();
       this.ui.printText("Enter your portfolio ID:","Y");
       String input = this.getInput("");
-      return new ViewPortfolioComposition(input);
+      return new GetPortfolioComposition(input);
     });
     acceptedCommands.put("3",s-> {
       this.ui.printText("Enter Portfolio ID you want to edit shares for:","Y");
@@ -85,7 +86,8 @@ public class InteractionHandlerV2 extends AbstractHandler {
       else {
         commandObject = commandEntered.apply(scan);
         commandObject.go(this.modelOrch);
-        this.ui.printText("Executed the command!","G");
+        this.ui.printText("Output:","Y");
+        this.ui.printText(commandObject.getStatusMessage(),"G");
       }
     }
 

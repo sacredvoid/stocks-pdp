@@ -18,7 +18,7 @@ public abstract class AOrchestrator implements Orchestrator {
    */
 
   @Override
-  public String[] showExistingPortfolios() {
+  public String[] getExistingPortfolios() {
     File f = new File("." + osSep + "app_data" + osSep + PORTFOLIO_DATA_PATH);
     if (!f.isDirectory()) {
       f.mkdirs();
