@@ -1,26 +1,31 @@
 package model;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+//import model.apiData.ApiDataList;
+//import model.apiData.ApiDataMapper;
+//import org.json.JSONObject;
+//import org.json.JSONArray;
 /**
  * RequestHandler class is responsible for creating requests and fetching the data from the<p></p>
  * the Alphavantage API.
  */
 class RequestHandler {
 
-  //sam's api key
-  private String apiKey = "SK3WEKBCG40DZ73N";
-
-  // aakash -
-  // private String apiKey = "MDK9ZTZLD3PS0N5K";
-
   private String stockSymbol;
-  URL url = null;
+  ApiHandler apiModel ;
 
-
+  private Map<String, LinkedTreeMap<String,String>> data;
   private RequestHandler(String stockSymbol) {
     this.stockSymbol = stockSymbol;
   }
@@ -72,26 +77,27 @@ class RequestHandler {
    *
    * @return the same RequestHandler object with url built and stored as an attribute
    */
-  RequestHandler buildURL() {
+  public RequestHandler buildURL() {
 
-    try {
-      /*
-      create the URL. This is the query to the web service. The query string
-      includes the type of query (DAILY stock prices), stock symbol to be
-      looked up, the API key and the format of the returned
-      data (comma-separated values:csv). This service also supports JSON
-      which you are welcome to use.
-       */
-
-      url = new URL("https://www.alphavantage"
-          + ".co/query?function=TIME_SERIES_DAILY"
-          + "&outputsize=full"
-          + "&symbol"
-          + "=" + stockSymbol + "&apikey=" + apiKey + "&datatype=csv");
-    } catch (MalformedURLException e) {
-      throw new RuntimeException("the alphavantage API has either changed or "
-          + "no longer works");
+    apiModel = AlphaVantageAPI.getBuilder().stockSymbol(stockSymbol).build();
+    if(apiModel instanceof AlphaVantageAPI){
+      if(apiModel.createURL() == null || !apiModel.createURL().works()){
+//        apiModel = (YahooStockAPI)apiModel;
+        return null;
+      }
+      else{
+        apiModel.writeJson();
+      }
     }
+
+//    if(apiModel instanceof YahooStockAPI){
+//      if(apiModel.createURL() == null || !apiModel.createURL().works()){
+//        return null;
+//      }
+//      else{
+//        apiModel.writeJson();
+//      }
+//    }
     return this;
   }
 
@@ -100,38 +106,28 @@ class RequestHandler {
    *
    * @return Stock data in the form of String
    */
-  String fetch() {
-    InputStream in = null;
-    StringBuilder output = new StringBuilder();
 
+  Map<String, LinkedTreeMap<String,String>> fetch() {
     try {
-      /*
-      Execute this query. This returns an InputStream object.
-      In the csv format, it returns several lines, each line being separated
-      by commas. Each line contains the date, price at opening time, highest
-      price for that date, lowest price for that date, price at closing time
-      and the volume of trade (no. of shares bought/sold) on that date.
-
-      This is printed below.
-       */
-      in = url.openStream();
-      int b;
-
-      while ((b = in.read()) != -1) {
-        output.append((char) b);
-      }
-    } catch (IOException e) {
-      throw new IllegalArgumentException("No price data found for " + stockSymbol);
+      data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
+          HashMap.class);
+    } catch (FileNotFoundException e) {
+//      throw new RuntimeException(e);
     }
-
-    try {
-      CSVFileOps f = new CSVFileOps();
-      f.writeToFile("" + stockSymbol + "Data.csv", "StocksData", output.toString());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return output.toString();
-
+    return data;
   }
 
+  public static void main(String args[]){
+    Map<String, LinkedTreeMap<String,String>> dataList ;
+    dataList = RequestHandler.getBuilder().stockSymbol("AAPL").build().buildURL().fetch();
+    for (Entry<String, LinkedTreeMap<String,String>> entry: dataList.entrySet()
+    ) {
+      System.out.println(entry.getKey());
+      for (Entry<String,String> data: entry.getValue().entrySet()
+      ) {
+        System.out.println(data.getKey());
+        System.out.println(data.getValue());
+      }
+    }
+  }
 }

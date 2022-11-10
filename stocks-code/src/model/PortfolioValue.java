@@ -85,7 +85,10 @@ class PortfolioValue {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "0");
       } else if (result == -1) {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "API Limit Reached");
-      } else {
+      } else if (result == -99) {
+        output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "Invalid Ticker");
+      }
+      else {
         output.add(String.format(nameAndCount[0] + "," + nameAndCount[1] + ",%.2f", result));
       }
       sum += result;
@@ -96,16 +99,17 @@ class PortfolioValue {
   }
 
   private String stockValueFetcher(String name) {
-    String nameValue = StockHandler.getBuilder()
-        .name(name)
-        .date(date)
-        .build()
-        .fetchByDate();
-    if (!nameValue.equals("")) {
-      return nameValue;
-    } else {
-      return "";
-    }
+//    String nameValue = StockHandler.getBuilder()
+//        .name(name)
+//        .date(date)
+//        .build()
+//        .fetchByDate();
+//    if (!nameValue.equals("")) {
+//      return nameValue;
+//    } else {
+//      return "";
+//    }
+    return "";
   }
 
   private float stockCountValue(String[] stockNameCount) {
@@ -117,6 +121,9 @@ class PortfolioValue {
     }
     if (stockPriceString.equals("API hit limit reached!!!")) {
       return -1;
+    }
+    if (stockPriceString.equals("No data found")){
+      return -99;
     }
     float stockPrice = Float.parseFloat(stockPriceString.split(",")[1]);
     return stockPrice * count;
