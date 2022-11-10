@@ -45,6 +45,6 @@ public class GsonTester {
       gson.toJson(datePFmap, writer);
     }
 
-    PortfolioDateMapper pf = new Gson().fromJson(new FileReader("D:\\PDP_CS5010\\stocks-pdp\\stocks-code\\p1.json"), PortfolioDateMapper.class);
+    HashMap<String, PortfolioData> pf = new Gson().fromJson(new FileReader("D:\\PDP_CS5010\\stocks-pdp\\stocks-code\\p1.json"), HashMap.class);
   }
 }
