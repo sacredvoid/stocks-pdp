@@ -2,12 +2,13 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
+import modelview.IModelView;
 
 /**
  * The base model class for our application which defines the basic methods which other model like
  * classes need to implement.
  */
-public interface Orchestrator {
+public interface Orchestrator extends IModelView {
 
   /**
    * Gets the portfolio data as string given a portfolio ID.
@@ -43,7 +44,7 @@ public interface Orchestrator {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  String getPortfolioValue(String date, String data) throws Exception;
+  String getPortfolioValue(String date, String data) throws ParseException;
 
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed

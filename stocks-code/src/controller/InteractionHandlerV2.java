@@ -26,7 +26,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
    */
   public InteractionHandlerV2(Readable input, PrintStream output) {
     this.modelOrch = new ModelOrchestrator();
-    this.ui = new UserInteraction(output);
+    this.ui = new UserInteraction(output, this.modelOrch);
     this.scan = new Scanner(input);
     this.initializeCommands();
   }

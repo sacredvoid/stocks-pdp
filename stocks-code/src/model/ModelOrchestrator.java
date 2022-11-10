@@ -63,7 +63,7 @@ public class ModelOrchestrator extends AOrchestrator {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  public String getPortfolioValue(String date, String data) throws Exception {
+  public String getPortfolioValue(String date, String data) throws ParseException {
 
     // Check if Date is a weekend
     if (dataValidator.checkData(date)) {

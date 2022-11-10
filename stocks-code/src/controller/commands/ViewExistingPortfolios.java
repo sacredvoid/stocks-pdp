@@ -3,7 +3,7 @@ package controller.commands;
 import controller.IPortfolioCommands;
 import model.Orchestrator;
 
-public class ViewExistingPortfolios implements IPortfolioCommands {
+public class ViewExistingPortfolios extends APortfolioCommands {
 
   @Override
   public void go(Orchestrator m) {

@@ -3,7 +3,7 @@ package controller.commands;
 import controller.IPortfolioCommands;
 import model.Orchestrator;
 
-public class ViewPortfolioComposition implements IPortfolioCommands {
+public class ViewPortfolioComposition extends APortfolioCommands {
 
   private String portfolioID;
 

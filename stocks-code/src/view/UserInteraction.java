@@ -1,6 +1,9 @@
 package view;
 
 import java.io.PrintStream;
+import model.ModelOrchestrator;
+import model.Orchestrator;
+import modelview.ModelView;
 
 /**
  * Our ViewHandler implementation which shows the outputs from our model to the user via
@@ -15,14 +18,16 @@ public class UserInteraction implements ViewHandler {
   private final String resetColor = "\u001B[0m";
 
   private PrintStream outStream;
+  private ModelView modelView;
 
   /**
    * Default constructor that takes in a PrintStream object and initializes the class attribute.
    *
    * @param out PrintStream object
    */
-  public UserInteraction(PrintStream out) {
+  public UserInteraction(PrintStream out, Orchestrator model) {
     this.outStream = out;
+    this.modelView = new ModelView(model);
   }
 
   /**
