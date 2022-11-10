@@ -1,4 +1,4 @@
-package model;
+package model.fileops;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,14 +6,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import model.OSValidator;
+import model.validation.DateValidator;
+import model.validation.IDataValidator;
+import model.validation.QuantityValidator;
 
 /**
  * The CSVFileOps class which is used to Read/Write CSV files and perform data check operations
  * (like validating the Stock,Quantity which our application ingests.
  */
-class CSVFileOps {
+public class CSVFileOps extends AFileOps {
 
   private String readStatus;
   final String splitBy = ",";
@@ -21,12 +26,14 @@ class CSVFileOps {
   private List<List<String>> csvData;
   private StringBuilder csvStringData;
 
+  private IDataValidator dateValidator = new DateValidator();
+  private QuantityValidator quantityValidator = new QuantityValidator();
 
   /**
    * The default constructor for our class which just initializes the current OS's path separator
    * (\\ for windows and / for linux).
    */
-  CSVFileOps() {
+  public CSVFileOps() {
     this.osPathSeparator = OSValidator.getOSSeparator();
   }
 
@@ -40,7 +47,7 @@ class CSVFileOps {
    * @return the contents of the CSV file as String
    * @throws FileNotFoundException throws when file not found in the given directory
    */
-  String readFile(String filename, String dir) throws FileNotFoundException {
+  public String readFile(String filename, String dir) throws FileNotFoundException {
     csvData = new ArrayList<>();
     csvStringData = new StringBuilder();
     String path = pathResolver(filename, dir);
@@ -51,7 +58,12 @@ class CSVFileOps {
         String[] data = currentLine.split(splitBy);    // use comma as separator
         // Check data !!! Modification required
         if (data.length <= 2) {
-          dataCheck(data);
+          try {
+            dataCheck(data);
+          }
+          catch (Exception p) {
+            return "Some error! while reading";
+          }
         } else {
           csvStringData.append(currentLine).append("\n");
         }
@@ -73,7 +85,7 @@ class CSVFileOps {
    * @param data     CSV data in a String datatype you want to write
    * @throws IOException throws when it's unable to save the CSV file
    */
-  void writeToFile(String filename, String dir, String data) throws IOException {
+  public void writeToFile(String filename, String dir, String data) throws IOException {
 
     try {
       String newPath = pathResolver(filename, dir);
@@ -104,7 +116,7 @@ class CSVFileOps {
    */
 
   // !!!! Needs modification
-  private void dataCheck(String[] data) {
+  private void dataCheck(String[] data) throws Exception {
     if (data.length == 1) {
       if (!data[0].isEmpty()) {
         this.readStatus = "Missing Data: " + data[0];
@@ -114,7 +126,7 @@ class CSVFileOps {
     if (data.length > 1) {
       int count = 0;
 
-      if (!isStockScrip(data[0]) && isNumeric(data[1])) {
+      if (!dateValidator.checkData(data[0]) && quantityValidator.checkData(data[1])) {
         data[1] = String.valueOf(Math.abs(Math.round(Float.parseFloat(data[1]))));
         csvData.add(List.of(data));
         for (String datapoint : data
@@ -132,33 +144,7 @@ class CSVFileOps {
     }
   }
 
-  /**
-   * Our internal method to check if the given stock quantity is numeric or not.
-   *
-   * @param str stock quantity data as string
-   * @return true/false depending on if string passed to it is numeric.
-   */
-  private boolean isNumeric(String str) {
-    try {
-      Double.parseDouble(str);
-      return true;
-    } catch (NumberFormatException e) {
-      return false;
-    }
-  }
 
-  /**
-   * Our internal method to check if the given Stock Ticker is a valid ticker or not. It follows the
-   * rule: Atleast 1 alphabet/number followed by an optional dot followed by atleast one alphabet.
-   * We used this to include stocks from other stock exchanges.
-   *
-   * @param str the stock ticker symbol
-   * @return true/false if the ticker symbol matches the regex
-   */
-  private boolean isStockScrip(String str) {
-    String scripRegex = "([A-Z])+([.]([A-Z])+)?";
-    return !str.matches(scripRegex);
-  }
 
   /**
    * Internal method to construct a complete path to file, given a path and directory (sitting

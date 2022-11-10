@@ -119,7 +119,7 @@ public class InteractionHandler extends AbstractHandler {
                             + "weekend or a future date, please re-enter:",
                         "Y");
                   }
-                } catch (ParseException e) {
+                } catch (Exception e) {
                   this.ui.printText("Couldn't parse text!", "R");
                 }
               } else {

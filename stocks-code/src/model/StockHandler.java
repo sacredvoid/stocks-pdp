@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import model.fileops.CSVFileOps;
 
 /**
  * StockHandler class defines the methods required for fetching the stock data according to the

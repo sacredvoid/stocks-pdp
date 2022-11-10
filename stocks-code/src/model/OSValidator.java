@@ -4,7 +4,7 @@ package model;
  * Helper class to identify the OS that is being used to help out with determining which file
  * separator to use for read/write operations.
  */
-class OSValidator {
+public class OSValidator {
 
   private static String OS = System.getProperty("os.name").toLowerCase();
 
@@ -13,7 +13,7 @@ class OSValidator {
    *
    * @return returns the respective file separator for windows (\\) and other OSes(/).
    */
-  static String getOSSeparator() {
+  public static String getOSSeparator() {
     if (isWindows()) {
       return "\\";
     } else {

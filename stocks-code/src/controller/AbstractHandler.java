@@ -25,6 +25,10 @@ public abstract class AbstractHandler implements Handler{
     }
     return scan.next();
   }
+//
+//  protected String getMultiInput(String regex) {
+//    while()
+//  }
 
   /**
    * Function which checks if input from user matches our specifications or not, like pre-defined

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import model.fileops.CSVFileOps;
 
 /**
  * RequestHandler class is responsible for creating requests and fetching the data from the<p></p>

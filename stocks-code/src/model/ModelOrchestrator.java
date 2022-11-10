@@ -1,16 +1,12 @@
 package model;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
-import java.util.Date;
-import java.util.Calendar;
-import java.util.Locale;
+import model.fileops.CSVFileOps;
+import model.validation.DateValidator;
+import model.validation.IDataValidator;
 
 /**
  * Our model orchestrator class, as the name suggests, it is the link for the controller to call the
@@ -19,12 +15,7 @@ import java.util.Locale;
  */
 public class ModelOrchestrator extends AOrchestrator {
 
-  private final String osSep = OSValidator.getOSSeparator();
-  private final String PORTFOLIO_DATA_PATH = String.format(
-      "%sPortfolioData%s", osSep, osSep
-  );
-
-  private final String acceptableDateLimit = "2022-11-01";
+  private IDataValidator dataValidator = new DateValidator();
 
   private CSVFileOps pw = new CSVFileOps();
 
@@ -72,10 +63,10 @@ public class ModelOrchestrator extends AOrchestrator {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  public String getPortfolioValue(String date, String data) throws ParseException  {
+  public String getPortfolioValue(String date, String data) throws Exception {
 
     // Check if Date is a weekend
-    if (isValidDate(date)) {
+    if (dataValidator.checkData(date)) {
       // Takes in portfolio data and returns the value of the portfolio on given date
       StringBuilder finalStockData = new StringBuilder();
 
