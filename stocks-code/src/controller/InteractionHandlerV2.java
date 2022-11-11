@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
-import model.ModelOrchestrator;
-import model.Orchestrator;
+import model.ModelOrchestratorV2;
 import view.UserInteraction;
 
 public class InteractionHandlerV2 extends AbstractHandler {
@@ -25,7 +24,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
    * @param output Prinstream type output object
    */
   public InteractionHandlerV2(Readable input, PrintStream output) {
-    this.modelOrch = new ModelOrchestrator();
+    this.modelOrch = new ModelOrchestratorV2();
     this.ui = new UserInteraction(output, this.modelOrch);
     this.scan = new Scanner(input);
     this.initializeCommands();
@@ -47,8 +46,8 @@ public class InteractionHandlerV2 extends AbstractHandler {
     acceptedCommands.put("3",s-> {
       this.ui.printText("Enter Portfolio ID you want to edit shares for:","Y");
       String pfID = this.getInput("");
-      this.ui.printText("Enter CALL,STOCK,QUANTITY,DATE","Y");
-      this.ui.printText("Example: BUY,AAPL,20,2020-10-13","G");
+      this.ui.printText("Enter STOCK,QUANTITY,DATE,CALL","Y");
+      this.ui.printText("Example: AAPL,20,2020-10-13,BUY","G");
       String stockData = this.getInput("");
       return new ModifyPortfolio(pfID, stockData);
     });
@@ -60,9 +59,17 @@ public class InteractionHandlerV2 extends AbstractHandler {
       return new GetPortfolioValue(pfID,date);
     });
     acceptedCommands.put("5",s-> {
+      StringBuilder inputStockData = new StringBuilder();
       this.ui.printText("Enter STOCK, QUANTITY, DATE","Y");
-      String data = this.getInput("");
-      return new CreatePortfolio(data);
+      this.ui.printText("Enter q/Q to stop entering","Y");
+      while (true) {
+        String data = this.getInput("");
+        if(data.equalsIgnoreCase("q")) break;
+        else {
+          inputStockData.append(data).append("\n");
+        }
+      }
+      return new CreatePortfolio(inputStockData.toString());
     });
   }
 
