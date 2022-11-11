@@ -2,7 +2,6 @@ package controller;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.text.ParseException;
 import java.util.Scanner;
 
 import model.ModelOrchestrator;
@@ -13,7 +12,7 @@ import view.UserInteraction;
  * Controller Class which accepts input from the terminal and decides what to do accordingly. This
  * class is the bridge between the model and view and defines our Stock Platform's logical flow.
  */
-public class InteractionHandler implements Handler {
+public class InteractionHandler extends AbstractHandler {
 
   private final UserInteraction ui;
   private Scanner scan;
@@ -36,38 +35,8 @@ public class InteractionHandler implements Handler {
    */
   public InteractionHandler(Readable input, PrintStream output) {
     this.modelOrch = new ModelOrchestrator();
-    this.ui = new UserInteraction(output);
+    this.ui = new UserInteraction(output, this.modelOrch);
     this.scan = new Scanner(input);
-  }
-
-  /**
-   * Function to accept inputs and returns the input from console as a String. Takes a Regular
-   * Expression as parameter which is used to check and accept/reject input from console as per
-   * application requirements.
-   *
-   * @param regex a string which describes the input pattern to match
-   * @return a string with the validated input from console
-   */
-  private String getInput(String regex) {
-    if (!regex.isEmpty()) {
-      validateInput(regex, scan);
-    }
-    return scan.next();
-  }
-
-  /**
-   * Function which checks if input from user matches our specifications or not, like pre-defined
-   * inputs, Stock Ticker Regex and Quantity regex.
-   *
-   * @param regex a string which describes the input pattern to match
-   * @param scan  an Object of type Scanner which is used to check console input with
-   *              scan.hasNext()
-   */
-  private void validateInput(String regex, Scanner scan) {
-    while (!scan.hasNext(regex)) {
-      this.ui.printText("Sorry, input did not match requirements!", "R");
-      scan.next();
-    }
   }
 
   /**
@@ -99,7 +68,7 @@ public class InteractionHandler implements Handler {
         }
         String message = "";
         try {
-          message = this.modelOrch.loadExternalCSV(input);
+          message = this.modelOrch.loadExternalPortfolio(input);
           if (message.contains("Not")) {
             this.ui.printText(message, "R");
           } else {
@@ -111,10 +80,10 @@ public class InteractionHandler implements Handler {
         this.ui.printText("File read successful. Portfolio ID: " + message, "G");
       } else if (input.equals("2")) {
         // User trying to access an existing portfolio
-        if (this.modelOrch.showExistingPortfolios() != null) {
+        if (this.modelOrch.getExistingPortfolios() != null) {
           this.ui.getPortfolioNumber();
           this.ui.printText("Pick from existing portfolios:", "Y");
-          this.ui.prettyPrintPortfolios(this.modelOrch.showExistingPortfolios());
+          this.ui.getExistingPortfolios();
         } else {
           this.ui.printText("Sorry, no existing portfolios found!", "R");
           continue;
@@ -149,7 +118,7 @@ public class InteractionHandler implements Handler {
                             + "weekend or a future date, please re-enter:",
                         "Y");
                   }
-                } catch (ParseException e) {
+                } catch (Exception e) {
                   this.ui.printText("Couldn't parse text!", "R");
                 }
               } else {

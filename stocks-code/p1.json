@@ -1,0 +1,20 @@
+{
+  "2020-10-11": {
+    "stockData": [
+      {
+        "Stock": "AAPL",
+        "quantity": 36.0
+      },
+      {
+        "Stock": "TSLA",
+        "quantity": 1.0
+      },
+      {
+        "Stock": "MSFT",
+        "quantity": 30.0
+      }
+    ],
+    "totalInvested": 123.0,
+    "totalCommission": 234.0
+  }
+}

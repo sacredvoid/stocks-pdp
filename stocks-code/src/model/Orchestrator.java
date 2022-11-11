@@ -2,12 +2,13 @@ package model;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
+import modelview.IModelView;
 
 /**
  * The base model class for our application which defines the basic methods which other model like
  * classes need to implement.
  */
-public interface Orchestrator {
+public interface Orchestrator extends IModelView {
 
   /**
    * Gets the portfolio data as string given a portfolio ID.
@@ -51,7 +52,7 @@ public interface Orchestrator {
    *
    * @return List of string containing the portfolio names/null if no portfolios found
    */
-  String[] showExistingPortfolios();
+  String[] getExistingPortfolios();
 
   /**
    * Loads an external CSV: firstly reads the given path to CSV file and then writes it into the
@@ -61,6 +62,6 @@ public interface Orchestrator {
    * @return Success/error message depending on if the CSV load was successful or not
    * @throws FileNotFoundException throws when the given CSV file is not found/unable to reach it
    */
-  String loadExternalCSV(String path) throws FileNotFoundException;
+  String loadExternalPortfolio(String path) throws FileNotFoundException;
 
 }

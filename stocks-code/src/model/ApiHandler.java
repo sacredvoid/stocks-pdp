@@ -13,6 +13,7 @@ public interface ApiHandler {
 
   void writeJson();
 
+  String getStatus();
   default StringBuilder fetch(URL url) {
     InputStream in = null;
     StringBuilder output = new StringBuilder();

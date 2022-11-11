@@ -76,7 +76,7 @@ class PortfolioValue {
   List<String> completePortfolioValue() {
     List<String> output = new ArrayList<>();
     String[] lines = stockCountList.split("\n");
-    float sum = 0.0F;
+    float sum = 0.00F;
     for (String line : lines
     ) {
       String[] nameAndCount = line.split(",");
@@ -84,14 +84,16 @@ class PortfolioValue {
       if (result == 0) {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "0");
       } else if (result == -1) {
-        output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "API Limit Reached");
-      } else if (result == -99) {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "Invalid Ticker");
-      }
-      else {
+      } else if (result == -2) {
+        output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "API limit reached!!!");
+      } else if (result == -3){
+        output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "No data found");
+      }else {
         output.add(String.format(nameAndCount[0] + "," + nameAndCount[1] + ",%.2f", result));
+        sum += result;
       }
-      sum += result;
+
     }
     output.add(String.format("Total,-,%.2f", sum));
 
@@ -99,33 +101,49 @@ class PortfolioValue {
   }
 
   private String stockValueFetcher(String name) {
-//    String nameValue = StockHandler.getBuilder()
-//        .name(name)
-//        .date(date)
-//        .build()
-//        .fetchByDate();
+    String nameValue = StockHandler.getBuilder()
+        .name(name)
+        .date(date)
+        .build()
+        .fetchByDate();
 //    if (!nameValue.equals("")) {
 //      return nameValue;
 //    } else {
 //      return "";
 //    }
-    return "";
+//    return "";
+    return nameValue;
   }
 
   private float stockCountValue(String[] stockNameCount) {
     String name = stockNameCount[0];
     int count = Integer.parseInt(stockNameCount[1]);
     String stockPriceString = stockValueFetcher(name);
-    if (stockPriceString.equals("")) {
-      return 0;
-    }
-    if (stockPriceString.equals("API hit limit reached!!!")) {
+//    if (stockPriceString.equals("")) {
+//      return 0;
+//    }
+//    if (stockPriceString.equals("API hit limit reached!!!")) {
+//      return -1;
+//    }
+    if (stockPriceString.equals("no data found")){
+      return -3;
+    } else if(stockPriceString.equals("URL is broken") || stockPriceString.equals("invalid ticker")){
       return -1;
-    }
-    if (stockPriceString.equals("No data found")){
-      return -99;
+    } else if(stockPriceString.equals("api limit reached")){
+      return -2;
     }
     float stockPrice = Float.parseFloat(stockPriceString.split(",")[1]);
     return stockPrice * count;
+  }
+
+  public static void main(String args[]){
+    String stockCountList ="AAPL,10\nIBM,10\nMADARA,30";
+    String date = "2022-11-07";
+
+    List<String> portfolioValue = PortfolioValue.getBuilder().stockCountList(stockCountList).date(date).build().completePortfolioValue();
+    for (String s: portfolioValue
+    ) {
+      System.out.println(s);
+    }
   }
 }

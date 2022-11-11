@@ -3,10 +3,12 @@ package model;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +18,13 @@ import java.util.Map.Entry;
 //import model.apiData.ApiDataMapper;
 //import org.json.JSONObject;
 //import org.json.JSONArray;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import model.apiData.ApiDataStruct;
+import model.fileops.CSVFileOps;
+
+
 /**
  * RequestHandler class is responsible for creating requests and fetching the data from the<p></p>
  * the Alphavantage API.
@@ -23,9 +32,13 @@ import java.util.Map.Entry;
 class RequestHandler {
 
   private String stockSymbol;
-  ApiHandler apiModel ;
+  private ApiHandler apiModel ;
 
-  private Map<String, LinkedTreeMap<String,String>> data;
+  private Map<String, ApiDataStruct> data;
+
+
+  private String status = "success";
+  private boolean urlFlag = true;
   private RequestHandler(String stockSymbol) {
     this.stockSymbol = stockSymbol;
   }
@@ -70,6 +83,9 @@ class RequestHandler {
       return new RequestHandler(this.stockSymbol);
     }
   }
+  public String getStatus() {
+    return status;
+  }
 
   /**
    * buildURL() method creates the URL for the API request using the name and symbol <p></p> of the
@@ -81,13 +97,14 @@ class RequestHandler {
 
     apiModel = AlphaVantageAPI.getBuilder().stockSymbol(stockSymbol).build();
     if(apiModel instanceof AlphaVantageAPI){
-      if(apiModel.createURL() == null || !apiModel.createURL().works()){
+      if(apiModel.createURL() == null || apiModel.createURL().works()==false){
 //        apiModel = (YahooStockAPI)apiModel;
-        return null;
+        urlFlag = false;
       }
       else{
         apiModel.writeJson();
       }
+      status = apiModel.getStatus();
     }
 
 //    if(apiModel instanceof YahooStockAPI){
@@ -107,27 +124,29 @@ class RequestHandler {
    * @return Stock data in the form of String
    */
 
-  Map<String, LinkedTreeMap<String,String>> fetch() {
+  Map<String, ApiDataStruct> fetch() {
+    if(!urlFlag){
+      return null;
+    }
+    Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
     try {
       data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
-          HashMap.class);
+          token);
     } catch (FileNotFoundException e) {
 //      throw new RuntimeException(e);
+      status ="no data found";
+      return null;
     }
     return data;
   }
 
   public static void main(String args[]){
-    Map<String, LinkedTreeMap<String,String>> dataList ;
+    Map<String, ApiDataStruct> dataList ;
     dataList = RequestHandler.getBuilder().stockSymbol("AAPL").build().buildURL().fetch();
-    for (Entry<String, LinkedTreeMap<String,String>> entry: dataList.entrySet()
+    for (Entry<String, ApiDataStruct> entry: dataList.entrySet()
     ) {
       System.out.println(entry.getKey());
-      for (Entry<String,String> data: entry.getValue().entrySet()
-      ) {
-        System.out.println(data.getKey());
-        System.out.println(data.getValue());
-      }
+      System.out.println(entry.getValue().getOpen());
     }
   }
 }

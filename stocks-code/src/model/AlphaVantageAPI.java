@@ -32,6 +32,9 @@ class AlphaVantageAPI implements ApiHandler{
       + "&symbol"
       + "=";
 
+
+
+  private String status = "success";
   private AlphaVantageAPI(String stockSymbol) {
     this.stockSymbol = stockSymbol;
   }
@@ -56,35 +59,60 @@ class AlphaVantageAPI implements ApiHandler{
     }
   }
   @Override
+  public String getStatus() {
+    return status;
+  }
+  @Override
   public AlphaVantageAPI createURL() {
     try {
       url = new URL(alphaVantageAPI + stockSymbol + "&apikey=" + apiKey);
     } catch (MalformedURLException e) {
+      status = "URL is broken";
       return null;
     }
     return this;
   }
   @Override
   public boolean works() {
-    String [] errorMsgs = {"{\n"
+//    String [] errorMsgs = {"{\n"
+//        + "    \"Note\": \"Thank you for using Alpha Vantage! Our standard API call frequency is "
+//        + "5 calls per minute and 500 calls per day. Please visit "
+//        + "https://www.alphavantage.co/premium/"
+//        + " if you would like to target a higher API call frequency.\"\n"
+//        + "}","{\n"
+//        + "    \"Error Message\": \"Invalid API call. Please retry or visit the documentation "
+//        + "(https://www.alphavantage.co/documentation/) for TIME_SERIES_DAILY.\"\n"
+//        + "}"};
+    String apiHitLimitError = "{\n"
         + "    \"Note\": \"Thank you for using Alpha Vantage! Our standard API call frequency is "
         + "5 calls per minute and 500 calls per day. Please visit "
         + "https://www.alphavantage.co/premium/"
         + " if you would like to target a higher API call frequency.\"\n"
-        + "}","{\n"
+        + "}";
+
+    String urlError = "{\n"
         + "    \"Error Message\": \"Invalid API call. Please retry or visit the documentation "
         + "(https://www.alphavantage.co/documentation/) for TIME_SERIES_DAILY.\"\n"
-        + "}"};
+        + "}";
 
     data = fetch(url);
     if(data == null){
+      status = "URL is broken";
       return false;
     }
-    for (String errorMsg: errorMsgs
-    ) {
-      if(data.toString().equals(errorMsg)){
-        return false;
-      }
+//    for (String errorMsg: errorMsgs
+//    ) {
+//      if(data.toString().equals(errorMsg)){
+//        return false;
+//      }
+//    }
+    if(data.toString().equals(apiHitLimitError)){
+      status = "api limit reached";
+      return false;
+    }
+    if(data.toString().equals(urlError)){
+      status = "invalid ticker";
+      return false;
     }
     return true;
   }

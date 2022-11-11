@@ -1,6 +1,8 @@
 package view;
 
 import java.io.PrintStream;
+import model.Orchestrator;
+import modelview.ModelView;
 
 /**
  * Our ViewHandler implementation which shows the outputs from our model to the user via
@@ -15,14 +17,16 @@ public class UserInteraction implements ViewHandler {
   private final String resetColor = "\u001B[0m";
 
   private PrintStream outStream;
+  private ModelView modelView;
 
   /**
    * Default constructor that takes in a PrintStream object and initializes the class attribute.
    *
    * @param out PrintStream object
    */
-  public UserInteraction(PrintStream out) {
+  public UserInteraction(PrintStream out, Orchestrator model) {
     this.outStream = out;
+    this.modelView = new ModelView(model);
   }
 
   /**
@@ -71,10 +75,9 @@ public class UserInteraction implements ViewHandler {
   /**
    * Method that takes in a list of strings (portfolio data) and prints it neatly.
    *
-   * @param portfolioList list of strings (Stock,Quantity)
    */
-  public void prettyPrintPortfolios(String[] portfolioList) {
-    for (String file : portfolioList
+  public void getExistingPortfolios() {
+    for (String file : this.modelView.getExistingPortfolios()
     ) {
       printText(file, "");
     }
@@ -131,5 +134,15 @@ public class UserInteraction implements ViewHandler {
       }
       this.outStream.print("+\n");
     }
+  }
+
+  public void printMenu() {
+    this.printText("Choose from the following:","G");
+    this.printText("1 - Load External Portfolio","Y");
+    this.printText("2 - View Portfolio Composition","Y");
+    this.printText("3 - Modify existing Portfolio","Y");
+    this.printText("4 - Get Portfolio Value","Y");
+    this.printText("5 - Create New Portfolio","Y");
+    this.printText("q/Q - Quit Application","Y");
   }
 }
