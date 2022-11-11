@@ -87,6 +87,11 @@ public class ModelOrchestrator extends AOrchestrator {
     }
   }
 
+  @Override
+  public String getPortfolioValueByID(String date, String pfID) throws FileNotFoundException {
+    return null;
+  }
+
   /**
    * Loads an external CSV: firstly reads the given path to CSV file and then writes it into the
    * './app_data/PortfolioData' directory with a generated Portfolio ID.

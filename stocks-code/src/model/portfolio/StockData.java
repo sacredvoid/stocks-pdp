@@ -1,5 +1,7 @@
 package model.portfolio;
 
+import com.google.gson.Gson;
+
 public class StockData implements IStockData {
 
   private String stockName;
@@ -8,6 +10,11 @@ public class StockData implements IStockData {
   public StockData(String name, float quantity) {
     this.stockName = name;
     this.quantity = quantity;
+  }
+
+  @Override
+  public String toString() {
+    return new Gson().toJson(this);
   }
 
   @Override

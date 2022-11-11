@@ -52,6 +52,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
       return new ModifyPortfolio(pfID, stockData);
     });
     acceptedCommands.put("4",s-> {
+      this.ui.getExistingPortfolios();
       this.ui.printText("Enter portfolio ID you want to get value for:","Y");
       String pfID = this.getInput("");
       this.ui.printText("Enter date you want to see value for","Y");
