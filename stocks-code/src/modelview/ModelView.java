@@ -1,5 +1,6 @@
 package modelview;
 
+import java.io.FileNotFoundException;
 import model.Orchestrator;
 
 public class ModelView implements IModelView{
@@ -16,12 +17,17 @@ public class ModelView implements IModelView{
   }
 
   @Override
-  public String getPortfolioValue(String date, String portfolioID) {
+  public String getPortfolioValue(String date, String data) {
     return null;
   }
 
   @Override
   public String[] getExistingPortfolios() {
     return this.morch.getExistingPortfolios();
+  }
+
+  @Override
+  public String getPortfolioValueByID(String date, String pfID) throws FileNotFoundException {
+    return this.morch.getPortfolioValueByID(date,pfID);
   }
 }

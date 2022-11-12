@@ -1,5 +1,6 @@
 package model.portfolio;
 
+import com.google.gson.Gson;
 import java.util.List;
 
 public class PortfolioData implements IPortfolioData {
@@ -11,6 +12,11 @@ public class PortfolioData implements IPortfolioData {
     this.stockData = sd;
     this.totalCommission = totalCommission;
     this.totalInvested = totalInvested;
+  }
+
+  @Override
+  public String toString() {
+    return new Gson().toJson(this);
   }
 
   @Override

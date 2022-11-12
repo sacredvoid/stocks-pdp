@@ -10,4 +10,6 @@ public interface IModelView {
   String getPortfolioValue(String date, String portfolioID) throws ParseException;
 
   String[] getExistingPortfolios();
+
+  String getPortfolioValueByID(String date, String pfID) throws FileNotFoundException;
 }
