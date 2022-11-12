@@ -117,7 +117,7 @@ class PortfolioValue {
 
   private float stockCountValue(String[] stockNameCount) {
     String name = stockNameCount[0];
-    int count = Integer.parseInt(stockNameCount[1]);
+    float count = Float.parseFloat(stockNameCount[1]);
     String stockPriceString = stockValueFetcher(name);
 //    if (stockPriceString.equals("")) {
 //      return 0;

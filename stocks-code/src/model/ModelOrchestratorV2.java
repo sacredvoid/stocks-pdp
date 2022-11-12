@@ -45,8 +45,28 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   }
 
   @Override
-  public String getPortfolioValue(String date, String data) throws ParseException {
-    return null;
+  public String getPortfolioValue(String date, String pfId) throws ParseException {
+    String stockCountList;
+    try{
+      stockCountList = this.getPortfolioValueByID(date,pfId);
+    }catch( FileNotFoundException e){
+      return "Sorry, No stocks for given date";
+    }
+    if(stockCountList.equals("Sorry, no data for given date.")){
+      return stockCountList;
+    } else if(stockCountList.equals("Sorry, no stocks for given date.")){
+      return stockCountList;
+    }
+    List<String> portfolioValue = PortfolioValue.getBuilder()
+        .stockCountList(stockCountList)
+        .date(date)
+        .build()
+        .completePortfolioValue();
+
+    String portfolioValueCsvFormat = String.join("\n",portfolioValue);
+//    System.out.println(portfolioValueCsvFormat);
+//    return null;
+    return portfolioValueCsvFormat;
   }
 
   @Override
