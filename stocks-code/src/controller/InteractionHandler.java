@@ -94,7 +94,7 @@ public class InteractionHandler extends AbstractHandler {
         }
         this.ui.printText("Your portfolio number:" + input, "G");
         try {
-          String pfData = this.modelOrch.getPortfolio(input);
+          String pfData = this.modelOrch.getLatestPortfolioComposition(input);
           if (!pfData.isEmpty()) {
             this.ui.printText("Here's your data!", "Y");
             this.ui.printPortfolioData(pfData);

@@ -14,7 +14,7 @@ public class GetPortfolioComposition extends APortfolioCommands{
   @Override
   public void go(Orchestrator m) {
     try {
-      String pfData = m.getPortfolio(this.pfID);
+      String pfData = m.getLatestPortfolioComposition(this.pfID);
       setStatusMessage(pfData);
     }
     catch (FileNotFoundException f) {

@@ -18,10 +18,9 @@ public class GetPortfolioValue extends APortfolioCommands {
   @Override
   public void go(Orchestrator m) {
     try {
-      setStatusMessage(m.getPortfolioValueByID(date,pfID));
-    }
-    catch (FileNotFoundException f) {
-      setStatusMessage("Unable to read file");
+      setStatusMessage(m.getPortfolioValue(date,pfID));
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
     }
 
   }

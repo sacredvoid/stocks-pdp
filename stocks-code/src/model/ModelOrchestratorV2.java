@@ -21,7 +21,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   private FileOps jsonParser = new JSONFileOps();
 
   @Override
-  public String getPortfolio(String portfolioID) throws FileNotFoundException {
+  public String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException {
     String pfData = jsonParser.readFile(portfolioID + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
     String latestDate = Utility.getLatestDate(parsedPFData);
@@ -48,7 +48,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   public String getPortfolioValue(String date, String pfId) throws ParseException {
     String stockCountList;
     try{
-      stockCountList = this.getPortfolioValueByID(date,pfId);
+      stockCountList = this.getPortfolioCompositionByDate(date,pfId);
     }catch( FileNotFoundException e){
       return "Sorry, No stocks for given date";
     }
@@ -70,7 +70,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   }
 
   @Override
-  public String getPortfolioValueByID(String date, String pfID) throws FileNotFoundException {
+  public String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException {
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
 

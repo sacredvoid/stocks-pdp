@@ -12,7 +12,7 @@ public class ModelView implements IModelView{
   }
 
   @Override
-  public String getPortfolio(String portfolioID) {
+  public String getLatestPortfolioComposition(String portfolioID) {
     return null;
   }
 
@@ -27,7 +27,7 @@ public class ModelView implements IModelView{
   }
 
   @Override
-  public String getPortfolioValueByID(String date, String pfID) throws FileNotFoundException {
-    return this.morch.getPortfolioValueByID(date,pfID);
+  public String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException {
+    return this.morch.getPortfolioCompositionByDate(date,pfID);
   }
 }

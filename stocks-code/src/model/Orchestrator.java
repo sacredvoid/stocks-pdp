@@ -16,7 +16,7 @@ public interface Orchestrator extends IModelView {
    * @param portfolioID Portfolio ID (6 digit number)
    * @return portfolio data stored in the given PortfolioID csv file
    */
-  String getPortfolio(String portfolioID) throws FileNotFoundException;
+  String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException;
 
   /**
    * Takes in (Stocks,Quantity) CSV data, generates a random portfolio ID and then saves it (CSV

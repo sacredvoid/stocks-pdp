@@ -25,7 +25,7 @@ public class ModelOrchestrator extends AOrchestrator {
    * @param portfolioID Portfolio ID (6 digit number)
    * @return portfolio data stored in the given PortfolioID csv file
    */
-  public String getPortfolio(String portfolioID) throws FileNotFoundException {
+  public String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException {
 
     // if portfolio exists, return data
     // else throw exception
@@ -88,7 +88,7 @@ public class ModelOrchestrator extends AOrchestrator {
   }
 
   @Override
-  public String getPortfolioValueByID(String date, String pfID) throws FileNotFoundException {
+  public String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException {
     return null;
   }
 
