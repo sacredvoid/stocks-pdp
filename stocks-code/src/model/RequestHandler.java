@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -129,8 +131,21 @@ class RequestHandler {
       return null;
     }
     Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
+    String staticDataPath = "app_data/StocksJsonData";
+    Path staticData = Path.of(staticDataPath);
+    if(Files.isDirectory(staticData)) {
+      status = "static data dir exists";
+    }
+    else {
+      try {
+        Files.createDirectories(staticData);
+      }
+      catch (IOException e) {
+        status = "couldn't make static data dir";
+        return null;
+      }
+    }
     try {
-//      File f =
       data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
           token);
     } catch (FileNotFoundException e) {
