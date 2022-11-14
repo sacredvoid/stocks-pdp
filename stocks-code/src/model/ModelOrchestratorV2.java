@@ -14,6 +14,7 @@ import model.portfolio.PortfolioDataAdapter;
 import model.portfolio.PortfolioToCSVAdapter;
 import model.portfolio.StockData;
 import model.portfolio.Utility;
+import model.portfolio.filters.FilterPortfolio;
 
 
 public class ModelOrchestratorV2 extends AOrchestrator {
@@ -50,7 +51,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     try{
       stockCountList = this.getPortfolioCompositionByDate(date,pfId);
     }catch( FileNotFoundException e){
-      return "Sorry, No stocks for given date";
+      return "Sorry, No stocks for given date"; // Get most recent stock list
     }
     if(stockCountList.equals("Sorry, no data for given date.")){
       return stockCountList;
@@ -75,14 +76,14 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
 
 //    // Example for filtering data
-//    Map<String, PortfolioData> filteredData = FilterPortfolio.getPortfolioAfterDate(parsedPFData,date);
-    // Send this stockDataCSV to Aakash
+    Map<String, PortfolioData> filteredData = FilterPortfolio.getPortfolioBeforeDate(parsedPFData,date);
+    String latestDate = Utility.getLatestDate(filteredData);
     List<StockData> stockDataForDate;
     try {
-      stockDataForDate = parsedPFData.getOrDefault(date,null).getStockList();
+      stockDataForDate = filteredData.getOrDefault(latestDate,null).getStockList();
     }
     catch (NullPointerException n) {
-      return "Sorry, no data for given date.";
+      return "Sorry, no portfolio data found for given date/before it.";
     }
     if(stockDataForDate != null) {
       String stockDataCSV = PortfolioToCSVAdapter.buildStockQuantityList(stockDataForDate);

@@ -130,6 +130,7 @@ class RequestHandler {
     }
     Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
     try {
+//      File f =
       data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
           token);
     } catch (FileNotFoundException e) {

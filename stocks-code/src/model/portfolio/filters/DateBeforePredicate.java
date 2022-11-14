@@ -1,10 +1,10 @@
 package model.portfolio.filters;
 
-public class DatePredicate {
+public class DateBeforePredicate {
 
   private String date;
 
-  public DatePredicate(String date) {
+  public DateBeforePredicate(String date) {
     this.date = date;
   }
 
