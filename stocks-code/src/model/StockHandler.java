@@ -154,7 +154,10 @@ class StockHandler {
       return output;
     }
 
-    ApiDataStruct stockInfo = stockData.get(this.date);
+    ApiDataStruct stockInfo = stockData.getOrDefault(this.date,null);
+    if(stockInfo == null){
+      return "no data found";
+    }
     output += this.name + "," + stockInfo.getClose();
 //    if (stockData.equals(apiHitLimitMsg)) {
 //      return "API hit limit reached!!!";
@@ -217,7 +220,10 @@ class StockHandler {
     if(recentDateKey.isPresent()){
       recentDate = recentDateKey.get();
     }
-    ApiDataStruct stockInfo = stockData.get(recentDate);
+    ApiDataStruct stockInfo = stockData.getOrDefault(recentDate,null);
+    if(stockInfo == null){
+      return "no data found";
+    }
     output += this.name+","+stockInfo.getClose();
     return output;
 //    ApiDataStruct stockInfo = stockData.get(this.date);

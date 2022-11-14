@@ -19,8 +19,9 @@ public class GetPortfolioValue extends APortfolioCommands {
   public void go(Orchestrator m) {
     try {
       setStatusMessage(m.getPortfolioValue(date,pfID));
-    } catch (ParseException e) {
-      throw new RuntimeException(e);
+    }
+    catch (ParseException f) {
+      setStatusMessage("Unable to read file");
     }
 
   }

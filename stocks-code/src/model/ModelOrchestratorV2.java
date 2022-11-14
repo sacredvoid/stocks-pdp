@@ -3,7 +3,12 @@ package model;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import model.fileops.FileOps;
@@ -18,7 +23,8 @@ import model.portfolio.filters.FilterPortfolio;
 
 
 public class ModelOrchestratorV2 extends AOrchestrator {
-
+  private static final String VALID_DATE_REGEX =
+      "q|Q|(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
   private FileOps jsonParser = new JSONFileOps();
 
   @Override
@@ -34,6 +40,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   @Override
   public String createPortfolio(String portfolioData) {
+    if(portfolioData.equals("no data provided")){
+      return "No data provided. No portfolio was created";
+    }
     String newPFID = this.generatePortfolioID();
     try {
       Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
@@ -42,6 +51,11 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     } catch (IOException io) {
       return "Failed to create portfolio";
     }
+//    catch (NumberFormatException e){
+//      return "Failed to create portfolio.\nMake sure QUANTITY is in only Numbers for each input";
+//    } catch (IllegalArgumentException e){
+//      return e.getMessage();
+//    }
     return "Created Portfolio with ID: " + newPFID;
   }
 
@@ -98,5 +112,35 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     return null;
   }
 
+  /**
+   * Shows the line chart performance of a specified portfolio over the timespan provided<p></p>
+   * by the user.
+   * @param pfId Portfolio id of the portfolio
+   * @param startDate Starting date of the timespan
+   * @param endDate Ending date of the timespan
+   * @return performance of the portfolio for each timestamp in the form of stars which depict<p></p>
+   *          the value of the portfolio
+   */
+//  public String showPerformance(String pfId, String startDate, String endDate) throws FileNotFoundException{
+//    String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
+//    Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
+//
+//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//    Period timespan = Period.between(LocalDate.parse(startDate,formatter),
+//        LocalDate.parse(endDate,formatter));
+//
+//    if(timespan.getDays() >=5 && timespan.getDays() <=30){
+//      return new Performance().showPerformanceByDate(parsedPFData,startDate,endDate);
+//    }else if( timespan.getMonths() >= 5 && timespan.getMonths() <=30){
+//      return new Performance().showPerformanceByMonth(parsedPFData,startDate,endDate);
+//    } else if(timespan.getMonths() >= 15 && timespan.getMonths() <=90){
+//      return new Performance().showPerformanceByQuarter(parsedPFData,startDate,endDate);
+//    } else if( timespan.getMonths() >= 30 && timespan.getMonths()<=180){
+//      return new Performance().showPerformanceByHalfYear(parsedPFData,startDate,endDate);
+//    } else{
+//      return new Performance().showPerformanceByYear(parsedPFData,startDate,endDate);
+//    }
 
+//    return null;
+//  }
 }

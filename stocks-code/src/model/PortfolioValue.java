@@ -136,6 +136,21 @@ class PortfolioValue {
     return stockPrice * count;
   }
 
+  protected float stockCountValueForPerformance(){
+    List<String> output = new ArrayList<>();
+    String[] lines = stockCountList.split("\n");
+    float sum = 0.00F;
+    for (String line: lines
+    ) {
+      String[] nameAndCount = line.split(",");
+      float result = stockCountValue(nameAndCount);
+      if(result == -1 || result == -2 || result == -3){
+        sum+=0;
+      }
+      sum += result;
+    }
+    return sum;
+  }
   public static void main(String args[]){
     String stockCountList ="AAPL,10\nIBM,10\nMADARA,30";
     String date = "2022-11-07";

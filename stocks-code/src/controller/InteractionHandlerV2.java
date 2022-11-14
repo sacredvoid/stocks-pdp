@@ -65,9 +65,15 @@ public class InteractionHandlerV2 extends AbstractHandler {
       this.ui.printText("Enter q/Q to stop entering","Y");
       while (true) {
         String data = this.getInput("");
-        if(data.equalsIgnoreCase("q")) break;
+        if(data.equalsIgnoreCase("q")) {
+          if(inputStockData.toString().equals("")){
+            return new CreatePortfolio("no data provided");
+          }
+          break;
+        }
         else {
           inputStockData.append(data).append("\n");
+//          return new CreatePortfolio(inputStockData.toString());
         }
       }
       return new CreatePortfolio(inputStockData.toString());
@@ -98,6 +104,5 @@ public class InteractionHandlerV2 extends AbstractHandler {
         this.ui.printText(commandObject.getStatusMessage(),"G");
       }
     }
-
   }
 }
