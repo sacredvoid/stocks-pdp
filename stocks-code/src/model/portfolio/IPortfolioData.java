@@ -8,9 +8,11 @@ import java.util.List;
 public interface IPortfolioData {
 
   List<StockData> getStockList();
+
   String addStock(StockData newStock);
 
   float getQuantity(String stockName);
+
   String setQuantity(String stockName, float quantity);
 
   float getTotalInvested();
@@ -18,5 +20,6 @@ public interface IPortfolioData {
   void setTotalInvested(float newInvested);
 
   float getTotalCommission();
+
   void setTotalCommission(float newCommission);
 }

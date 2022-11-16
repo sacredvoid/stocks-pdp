@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import java.util.List;
 
 public class PortfolioData implements IPortfolioData {
+
   private List<StockData> stockData;
   private float totalInvested;
   private float totalCommission;
@@ -48,9 +49,8 @@ public class PortfolioData implements IPortfolioData {
   public String addStock(StockData newStock) {
     try {
       stockData.add(newStock);
-    }
-    catch (Exception e) {
-      return "Adding stock failed: "+e.getMessage();
+    } catch (Exception e) {
+      return "Adding stock failed: " + e.getMessage();
     }
     return "Adding successful";
   }
@@ -63,10 +63,11 @@ public class PortfolioData implements IPortfolioData {
         .findAny()
         .orElse(null);
 
-    if(found!=null) {
+    if (found != null) {
       return found.getQuantity();
+    } else {
+      return -1;
     }
-    else return -1;
   }
 
   @Override
@@ -77,11 +78,10 @@ public class PortfolioData implements IPortfolioData {
         .findAny()
         .orElse(null);
 
-    if(found!=null) {
+    if (found != null) {
       found.setQuantity(quantity);
       return "Successfully changed stock quantity";
-    }
-    else {
+    } else {
       return "Stock not found";
     }
   }

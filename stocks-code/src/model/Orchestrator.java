@@ -34,7 +34,7 @@ public interface Orchestrator extends IModelView {
    */
   String generatePortfolioID();
 
-//  /**
+  //  /**
 //   * Fetches Portfolio Value as CSV Data in string format (stock,quantity,value) given a date and
 //   * portfolio data (in CSV). Since weekend data is unavailble for stocks, returns null if given
 //   * date is a weekend.
@@ -65,13 +65,14 @@ public interface Orchestrator extends IModelView {
   String loadExternalPortfolio(String path) throws FileNotFoundException;
 
   /**
-   * Shows the line chart performance of a specified portfolio over the timespan provided<p></p>
-   * by the user.
-   * @param pfId Portfolio id of the portfolio
+   * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
+   * the user.
+   *
+   * @param pfId      Portfolio id of the portfolio
    * @param startDate Starting date of the timespan
-   * @param endDate Ending date of the timespan
-   * @return performance of the portfolio for each timestamp in the form of stars which depict<p></p>
-   *          the value of the portfolio
+   * @param endDate   Ending date of the timespan
+   * @return performance of the portfolio for each timestamp in the form of stars which
+   * depict<p></p> the value of the portfolio
    */
   String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException;

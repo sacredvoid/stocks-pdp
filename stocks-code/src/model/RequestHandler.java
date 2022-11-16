@@ -1,46 +1,27 @@
 package model;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-//import model.apiData.ApiDataList;
-//import model.apiData.ApiDataMapper;
-//import org.json.JSONObject;
-//import org.json.JSONArray;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import model.apiData.ApiDataAdapter;
 import model.apiData.ApiDataStruct;
-import model.fileops.CSVFileOps;
 import model.fileops.JSONFileOps;
 
 
 /**
- * RequestHandler class is responsible for creating requests and fetching the data from the<p></p>
- * the Alphavantage API.
+ * RequestHandler class is responsible for creating APIcalls handling multiple API data<p></p>
+ * sources by interacting with the respective API Classes.
  */
 class RequestHandler {
 
   private String stockSymbol;
-  private ApiHandler apiModel ;
+  private ApiHandler apiModel;
 
   private Map<String, ApiDataStruct> data;
 
 
   private String status = "success";
   private boolean urlFlag = true;
+
   private RequestHandler(String stockSymbol) {
     this.stockSymbol = stockSymbol;
   }
@@ -85,72 +66,66 @@ class RequestHandler {
       return new RequestHandler(this.stockSymbol);
     }
   }
+
+  /**
+   * getStatus() method returns the status of the API request.
+   *
+   * @return the status message
+   */
   public String getStatus() {
     return status;
   }
 
   /**
-   * buildURL() method creates the URL for the API request using the name and symbol <p></p> of the
-   * stock passed to it.
+   * buildURL() method takes the stockSymbol and pass it to the respective API classes<p></p> and
+   * builds the respective URL and saves it on local machine.
    *
    * @return the same RequestHandler object with url built and stored as an attribute
    */
   public RequestHandler buildURL() {
 
     apiModel = AlphaVantageAPI.getBuilder().stockSymbol(stockSymbol).build();
-    if(apiModel instanceof AlphaVantageAPI){
-      if(apiModel.createURL() == null || apiModel.createURL().works()==false){
-//        apiModel = (YahooStockAPI)apiModel;
+    if (apiModel instanceof AlphaVantageAPI) {
+      if (apiModel.createURL() == null || apiModel.createURL().works() == false) {
         urlFlag = false;
-      }
-      else{
+      } else {
         apiModel.writeJson();
       }
       status = apiModel.getStatus();
     }
-
-//    if(apiModel instanceof YahooStockAPI){
-//      if(apiModel.createURL() == null || !apiModel.createURL().works()){
-//        return null;
-//      }
-//      else{
-//        apiModel.writeJson();
-//      }
-//    }
     return this;
   }
 
   /**
-   * fetch() method fetches the data from the API using the URL.
+   * fetch() method reads the data that was saved on the local machine by the RequestHandler and
+   * returns it back.
    *
-   * @return Stock data in the form of String
+   * @return Stock data in the form of Map Object
    */
 
   Map<String, ApiDataStruct> fetch() {
-    if(!urlFlag){
+    if (!urlFlag) {
       return null;
     }
-//    Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
+
     try {
-//      File f =
-//      data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
-//          token);
-      data = ApiDataAdapter.getApiObject(new JSONFileOps().readFile(this.stockSymbol+"Data.json","StocksJsonData"));
+      data = ApiDataAdapter.getApiObject(
+          new JSONFileOps().readFile(this.stockSymbol + "Data.json", "StocksJsonData"));
     } catch (FileNotFoundException e) {
-//      throw new RuntimeException(e);
-      status ="no data found";
+
+      status = "no data found";
       return null;
     }
     return data;
   }
 
-  public static void main(String args[]){
-    Map<String, ApiDataStruct> dataList ;
-    dataList = RequestHandler.getBuilder().stockSymbol("GOOG").build().buildURL().fetch();
-    for (Entry<String, ApiDataStruct> entry: dataList.entrySet()
-    ) {
-      System.out.println(entry.getKey());
-      System.out.println(entry.getValue().getOpen());
-    }
-  }
+//  public static void main(String args[]){
+//    Map<String, ApiDataStruct> dataList ;
+//    dataList = RequestHandler.getBuilder().stockSymbol("GOOG").build().buildURL().fetch();
+//    for (Entry<String, ApiDataStruct> entry: dataList.entrySet()
+//    ) {
+//      System.out.println(entry.getKey());
+//      System.out.println(entry.getValue().getOpen());
+//    }
+//  }
 }

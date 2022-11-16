@@ -59,8 +59,7 @@ public class CSVFileOps extends AFileOps {
         if (data.length <= 2) {
           try {
             dataCheck(data);
-          }
-          catch (Exception p) {
+          } catch (Exception p) {
             return "Some error! while reading";
           }
         } else {

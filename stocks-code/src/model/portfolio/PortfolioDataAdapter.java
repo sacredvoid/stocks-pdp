@@ -8,10 +8,11 @@ import java.util.Map;
 
 public class PortfolioDataAdapter {
 
-  private static Type typeToken = new TypeToken<HashMap<String,PortfolioData>>() {}.getType();
+  private static Type typeToken = new TypeToken<HashMap<String, PortfolioData>>() {
+  }.getType();
 
   public static Map<String, PortfolioData> getObject(String jsonData) {
-    return new Gson().fromJson(jsonData,typeToken);
+    return new Gson().fromJson(jsonData, typeToken);
   }
 
   public static String getJSON(Map<String, PortfolioData> data) {

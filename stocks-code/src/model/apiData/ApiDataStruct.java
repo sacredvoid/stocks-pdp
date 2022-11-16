@@ -3,21 +3,10 @@ package model.apiData;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * ApiDataStruct class defines the structure of the API Stock Data.
+ */
 public class ApiDataStruct {
-
-//  public Map<String, String> getDataStruct() {
-//    return dataStruct;
-//  }
-//
-//  public void setDataStruct(Map<String, String> dataStruct) {
-//    this.dataStruct = dataStruct;
-//  }
-//
-//  private Map<String, String> dataStruct = new HashMap<String,String>();
-//
-//  public ApiDataStruct(Map<String,String> dataStruct){
-//    this.dataStruct = dataStruct;
-//  }
 
   private String open;
   private String high;
@@ -25,43 +14,48 @@ public class ApiDataStruct {
   private String close;
   private String volume;
 
+  /**
+   * get the Open value of the stock.
+   *
+   * @return open value as string
+   */
   public String getOpen() {
     return open;
   }
 
-  public void setOpen(String open) {
-    this.open = open;
-  }
-
+  /**
+   * get the High value of the stock.
+   *
+   * @return high value as string
+   */
   public String getHigh() {
     return high;
   }
 
-  public void setHigh(String high) {
-    this.high = high;
-  }
-
+  /**
+   * get the Low value of the stock.
+   *
+   * @return low value as string
+   */
   public String getLow() {
     return low;
   }
 
-  public void setLow(String low) {
-    this.low = low;
-  }
-
+  /**
+   * get the Close value of the stock.
+   *
+   * @return close value as string
+   */
   public String getClose() {
     return close;
   }
 
-  public void setClose(String close) {
-    this.close = close;
-  }
-
+  /**
+   * get the Volume value of the stock.
+   *
+   * @return
+   */
   public String getVolume() {
     return volume;
-  }
-
-  public void setVolume(String volume) {
-    this.volume = volume;
   }
 }

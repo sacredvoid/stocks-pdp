@@ -11,6 +11,7 @@ public class CreatePortfolio extends APortfolioCommands {
   public CreatePortfolio(String data) {
     this.stockData = data;
   }
+
   @Override
   public void go(Orchestrator m) {
     setStatusMessage(m.createPortfolio(this.stockData));

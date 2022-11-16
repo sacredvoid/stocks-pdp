@@ -3,7 +3,7 @@ package controller.commands;
 import java.io.FileNotFoundException;
 import model.Orchestrator;
 
-public class GetPortfolioComposition extends APortfolioCommands{
+public class GetPortfolioComposition extends APortfolioCommands {
 
   private String pfID;
 
@@ -16,8 +16,7 @@ public class GetPortfolioComposition extends APortfolioCommands{
     try {
       String pfData = m.getLatestPortfolioComposition(this.pfID);
       setStatusMessage(pfData);
-    }
-    catch (FileNotFoundException f) {
+    } catch (FileNotFoundException f) {
       setStatusMessage("File not found!");
     }
   }

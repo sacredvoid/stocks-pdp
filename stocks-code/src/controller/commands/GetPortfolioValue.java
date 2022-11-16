@@ -15,12 +15,12 @@ public class GetPortfolioValue extends APortfolioCommands {
     this.pfID = pfID;
     this.date = date;
   }
+
   @Override
   public void go(Orchestrator m) {
     try {
-      setStatusMessage(m.getPortfolioValue(date,pfID));
-    }
-    catch (ParseException f) {
+      setStatusMessage(m.getPortfolioValue(date, pfID));
+    } catch (ParseException f) {
       setStatusMessage("Unable to read file");
     }
 
