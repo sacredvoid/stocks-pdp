@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import model.apiData.ApiDataAdapter;
 import model.apiData.ApiDataStruct;
+import model.fileops.JSONFileOps;
 //import model.apiData.ApiDataList;
 
 /**
@@ -116,6 +118,7 @@ class StockHandler {
     LocalDateTime now = LocalDateTime.now();
     Date stockUpdateTime = null;
     Date todayTime = null;
+    Date requiredDate = null;
 
     String todayDateAndTime = dtf.format(now);
     String todayDate = todayDateAndTime.split(" ")[0];
@@ -123,6 +126,7 @@ class StockHandler {
     try {
       stockUpdateTime = sdf.parse(todayDate + " 17:00");
       todayTime = sdf.parse(todayDateAndTime);
+      requiredDate = sdf.parse(this.date + " 23:59");
     } catch (ParseException ignored) {
     }
     String output = "";
@@ -139,9 +143,10 @@ class StockHandler {
 //      stockData = this.stockDataFetcher(this.name);
 //    }
     try{
-      Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
-      stockData = new Gson().fromJson(new FileReader("app_data/StocksJsonData/" + this.name + "Data.json"),
-          token);
+//      Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
+//      stockData = new Gson().fromJson(new FileReader("app_data/StocksJsonData/" + this.name + "Data.json"),
+//          token);
+      stockData = ApiDataAdapter.getApiObject(new JSONFileOps().readFile(this.name+"Data.json","StocksJsonData"));
       if(!stockData.containsKey(this.date) && todayTime.after(stockUpdateTime)){
         stockData = stockDataFetcher(this.name);
       }
@@ -156,6 +161,9 @@ class StockHandler {
 
     ApiDataStruct stockInfo = stockData.getOrDefault(this.date,null);
     if(stockInfo == null){
+      if(requiredDate.after(todayTime)){
+        return fetchCurrent(stockData);
+      }
       return "no data found";
     }
     output += this.name + "," + stockInfo.getClose();
@@ -182,39 +190,40 @@ class StockHandler {
     return output;
   }
 
-  String fetchCurrent(){
-    Map<String,ApiDataStruct> stockData;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    LocalDateTime now = LocalDateTime.now();
-    Date stockUpdateTime = null;
-    Date todayTime = null;
-
-    String todayDateAndTime = dtf.format(now);
-    String todayDate = todayDateAndTime.split(" ")[0];
-
-    try {
-      stockUpdateTime = sdf.parse(todayDate + " 17:00");
-      todayTime = sdf.parse(todayDateAndTime);
-    } catch (ParseException ignored) {
-    }
+  private String fetchCurrent(Map<String,ApiDataStruct> stockData){
+//    Map<String,ApiDataStruct> stockData;
+//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+//    LocalDateTime now = LocalDateTime.now();
+//    Date stockUpdateTime = null;
+//    Date todayTime = null;
+//
+//    String todayDateAndTime = dtf.format(now);
+//    String todayDate = todayDateAndTime.split(" ")[0];
+//
+//    try {
+//      stockUpdateTime = sdf.parse(todayDate + " 17:00");
+//      todayTime = sdf.parse(todayDateAndTime);
+//    } catch (ParseException ignored) {
+//    }
+//    String output = "";
+//
+//    try{
+//      Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
+//      stockData = new Gson().fromJson(new FileReader("app_data/StocksJsonData/" + this.name + "Data.json"),
+//          token);
+//      if(!stockData.containsKey(this.date) && todayTime.after(stockUpdateTime)){
+//        stockData = stockDataFetcher(this.name);
+//      }
+//    } catch(FileNotFoundException e){
+//      stockData = stockDataFetcher(this.name);
+//    }
+//
+//    if(stockData == null){
+//      output = this.status;
+//      return output;
+//    }
     String output = "";
-
-    try{
-      Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
-      stockData = new Gson().fromJson(new FileReader("app_data/StocksJsonData/" + this.name + "Data.json"),
-          token);
-      if(!stockData.containsKey(this.date) && todayTime.after(stockUpdateTime)){
-        stockData = stockDataFetcher(this.name);
-      }
-    } catch(FileNotFoundException e){
-      stockData = stockDataFetcher(this.name);
-    }
-
-    if(stockData == null){
-      output = this.status;
-      return output;
-    }
     String recentDate = "";
     Optional<String> recentDateKey = stockData.keySet().stream().findFirst();
     if(recentDateKey.isPresent()){
@@ -259,9 +268,9 @@ class StockHandler {
     return stockData;
   }
   public static void main(String args[]){
-//    System.out.println(StockHandler.getBuilder().name("AAPL").date("2022-11-07").build().fetchByDate());
+   System.out.println(StockHandler.getBuilder().name("GOOG").date("2022-11-07").build().fetchByDate());
 //    System.out.println(StockHandler.getBuilder().name("AAPL").build().fetchCurrent());
-    System.out.println(StockHandler.getBuilder().name("MADARA").build().fetchCurrent());
+//    System.out.println(StockHandler.getBuilder().name("MADARA").build().fetchCurrent());
   }
 }
 //=======

@@ -146,6 +146,7 @@ class PortfolioValue {
       float result = stockCountValue(nameAndCount);
       if(result == -1 || result == -2 || result == -3){
         sum+=0;
+        continue;
       }
       sum += result;
     }

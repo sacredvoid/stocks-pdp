@@ -1,6 +1,7 @@
 package model;
 
 import com.google.gson.Gson;
+import controller.commands.LoadExternalPortfolio;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -9,6 +10,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import model.fileops.FileOps;
@@ -20,7 +22,7 @@ import model.portfolio.PortfolioToCSVAdapter;
 import model.portfolio.StockData;
 import model.portfolio.Utility;
 import model.portfolio.filters.FilterPortfolio;
-
+import java.time.temporal.ChronoUnit;
 
 public class ModelOrchestratorV2 extends AOrchestrator {
   private static final String VALID_DATE_REGEX =
@@ -127,26 +129,62 @@ public class ModelOrchestratorV2 extends AOrchestrator {
    * @return performance of the portfolio for each timestamp in the form of stars which depict<p></p>
    *          the value of the portfolio
    */
-//  public String showPerformance(String pfId, String startDate, String endDate) throws FileNotFoundException{
-//    String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
-//    Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
-//
-//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//    Period timespan = Period.between(LocalDate.parse(startDate,formatter),
-//        LocalDate.parse(endDate,formatter));
-//
-//    if(timespan.getDays() >=5 && timespan.getDays() <=30){
-//      return new Performance().showPerformanceByDate(parsedPFData,startDate,endDate);
-//    }else if( timespan.getMonths() >= 5 && timespan.getMonths() <=30){
-//      return new Performance().showPerformanceByMonth(parsedPFData,startDate,endDate);
-//    } else if(timespan.getMonths() >= 15 && timespan.getMonths() <=90){
-//      return new Performance().showPerformanceByQuarter(parsedPFData,startDate,endDate);
-//    } else if( timespan.getMonths() >= 30 && timespan.getMonths()<=180){
-//      return new Performance().showPerformanceByHalfYear(parsedPFData,startDate,endDate);
-//    } else{
-//      return new Performance().showPerformanceByYear(parsedPFData,startDate,endDate);
-//    }
+  public String showPerformance(String pfId, String startDate, String endDate) throws FileNotFoundException {
+    String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
+    Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
 
-//    return null;
-//  }
+//    if(){
+//      return "End date is not in the portfolio. "
+//          + "Kindly try giving end date on or after "+Utility.getOldestDate(parsedPFData);
+//    }
+    LocalDate localSD = LocalDate.parse(startDate);
+    LocalDate localED = LocalDate.parse(endDate);
+
+    if (localSD.isAfter(localED)) {
+      return "Start date cannot be after End date";
+    }
+    String firstMostDate = Utility.getOldestDate(parsedPFData);
+    if (localED.isBefore(LocalDate.parse(firstMostDate))) {
+      return "End date is not in the portfolio. "
+          + "Kindly try giving end date on or after " + Utility.getOldestDate(parsedPFData);
+
+    }
+    long months = 99999;
+    long years = 99999;
+    long days = ChronoUnit.DAYS.between(localSD,localED);
+
+    if(days==0){
+      return "Enter different dates for 2 ranges";
+    } else if(days<5){
+      return "Enter date range with more than 5 days";
+    } else if(days>31){
+      months = ChronoUnit.MONTHS.between(localSD,localED);
+    }
+
+    if(months < 5){
+      return "Enter date range with more than 5 months";
+    } else if(months > 180){
+      years = ChronoUnit.YEARS.between(localSD,localED);
+    }
+    Performance performance = Performance.getBuilder().portfolioId(pfId).build();
+
+    if(days >=5 && days <=31){
+      return performance.showPerformanceByDate(parsedPFData,startDate,endDate);
+    }else if( months >= 5 && months <=30){
+      return performance.showPerformanceByMonth(parsedPFData,startDate,endDate);
+    } else if(months >= 15 && months <=90){
+      return performance.showPerformanceByQuarter(parsedPFData,startDate,endDate);
+    } else if( months >= 30 && months<=180){
+      return performance.showPerformanceByHalfYear(parsedPFData,startDate,endDate);
+    } else if(years<=30){
+      return performance.showPerformanceByYear(parsedPFData,startDate,endDate);
+    } else{
+      return "Time range too big to display as graph.";
+    }
+  }
+
+  public static void main(String args[]) throws FileNotFoundException {
+    ModelOrchestratorV2 mv2 = new ModelOrchestratorV2();
+    System.out.println(mv2.showPerformance("123455","2021-09-11","2021-11-11"));
+  }
 }

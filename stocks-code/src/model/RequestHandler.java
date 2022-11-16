@@ -21,8 +21,10 @@ import java.util.Map.Entry;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import model.apiData.ApiDataAdapter;
 import model.apiData.ApiDataStruct;
 import model.fileops.CSVFileOps;
+import model.fileops.JSONFileOps;
 
 
 /**
@@ -128,11 +130,12 @@ class RequestHandler {
     if(!urlFlag){
       return null;
     }
-    Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
+//    Type token = new TypeToken<LinkedHashMap<String,ApiDataStruct>>(){}.getType();
     try {
 //      File f =
-      data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
-          token);
+//      data = new Gson().fromJson(new FileReader("app_data/StocksJsonData/"+stockSymbol+"Data.json"),
+//          token);
+      data = ApiDataAdapter.getApiObject(new JSONFileOps().readFile(this.stockSymbol+"Data.json","StocksJsonData"));
     } catch (FileNotFoundException e) {
 //      throw new RuntimeException(e);
       status ="no data found";
@@ -143,7 +146,7 @@ class RequestHandler {
 
   public static void main(String args[]){
     Map<String, ApiDataStruct> dataList ;
-    dataList = RequestHandler.getBuilder().stockSymbol("AAPL").build().buildURL().fetch();
+    dataList = RequestHandler.getBuilder().stockSymbol("GOOG").build().buildURL().fetch();
     for (Entry<String, ApiDataStruct> entry: dataList.entrySet()
     ) {
       System.out.println(entry.getKey());

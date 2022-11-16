@@ -5,6 +5,7 @@ import controller.commands.GetPortfolioComposition;
 import controller.commands.GetPortfolioValue;
 import controller.commands.LoadExternalPortfolio;
 import controller.commands.ModifyPortfolio;
+import controller.commands.PortfolioPerformance;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +78,16 @@ public class InteractionHandlerV2 extends AbstractHandler {
         }
       }
       return new CreatePortfolio(inputStockData.toString());
+    });
+    acceptedCommands.put("6",s->{
+      this.ui.getExistingPortfolios();
+      this.ui.printText("Enter portfolio ID you want to view performance for:","Y");
+      String pfId = this.getInput("");
+      this.ui.printText("Enter start date of the date range:","Y");
+      String startDate = this.getInput("");
+      this.ui.printText("Enter end date of the date range:","Y");
+      String endDate = this.getInput("");
+      return new PortfolioPerformance(pfId,startDate,endDate);
     });
   }
 

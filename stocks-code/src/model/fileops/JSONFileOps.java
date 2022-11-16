@@ -40,8 +40,15 @@ public class JSONFileOps extends AFileOps {
 
   @Override
   public void writeToFile(String filename, String dir, String data) throws IOException {
-    String path = pathResolver(filename,dir);
-    try (Writer writer = Files.newBufferedWriter(Path.of(path), StandardCharsets.UTF_8)) {
+    String staticDataPath = pathResolver("",dir);
+
+    Path staticPath = Path.of(staticDataPath);
+    if(Files.isDirectory(staticPath)==false){
+      Files.createDirectory(staticPath);
+    }
+
+    String dataWritePath = pathResolver(filename,dir);
+    try (Writer writer = Files.newBufferedWriter(Path.of(dataWritePath), StandardCharsets.UTF_8)) {
       JsonElement json = JsonParser.parseString(data);
       customJSONReader.toJson(json,writer);
     }

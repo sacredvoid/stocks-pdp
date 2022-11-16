@@ -13,4 +13,12 @@ public class Utility {
     sortedDates.sort(Collections.reverseOrder());
     return sortedDates.get(0);
   }
+  public static String getOldestDate(Map<String, PortfolioData> pfData) {
+    ArrayList<String> sortedDates = new ArrayList<>(pfData.keySet());
+    if(sortedDates.isEmpty()) {
+      return "No data found to sort";
+    }
+    Collections.sort(sortedDates);
+    return sortedDates.get(0);
+  }
 }

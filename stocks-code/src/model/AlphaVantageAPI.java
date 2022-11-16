@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import model.fileops.JSONFileOps;
 
 class AlphaVantageAPI implements ApiHandler{
   private String stockSymbol;
@@ -123,12 +124,14 @@ class AlphaVantageAPI implements ApiHandler{
     JsonObject alphaDataJson = new Gson().fromJson(replacedString,JsonObject.class);
     JsonObject stockData = (JsonObject) alphaDataJson.get("Time Series (Daily)");
 
-    Path path = Paths.get("app_data/StocksJsonData/"+stockSymbol+"Data.json");
-    try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      gson.toJson(stockData,writer);
+//    Path path = Paths.get("app_data/StocksJsonData/"+stockSymbol+"Data.json");
+//    try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+//      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//      gson.toJson(stockData,writer);
+    try{
+      new JSONFileOps().writeToFile(this.stockSymbol+"Data.json","StocksJsonData",stockData.toString());
     } catch (IOException e) {
-      //
+      status = "couldn't make static data dir";
     }
 //    return stockData;
   }

@@ -143,6 +143,7 @@ public class UserInteraction implements ViewHandler {
     this.printText("3 - Modify existing Portfolio","Y");
     this.printText("4 - Get Portfolio Value","Y");
     this.printText("5 - Create New Portfolio","Y");
+    this.printText("6 - View Portfolio Performance","Y");
     this.printText("q/Q - Quit Application","Y");
   }
 }

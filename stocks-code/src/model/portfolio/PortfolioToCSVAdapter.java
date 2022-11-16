@@ -2,6 +2,7 @@ package model.portfolio;
 
 import java.util.List;
 
+
 public class PortfolioToCSVAdapter {
 
   public static String buildStockQuantity(StockData s) {
