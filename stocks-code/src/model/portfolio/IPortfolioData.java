@@ -19,4 +19,7 @@ public interface IPortfolioData {
 
   float getTotalCommission();
   void setTotalCommission(float newCommission);
+
+  float getTotalEarned();
+  void setTotalEarned(float newEarning);
 }

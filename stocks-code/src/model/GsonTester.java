@@ -27,7 +27,7 @@ public class GsonTester {
     List<StockData> s = new ArrayList<>();
     s.add(s1);
     s.add(s2);
-    PortfolioData p = new PortfolioData(s,123,234);
+    PortfolioData p = new PortfolioData(s,123,234, 0);
     System.out.printf("Portfolio stuff: %s",p.getQuantity("AAPL"));
     System.out.printf("Portfolio stuff: %s",p.getStockList());
     System.out.printf("%s",p.setQuantity("MSFT",30));

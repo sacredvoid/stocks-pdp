@@ -31,4 +31,18 @@ public class StockData implements IStockData {
   public void setQuantity(float quantity) {
     this.quantity = quantity;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof StockData)) {
+      return false;
+    }
+    return stockName.equals(((StockData) obj).stockName);
+  }
+
+  @Override
+  public int hashCode() {
+    return 15*stockName.hashCode();
+  }
+
 }

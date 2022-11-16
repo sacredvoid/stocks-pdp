@@ -11,6 +11,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import model.PortfolioValue;
 
 public class CSVToPortfolioAdapter {
   public static StockData buildStockData(String data) {
@@ -22,8 +23,9 @@ public class CSVToPortfolioAdapter {
   public static PortfolioData buildPortfolioData(
       List<StockData> stockDataList,
       float totalInvested,
-      float totalCommission) {
-    return new PortfolioData(stockDataList, totalInvested, totalCommission);
+      float totalCommission,
+      float totalEarned) {
+    return new PortfolioData(stockDataList, totalInvested, totalCommission, totalEarned);
   }
 
   public static Map<String, PortfolioData> appendPFDataByDate(
@@ -48,30 +50,21 @@ public class CSVToPortfolioAdapter {
       String date = stockQuantity[2];
       // validate
       // calculate these two
-      float totalInvested = 0;
-      float totalCommission = 0;
+      float totalTransaction;
+      float totalCommission = 1;
+      float totalEarned = 0;
 
-      //STOCK TICKER VALIDATION
-//      if(!stockQuantity[1].matches(SCRIP_REGEX)){
-//        throw new IllegalArgumentException("Make sure to use Valid Stock Ticker for each input.");
-//      }
+      List<String> portfolioValue = PortfolioValue.getBuilder()
+          .stockCountList(line)
+          .date(date)
+          .build()
+          .completePortfolioValue();
+
+      totalTransaction = Float.parseFloat(portfolioValue.get(1).split(",")[2]);
+
       StockData currentStock = new StockData(stockQuantity[0], Float.parseFloat(stockQuantity[1]));
-
-//      //DATE VALIDATION
-//      if(!date.matches(VALID_DATE_REGEX)){
-//        throw new IllegalArgumentException("Make sure DATE is in YYYY-MM-DD format for each input.");
-//      }
-
-      if(pfData.containsKey(date)) {
-        pfData.get(date).addStock(currentStock);
-      }
-
-      else {
-        List<StockData> tempList = new ArrayList<>();
-        tempList.add(currentStock);
-        PortfolioData tempP = new PortfolioData(tempList,totalInvested,totalCommission);
-        pfData.put(date,tempP);
-      }
+      CascadeTransactions.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
+          totalTransaction, totalCommission);
     }
     return pfData;
   }

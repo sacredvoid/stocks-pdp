@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * PortfolioValue class defines methods to perform operations and find the values of the stocks.
  */
-class PortfolioValue {
+public class PortfolioValue {
 
   private String stockCountList;
   private String date = null;
@@ -21,7 +21,7 @@ class PortfolioValue {
    *
    * @return PortfolioValueBuilder objecty
    */
-  static PortfolioValueBuilder getBuilder() {
+  public static PortfolioValueBuilder getBuilder() {
     return new PortfolioValueBuilder();
   }
 
@@ -29,7 +29,7 @@ class PortfolioValue {
    * PortfolioValueBuilder class is a static class which is used to build the object of <p></p>
    * PortfolioValue class.
    */
-  static class PortfolioValueBuilder {
+  public static class PortfolioValueBuilder {
 
     private String stockCountList;
     private String date;
@@ -40,7 +40,7 @@ class PortfolioValue {
      * @param stockCountList is a list of stock names and quantities.
      * @return the same PortfolioValueBuilder class with stockCountList stored as an attribute.
      */
-    PortfolioValueBuilder stockCountList(String stockCountList) {
+    public PortfolioValueBuilder stockCountList(String stockCountList) {
       this.stockCountList = stockCountList;
       return this;
     }
@@ -51,7 +51,7 @@ class PortfolioValue {
      * @param date to retrieve the data of the stock on that specific day.
      * @return the same PortfolioValueBuilder class with date stored as an attribute.
      */
-    PortfolioValueBuilder date(String date) {
+    public PortfolioValueBuilder date(String date) {
       this.date = date;
       return this;
     }
@@ -62,7 +62,7 @@ class PortfolioValue {
      *
      * @return PortfolioValue object.
      */
-    PortfolioValue build() {
+    public PortfolioValue build() {
       return new PortfolioValue(this.stockCountList, this.date);
     }
   }
@@ -73,7 +73,7 @@ class PortfolioValue {
    *
    * @return a list of individual and total stock values.
    */
-  List<String> completePortfolioValue() {
+  public List<String> completePortfolioValue() {
     List<String> output = new ArrayList<>();
     String[] lines = stockCountList.split("\n");
     float sum = 0.00F;

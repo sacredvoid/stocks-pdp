@@ -11,6 +11,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
 import model.portfolio.CSVToPortfolioAdapter;
@@ -67,13 +68,6 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     }catch( FileNotFoundException e){
       return "Sorry, No stocks for given date"; // Get most recent stock list
     }
-//    if(stockCountList.equals("Sorry, no data for given date.")){
-//      return stockCountList;
-//    } else if(stockCountList.equals("Sorry, no stocks for given date.")){
-//      return stockCountList;
-//    } else if(stockCountList.equals("Sorry, no portfolio data found for given date/before it.")){
-//      return stockCountList;
-//    }
     if(stockCountList.contains("Sorry")){
       return stockCountList;
     }

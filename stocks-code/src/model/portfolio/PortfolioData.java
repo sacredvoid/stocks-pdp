@@ -1,17 +1,24 @@
 package model.portfolio;
 
 import com.google.gson.Gson;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PortfolioData implements IPortfolioData {
+
   private List<StockData> stockData;
   private float totalInvested;
   private float totalCommission;
 
-  public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission) {
+  private float totalEarned;
+
+  public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission,
+      float totalEarned) {
     this.stockData = sd;
     this.totalCommission = totalCommission;
     this.totalInvested = totalInvested;
+    this.totalEarned = totalEarned;
   }
 
   @Override
@@ -40,6 +47,17 @@ public class PortfolioData implements IPortfolioData {
   }
 
   @Override
+  public float getTotalEarned() {
+    return this.totalEarned;
+  }
+
+  @Override
+  public void setTotalEarned(float newEarning) {
+    this.totalEarned = newEarning;
+  }
+
+
+  @Override
   public List<StockData> getStockList() {
     return stockData;
   }
@@ -47,10 +65,15 @@ public class PortfolioData implements IPortfolioData {
   @Override
   public String addStock(StockData newStock) {
     try {
+      for (StockData s : stockData) {
+        if (s.equals(newStock)) {
+          s.setQuantity(newStock.getQuantity()+s.getQuantity());
+          return "Adding successful";
+        }
+      }
       stockData.add(newStock);
-    }
-    catch (Exception e) {
-      return "Adding stock failed: "+e.getMessage();
+    } catch (Exception e) {
+      return "Adding stock failed: " + e.getMessage();
     }
     return "Adding successful";
   }
@@ -63,10 +86,11 @@ public class PortfolioData implements IPortfolioData {
         .findAny()
         .orElse(null);
 
-    if(found!=null) {
+    if (found != null) {
       return found.getQuantity();
+    } else {
+      return -1;
     }
-    else return -1;
   }
 
   @Override
@@ -77,11 +101,10 @@ public class PortfolioData implements IPortfolioData {
         .findAny()
         .orElse(null);
 
-    if(found!=null) {
+    if (found != null) {
       found.setQuantity(quantity);
       return "Successfully changed stock quantity";
-    }
-    else {
+    } else {
       return "Stock not found";
     }
   }

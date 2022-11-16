@@ -72,7 +72,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
           break;
         }
         else {
-          inputStockData.append(data).append("\n");
+          inputStockData.append(data).append(",BUY").append("\n");
 //          return new CreatePortfolio(inputStockData.toString());
         }
       }
