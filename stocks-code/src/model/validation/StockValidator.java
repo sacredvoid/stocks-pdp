@@ -1,7 +1,9 @@
 package model.validation;
 
-
-public class StockValidator implements IDataValidator{
+/**
+ * StockValidator class defines the methods to validate stock names.
+ */
+public class StockValidator implements IDataValidator {
 
   /**
    * Our internal method to check if the given Stock Ticker is a valid ticker or not. It follows the

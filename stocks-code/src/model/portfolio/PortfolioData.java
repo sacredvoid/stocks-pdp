@@ -3,7 +3,8 @@ package model.portfolio;
 import com.google.gson.Gson;
 import java.util.List;
 
-public class PortfolioData implements IPortfolioData, Cloneable{
+
+public class PortfolioData implements IPortfolioData {
 
   private List<StockData> stockData;
   private float totalInvested;

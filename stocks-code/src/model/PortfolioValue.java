@@ -87,9 +87,9 @@ public class PortfolioValue {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "Invalid Ticker");
       } else if (result == -2) {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "API limit reached!!!");
-      } else if (result == -3){
+      } else if (result == -3) {
         output.add(nameAndCount[0] + "," + nameAndCount[1] + "," + "No data found");
-      }else {
+      } else {
         output.add(String.format(nameAndCount[0] + "," + nameAndCount[1] + ",%.2f", result));
         sum += result;
       }
@@ -106,12 +106,7 @@ public class PortfolioValue {
         .date(date)
         .build()
         .fetchByDate();
-//    if (!nameValue.equals("")) {
-//      return nameValue;
-//    } else {
-//      return "";
-//    }
-//    return "";
+
     return nameValue;
   }
 
@@ -119,46 +114,43 @@ public class PortfolioValue {
     String name = stockNameCount[0];
     float count = Float.parseFloat(stockNameCount[1]);
     String stockPriceString = stockValueFetcher(name);
-//    if (stockPriceString.equals("")) {
-//      return 0;
-//    }
-//    if (stockPriceString.equals("API hit limit reached!!!")) {
-//      return -1;
-//    }
-    if (stockPriceString.equals("no data found")){
+
+    if (stockPriceString.equals("no data found")) {
       return -3;
-    } else if(stockPriceString.equals("URL is broken") || stockPriceString.equals("invalid ticker")){
+    } else if (stockPriceString.equals("URL is broken") || stockPriceString.equals(
+        "invalid ticker")) {
       return -1;
-    } else if(stockPriceString.equals("api limit reached")){
+    } else if (stockPriceString.equals("api limit reached")) {
       return -2;
     }
     float stockPrice = Float.parseFloat(stockPriceString.split(",")[1]);
     return stockPrice * count;
   }
 
-  protected float stockCountValueForPerformance(){
+  protected float stockCountValueForPerformance() {
     List<String> output = new ArrayList<>();
     String[] lines = stockCountList.split("\n");
     float sum = 0.00F;
-    for (String line: lines
+    for (String line : lines
     ) {
       String[] nameAndCount = line.split(",");
       float result = stockCountValue(nameAndCount);
-      if(result == -1 || result == -2 || result == -3){
-        sum+=0;
+      if (result == -1 || result == -2 || result == -3) {
+        sum += 0;
+        continue;
       }
       sum += result;
     }
     return sum;
   }
-  public static void main(String args[]){
-    String stockCountList ="AAPL,10\nIBM,10\nMADARA,30";
-    String date = "2022-11-07";
-
-    List<String> portfolioValue = PortfolioValue.getBuilder().stockCountList(stockCountList).date(date).build().completePortfolioValue();
-    for (String s: portfolioValue
-    ) {
-      System.out.println(s);
-    }
-  }
+//  public static void main(String args[]){
+//    String stockCountList ="AAPL,10\nIBM,10\nMADARA,30";
+//    String date = "2022-11-07";
+//
+//    List<String> portfolioValue = PortfolioValue.getBuilder().stockCountList(stockCountList).date(date).build().completePortfolioValue();
+//    for (String s: portfolioValue
+//    ) {
+//      System.out.println(s);
+//    }
+//  }
 }

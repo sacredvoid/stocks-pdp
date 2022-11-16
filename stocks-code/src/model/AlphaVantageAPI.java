@@ -13,8 +13,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import model.fileops.JSONFileOps;
 
-class AlphaVantageAPI implements ApiHandler{
+class AlphaVantageAPI implements ApiHandler {
+
   private String stockSymbol;
 
   private StringBuilder data;
@@ -27,8 +29,8 @@ class AlphaVantageAPI implements ApiHandler{
       + "=";
 
 
-
   private String status = "success";
+
   private AlphaVantageAPI(String stockSymbol) {
     this.stockSymbol = stockSymbol;
   }
@@ -52,10 +54,12 @@ class AlphaVantageAPI implements ApiHandler{
       return new AlphaVantageAPI(this.stockSymbol);
     }
   }
+
   @Override
   public String getStatus() {
     return status;
   }
+
   @Override
   public AlphaVantageAPI createURL() {
     try {
@@ -66,17 +70,10 @@ class AlphaVantageAPI implements ApiHandler{
     }
     return this;
   }
+
   @Override
   public boolean works() {
-//    String [] errorMsgs = {"{\n"
-//        + "    \"Note\": \"Thank you for using Alpha Vantage! Our standard API call frequency is "
-//        + "5 calls per minute and 500 calls per day. Please visit "
-//        + "https://www.alphavantage.co/premium/"
-//        + " if you would like to target a higher API call frequency.\"\n"
-//        + "}","{\n"
-//        + "    \"Error Message\": \"Invalid API call. Please retry or visit the documentation "
-//        + "(https://www.alphavantage.co/documentation/) for TIME_SERIES_DAILY.\"\n"
-//        + "}"};
+
     String apiHitLimitError = "{\n"
         + "    \"Note\": \"Thank you for using Alpha Vantage! Our standard API call frequency is "
         + "5 calls per minute and 500 calls per day. Please visit "
@@ -90,21 +87,16 @@ class AlphaVantageAPI implements ApiHandler{
         + "}";
 
     data = fetch(url);
-    if(data == null){
+    if (data == null) {
       status = "URL is broken";
       return false;
     }
-//    for (String errorMsg: errorMsgs
-//    ) {
-//      if(data.toString().equals(errorMsg)){
-//        return false;
-//      }
-//    }
-    if(data.toString().equals(apiHitLimitError)){
+
+    if (data.toString().equals(apiHitLimitError)) {
       status = "api limit reached";
       return false;
     }
-    if(data.toString().equals(urlError)){
+    if (data.toString().equals(urlError)) {
       status = "invalid ticker";
       return false;
     }
@@ -114,23 +106,22 @@ class AlphaVantageAPI implements ApiHandler{
   @Override
   public void writeJson() {
     String replacedString = data.toString();
-    replacedString = replacedString.replace("1. open","open");
-    replacedString = replacedString.replace("2. high","high");
-    replacedString = replacedString.replace("3. low","low");
-    replacedString = replacedString.replace("4. close","close");
-    replacedString = replacedString.replace("5. volume","volume");
+    replacedString = replacedString.replace("1. open", "open");
+    replacedString = replacedString.replace("2. high", "high");
+    replacedString = replacedString.replace("3. low", "low");
+    replacedString = replacedString.replace("4. close", "close");
+    replacedString = replacedString.replace("5. volume", "volume");
 
-    JsonObject alphaDataJson = new Gson().fromJson(replacedString,JsonObject.class);
+    JsonObject alphaDataJson = new Gson().fromJson(replacedString, JsonObject.class);
     JsonObject stockData = (JsonObject) alphaDataJson.get("Time Series (Daily)");
 
-    Path path = Paths.get("app_data/StocksJsonData/"+stockSymbol+"Data.json");
-    try(Writer writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-      gson.toJson(stockData,writer);
+    try {
+      new JSONFileOps().writeToFile(this.stockSymbol + "Data.json", "StocksJsonData",
+          stockData.toString());
     } catch (IOException e) {
-      //
+      status = "couldn't make static data dir";
     }
-//    return stockData;
+
   }
 
   @Override
@@ -138,26 +129,4 @@ class AlphaVantageAPI implements ApiHandler{
     return ApiHandler.super.fetch(url);
   }
 
-  public static void main(String args[]){
-    String [] stockNames = {"AAPL","IBM","MSFT","GOOG","T","META","NFLX","NKE","ORCL","PEP","TSCO.LON","UNH","VZ","WMT","XOM","NVDA","TXN","JNJ","GPV.TRV"};
-    for (String stock: stockNames
-    ) {
-      ApiHandler alphaApi1 = AlphaVantageAPI.getBuilder().stockSymbol(stock).build();
-      if(alphaApi1.createURL().works()) {
-        alphaApi1.writeJson();
-      } else{
-        System.out.println(stock+" data cannot be fetched");
-      }
-    }
-
-
-
-
-
-//
-//    ApiHandler alphaApi = AlphaVantageAPI.getBuilder().stockSymbol("adsfsf").build().createURL();
-//    if(!alphaApi.works()){
-//      System.out.println("condition working fine");
-//    }
-  }
 }

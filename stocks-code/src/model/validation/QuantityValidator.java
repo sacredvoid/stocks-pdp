@@ -1,5 +1,8 @@
 package model.validation;
 
+/**
+ * QuantitiyValidator class defines the methods to validate quantity parameter.
+ */
 public class QuantityValidator implements IDataValidator {
 
   /**

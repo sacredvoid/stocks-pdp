@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * DateValidator class defines methods to check and validate dates.
+ */
 public class DateValidator implements IDataValidator {
 
   /**

@@ -52,7 +52,6 @@ public class ModelOrchestrator extends AOrchestrator {
   }
 
 
-
   /**
    * Fetches Portfolio Value as CSV Data in string format (stock,quantity,value) given a date and
    * portfolio data (in CSV). Since weekend data is unavailble for stocks, returns null if given
@@ -88,7 +87,8 @@ public class ModelOrchestrator extends AOrchestrator {
   }
 
   @Override
-  public String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException {
+  public String getPortfolioCompositionByDate(String date, String pfID)
+      throws FileNotFoundException {
     return null;
   }
 
@@ -119,6 +119,11 @@ public class ModelOrchestrator extends AOrchestrator {
 
   @Override
   public String editExistingPortfolio(String pfID, String call) {
+    return null;
+  }
+  @Override
+  public String showPerformance(String pfId, String startDate, String endDate)
+      throws FileNotFoundException {
     return null;
   }
 }

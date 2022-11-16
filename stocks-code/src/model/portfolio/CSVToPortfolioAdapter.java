@@ -1,10 +1,12 @@
 package model.portfolio;
 
+<<<<<<< HEAD
 import java.util.List;
 import java.util.Map;
 import model.PortfolioValue;
 
 public class CSVToPortfolioAdapter {
+
   public static StockData buildStockData(String data) {
     String[] dataSplit = data.split(",");
     // Validate data
@@ -24,7 +26,7 @@ public class CSVToPortfolioAdapter {
       PortfolioData pfData,
       Map<String, PortfolioData> fullPortfolio) {
     // Probably add logic to handle date clashes
-    fullPortfolio.put(date,pfData);
+    fullPortfolio.put(date, pfData);
     return fullPortfolio;
   }
 

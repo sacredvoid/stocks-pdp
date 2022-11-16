@@ -3,6 +3,7 @@ package controller.commands;
 import controller.IPortfolioCommands;
 
 public abstract class APortfolioCommands implements IPortfolioCommands {
+
   protected String statusMessage = "";
 
 

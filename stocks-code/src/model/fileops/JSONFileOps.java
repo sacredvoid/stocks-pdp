@@ -29,35 +29,41 @@ public class JSONFileOps extends AFileOps {
   @Override
   public String readFile(String filename, String dir) throws FileNotFoundException {
     String path = pathResolver(filename, dir);
-    try(Reader reader = Files.newBufferedReader(Path.of(path), StandardCharsets.UTF_8)) {
-      JsonObject j = customJSONReader.fromJson(reader,JsonObject.class);
+    try (Reader reader = Files.newBufferedReader(Path.of(path), StandardCharsets.UTF_8)) {
+      JsonObject j = customJSONReader.fromJson(reader, JsonObject.class);
       return j.toString();
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new FileNotFoundException("Portfolio File not found!");
     }
   }
 
   @Override
   public void writeToFile(String filename, String dir, String data) throws IOException {
-    String path = pathResolver(filename,dir);
-    try (Writer writer = Files.newBufferedWriter(Path.of(path), StandardCharsets.UTF_8)) {
-      JsonElement json = JsonParser.parseString(data);
-      customJSONReader.toJson(json,writer);
+    String staticDataPath = pathResolver("", dir);
+
+    Path staticPath = Path.of(staticDataPath);
+    if (Files.isDirectory(staticPath) == false) {
+      Files.createDirectory(staticPath);
     }
-    catch (Exception e) {
+
+    String dataWritePath = pathResolver(filename, dir);
+    try (Writer writer = Files.newBufferedWriter(Path.of(dataWritePath), StandardCharsets.UTF_8)) {
+      JsonElement json = JsonParser.parseString(data);
+      customJSONReader.toJson(json, writer);
+    } catch (Exception e) {
       throw new IOException(e.getMessage());
     }
   }
 
   public static void main(String[] args) throws IOException {
     JSONFileOps j = new JSONFileOps();
-    String out = j.readFile("1234.json","PortfolioData");
-    Type typetoken = new TypeToken<HashMap<String,PortfolioData>>() {}.getType();
-    Map<String,PortfolioData> pf = new Gson().fromJson(out,typetoken);
-    System.out.printf("****\n%s****\n",pf.get("2020-10-11").getStockList().get(0).getStockName());
+    String out = j.readFile("1234.json", "PortfolioData");
+    Type typetoken = new TypeToken<HashMap<String, PortfolioData>>() {
+    }.getType();
+    Map<String, PortfolioData> pf = new Gson().fromJson(out, typetoken);
+    System.out.printf("****\n%s****\n", pf.get("2020-10-11").getStockList().get(0).getStockName());
     System.out.println(out);
-    j.writeToFile("2345.json","PortfolioData",out);
+    j.writeToFile("2345.json", "PortfolioData", out);
   }
 
 }
