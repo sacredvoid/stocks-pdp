@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import model.apiData.ApiDataStruct;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
 import model.portfolio.CSVToPortfolioAdapter;
@@ -53,10 +54,24 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   }
 
   @Override
-  public String getPortfolioValue(String date, String pfId) throws ParseException {
+  public String getPortfolioValue(String date, String pfID) throws ParseException {
+//    String stockCountList;
+    String pfData;
+    LocalDate reqDate = LocalDate.parse(date);
+    try {
+      pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+    } catch (FileNotFoundException e) {
+      return "Sorry, could not find the portfolio with id "+pfID;
+    }
+    Map<String, PortfolioData> pfJsonData =  PortfolioDataAdapter.getObject(pfData);
+    LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
+
+    if(reqDate.isBefore(oldestPurchaseDate)){
+      return "0\nEnter date equal to or after "+oldestPurchaseDate.toString();
+    }
     String stockCountList;
     try {
-      stockCountList = this.getPortfolioCompositionByDate(date, pfId);
+      stockCountList = this.getPortfolioCompositionByDate(date, pfID);
     } catch (FileNotFoundException e) {
       return "Sorry, No stocks for given date"; // Get most recent stock list
     }
