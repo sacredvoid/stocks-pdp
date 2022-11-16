@@ -10,6 +10,10 @@ public interface IPortfolioData {
   List<StockData> getStockList();
   String addStock(StockData newStock);
 
+  String removeStock(StockData newStock);
+
+  void setStockList(List<StockData> newStockList);
+
   float getQuantity(String stockName);
   String setQuantity(String stockName, float quantity);
 

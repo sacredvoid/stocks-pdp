@@ -3,15 +3,10 @@ package model;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
 import model.portfolio.CSVToPortfolioAdapter;
@@ -47,16 +42,11 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     String newPFID = this.generatePortfolioID();
     try {
       Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
-          portfolioData);
+          portfolioData, new HashMap<>());
       jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(translated));
     } catch (IOException io) {
       return "Failed to create portfolio";
     }
-//    catch (NumberFormatException e){
-//      return "Failed to create portfolio.\nMake sure QUANTITY is in only Numbers for each input";
-//    } catch (IllegalArgumentException e){
-//      return e.getMessage();
-//    }
     return "Created Portfolio with ID: " + newPFID;
   }
 
@@ -110,6 +100,28 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String loadExternalPortfolio(String path) throws FileNotFoundException {
     return null;
+  }
+
+  @Override
+  public String editExistingPortfolio(String pfID, String call) {
+    String csvPFData;
+    try {
+      csvPFData =  jsonParser.readFile(pfID+".json",PORTFOLIO_DATA_PATH);
+    }
+    catch (FileNotFoundException f) {
+      return "File not found!";
+    }
+    Map<String, PortfolioData> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
+        call, PortfolioDataAdapter.getObject(csvPFData));
+
+    try {
+      jsonParser.writeToFile(pfID+".json",PORTFOLIO_DATA_PATH,new Gson().toJson(updatedPF));
+    }
+    catch (IOException io) {
+      return "Unable to save Portfolio data";
+    }
+    return "Saved the updated portfolio!";
+
   }
 
   /**

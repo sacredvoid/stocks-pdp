@@ -11,21 +11,24 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 import model.ModelOrchestratorV2;
+import model.Orchestrator;
 import view.UserInteraction;
 
 public class InteractionHandlerV2 extends AbstractHandler {
 
+  UserInteraction ui;
+  Orchestrator morch;
   Map<String, Function<Scanner, IPortfolioCommands>> acceptedCommands = new HashMap<>();
   /**
    * Constructor class which takes a Readable input and Printstream output, which is used by our
    * view to display outputs from model to console.
    *
    * @param input  Readable type input object
-   * @param output Prinstream type output object
+   * @param morch Prinstream type output object
    */
-  public InteractionHandlerV2(Readable input, PrintStream output) {
-    this.modelOrch = new ModelOrchestratorV2();
-    this.ui = new UserInteraction(output, this.modelOrch);
+  public InteractionHandlerV2(Readable input, Orchestrator morch, UserInteraction ui) {
+    this.ui = ui;
+    this.morch = morch;
     this.scan = new Scanner(input);
     this.initializeCommands();
   }
@@ -44,12 +47,14 @@ public class InteractionHandlerV2 extends AbstractHandler {
       return new GetPortfolioComposition(input);
     });
     acceptedCommands.put("3",s-> {
+      this.ui.getExistingPortfolios();
+      StringBuilder inputStockCalls = new StringBuilder();
       this.ui.printText("Enter Portfolio ID you want to edit shares for:","Y");
       String pfID = this.getInput("");
       this.ui.printText("Enter STOCK,QUANTITY,DATE,CALL","Y");
       this.ui.printText("Example: AAPL,20,2020-10-13,BUY","G");
-      String stockData = this.getInput("");
-      return new ModifyPortfolio(pfID, stockData);
+      String callRequests = getMultilineInput(inputStockCalls,"","modify");
+      return new ModifyPortfolio(pfID, callRequests);
     });
     acceptedCommands.put("4",s-> {
       this.ui.getExistingPortfolios();
@@ -63,21 +68,27 @@ public class InteractionHandlerV2 extends AbstractHandler {
       StringBuilder inputStockData = new StringBuilder();
       this.ui.printText("Enter STOCK, QUANTITY, DATE","Y");
       this.ui.printText("Enter q/Q to stop entering","Y");
-      while (true) {
-        String data = this.getInput("");
-        if(data.equalsIgnoreCase("q")) {
-          if(inputStockData.toString().equals("")){
-            return new CreatePortfolio("no data provided");
-          }
-          break;
-        }
-        else {
-          inputStockData.append(data).append(",BUY").append("\n");
-//          return new CreatePortfolio(inputStockData.toString());
-        }
+      String inputData = getMultilineInput(inputStockData,"","create");
+      if(inputData.equals("")){
+        return new CreatePortfolio("no data provided");
       }
       return new CreatePortfolio(inputStockData.toString());
     });
+  }
+
+  private String getMultilineInput(StringBuilder inputData, String regex, String caller) {
+    while (true) {
+      String data = this.getInput(regex);
+      if(data.equalsIgnoreCase("q")) {
+        break;
+      }
+      inputData.append(data);
+      if(caller.equals("create")) {
+        inputData.append(",BUY");
+      }
+      inputData.append("\n");
+    }
+    return inputData.toString();
   }
 
   @Override
@@ -99,7 +110,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
       }
       else {
         commandObject = commandEntered.apply(scan);
-        commandObject.go(this.modelOrch);
+        commandObject.go(this.morch);
         this.ui.printText("Output:","Y");
         this.ui.printText(commandObject.getStatusMessage(),"G");
       }

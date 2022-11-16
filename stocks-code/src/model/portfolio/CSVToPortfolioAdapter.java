@@ -1,16 +1,7 @@
 package model.portfolio;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import model.PortfolioValue;
 
 public class CSVToPortfolioAdapter {
@@ -38,11 +29,10 @@ public class CSVToPortfolioAdapter {
   }
 
   public static Map<String, PortfolioData> buildPortfolioData(
-      String stockData
+      String stockData, Map<String, PortfolioData> pfData
   ){
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested
-    Map<String, PortfolioData> pfData = new HashMap<>();
     String[] dataPerLine = stockData.split("\n");
     for (String line : dataPerLine
     ) {
@@ -63,7 +53,7 @@ public class CSVToPortfolioAdapter {
       totalTransaction = Float.parseFloat(portfolioValue.get(1).split(",")[2]);
 
       StockData currentStock = new StockData(stockQuantity[0], Float.parseFloat(stockQuantity[1]));
-      CascadeTransactions.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
+      CascadeV2.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
           totalTransaction, totalCommission);
     }
     return pfData;

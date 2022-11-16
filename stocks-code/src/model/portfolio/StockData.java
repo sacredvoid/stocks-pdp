@@ -2,7 +2,7 @@ package model.portfolio;
 
 import com.google.gson.Gson;
 
-public class StockData implements IStockData {
+public class StockData implements IStockData, Cloneable {
 
   private String stockName;
   private float quantity;
@@ -11,6 +11,18 @@ public class StockData implements IStockData {
     this.stockName = name;
     this.quantity = quantity;
   }
+
+//  @Override
+//  public Object clone() throws CloneNotSupportedException {
+//    StockData clone = null;
+//    try {
+//      clone = (StockData) super.clone();
+//    }
+//    catch (CloneNotSupportedException e) {
+//      throw new RuntimeException(e);
+//    }
+//    return clone;
+//  }
 
   @Override
   public String toString() {

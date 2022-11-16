@@ -1,6 +1,5 @@
 package controller.commands;
 
-import controller.IPortfolioCommands;
 import model.Orchestrator;
 
 public class ModifyPortfolio extends APortfolioCommands {
@@ -15,6 +14,6 @@ public class ModifyPortfolio extends APortfolioCommands {
 
   @Override
   public void go(Orchestrator m) {
-
+    setStatusMessage(m.editExistingPortfolio(this.portfolioID,this.data));
   }
 }

@@ -1,11 +1,9 @@
 package model.portfolio;
 
 import com.google.gson.Gson;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class PortfolioData implements IPortfolioData {
+public class PortfolioData implements IPortfolioData, Cloneable{
 
   private List<StockData> stockData;
   private float totalInvested;
@@ -20,6 +18,20 @@ public class PortfolioData implements IPortfolioData {
     this.totalInvested = totalInvested;
     this.totalEarned = totalEarned;
   }
+
+//  @Override
+//  public Object clone() throws CloneNotSupportedException {
+//    PortfolioData clone = null;
+//    try {
+//      clone = (PortfolioData) super.clone();
+//
+//      clone.setStockList((List<StockData>) this.stockData.clone());
+//    }
+//    catch (CloneNotSupportedException e) {
+//      throw new RuntimeException(e);
+//    }
+//    return clone;
+//  }
 
   @Override
   public String toString() {
@@ -76,6 +88,27 @@ public class PortfolioData implements IPortfolioData {
       return "Adding stock failed: " + e.getMessage();
     }
     return "Adding successful";
+  }
+
+  @Override
+  public String removeStock(StockData newStock) {
+    try {
+      for (StockData s : stockData) {
+        if (s.equals(newStock)) {
+          s.setQuantity(s.getQuantity()-newStock.getQuantity());
+          return "Adding successful";
+        }
+      }
+      stockData.add(newStock);
+    } catch (Exception e) {
+      return "Removing stock failed: " + e.getMessage();
+    }
+    return "Removing successful";
+  }
+
+  @Override
+  public void setStockList(List<StockData> newStockList) {
+    this.stockData = newStockList;
   }
 
   @Override

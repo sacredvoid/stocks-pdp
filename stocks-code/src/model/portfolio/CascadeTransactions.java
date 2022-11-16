@@ -24,18 +24,21 @@ public class CascadeTransactions {
     String mostRecentPastDate = Utility.getLatestDate(filteredBeforeDateMap);
 
     if (operation.equals("BUY")) {
+      // Check if PF contains given date
       if (currentPF.containsKey(date)) {
+        // If it does, add stock for that date
         if(filteredAfterDateMap.size()!=0){
-        filteredAfterDateMap.replaceAll((pfDate, newPFData) ->
-        {
-          newPFData.addStock(newStocks);
-          newPFData.setTotalInvested(currentPF.get(date).getTotalInvested() + totalTransaction);
-          newPFData.setTotalCommission(currentPF.get(date).getTotalCommission() + totalCommission);
-          return newPFData;
-        });}
+          filteredAfterDateMap.replaceAll((pfDate, newPFData) ->
+          {
+            newPFData.addStock(newStocks);
+            newPFData.setTotalInvested(currentPF.get(date).getTotalInvested() + totalTransaction);
+            newPFData.setTotalCommission(currentPF.get(date).getTotalCommission() + totalCommission);
+            return newPFData;
+          });}
         else{
           if(currentPF.get(date).getStockList().contains(newStocks)){
-
+            //empty
+            currentPF.get(date).addStock(newStocks);
           }
           else{
             currentPF.get(date).addStock(newStocks);
@@ -65,9 +68,6 @@ public class CascadeTransactions {
     }
     return currentPF;
   }
-
-//  private void pullLastPortfolioData(Map<String, PortfolioData> current)
-
 
   public static void main(String[] args) throws FileNotFoundException {
     FileOps jsonParser = new JSONFileOps();
