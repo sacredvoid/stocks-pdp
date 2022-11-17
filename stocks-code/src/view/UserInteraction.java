@@ -1,5 +1,6 @@
 package view;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import model.Orchestrator;
 import modelview.ModelView;
@@ -18,6 +19,9 @@ public class UserInteraction implements ViewHandler {
 
   private PrintStream outStream;
   private ModelView modelView;
+  private ByteArrayOutputStream outData;
+
+  private String status;
 
   /**
    * Default constructor that takes in a PrintStream object and initializes the class attribute.
@@ -27,6 +31,7 @@ public class UserInteraction implements ViewHandler {
   public UserInteraction(PrintStream out, Orchestrator model) {
     this.outStream = out;
     this.modelView = new ModelView(model);
+    this.outData = new ByteArrayOutputStream();
   }
 
   /**
@@ -36,6 +41,18 @@ public class UserInteraction implements ViewHandler {
   public void printHeader() {
     printText("Welcome To Aaka-Sam Stock Trading!", "G");
     printText("You can always quit the platform by pressing 'q'", "Y");
+  }
+
+  public ByteArrayOutputStream getOutData() {
+    return this.outData;
+  }
+
+  public void setStatus(String statusMSG) {
+    this.status = statusMSG;
+  }
+
+  public String getStatus() {
+    return this.status;
   }
 
   /**
@@ -77,10 +94,17 @@ public class UserInteraction implements ViewHandler {
    *
    */
   public void getExistingPortfolios() {
-    for (String file : this.modelView.getExistingPortfolios()
+    String[] existingPortfolios = this.modelView.getExistingPortfolios();
+    if(existingPortfolios.length == 0) {
+      printText("No Portfolios Found! You can create one though.","R");
+      setStatus("Failed to load portfolios");
+      return;
+    }
+    for (String file : existingPortfolios
     ) {
       printText(file, "");
     }
+    setStatus("Portfolio view successful");
   }
 
   /**
@@ -136,6 +160,14 @@ public class UserInteraction implements ViewHandler {
     }
   }
 
+  public void printCostBasis(String pfID, String date) {
+    String[] costBasisInfo = this.modelView.getCostBasis(pfID, date);
+    printText("Total Amount Invested:"+costBasisInfo[0],"G");
+    printText("Total Commission Charged:"+costBasisInfo[1],"G");
+    printText("Total Earned by Selling:"+costBasisInfo[2],"G");
+    printText("Total Amount+Commission"+costBasisInfo[3],"G");
+  }
+
   public void printMenu() {
     this.printText("Choose from the following:","G");
     this.printText("1 - Load External Portfolio","Y");
@@ -144,6 +176,7 @@ public class UserInteraction implements ViewHandler {
     this.printText("4 - Get Portfolio Value","Y");
     this.printText("5 - Create New Portfolio","Y");
     this.printText("6 - View Portfolio Performance","Y");
+    this.printText("7 - Get Cost-Basis for Portfolio and Date","Y");
     this.printText("q/Q - Quit Application","Y");
   }
 }

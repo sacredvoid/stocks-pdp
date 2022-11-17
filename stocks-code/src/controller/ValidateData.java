@@ -12,7 +12,7 @@ public class ValidateData {
         case "date":
           return "(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
         case "call":
-          return "BUY|SELL";
+          return "(BUY|SELL)";
         case "quit":
           return "q|Q";
         default:

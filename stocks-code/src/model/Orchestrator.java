@@ -78,4 +78,6 @@ public interface Orchestrator extends IModelView {
    */
   String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException;
+
+  String[] getCostBasis(String pfID, String date);
 }

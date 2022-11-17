@@ -60,13 +60,13 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     try {
       pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     } catch (FileNotFoundException e) {
-      return "Sorry, could not find the portfolio with id "+pfID;
+      return "Sorry, could not find the portfolio with id " + pfID;
     }
-    Map<String, PortfolioData> pfJsonData =  PortfolioDataAdapter.getObject(pfData);
+    Map<String, PortfolioData> pfJsonData = PortfolioDataAdapter.getObject(pfData);
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
-    if(reqDate.isBefore(oldestPurchaseDate)){
-      return "0\nEnter date equal to or after "+oldestPurchaseDate.toString();
+    if (reqDate.isBefore(oldestPurchaseDate)) {
+      return "0\nEnter date equal to or after " + oldestPurchaseDate.toString();
     }
     String stockCountList;
     try {
@@ -74,7 +74,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     } catch (FileNotFoundException e) {
       return "Sorry, No stocks for given date"; // Get most recent stock list
     }
-    if(stockCountList.contains("Sorry")){
+    if (stockCountList.contains("Sorry")) {
       return stockCountList;
     }
     List<String> portfolioValue = PortfolioValue.getBuilder()
@@ -122,32 +122,59 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   public String editExistingPortfolio(String pfID, String call) {
     String csvPFData;
     try {
-      csvPFData =  jsonParser.readFile(pfID+".json",PORTFOLIO_DATA_PATH);
-    }
-    catch (FileNotFoundException f) {
+      csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+    } catch (FileNotFoundException f) {
       return "File not found!";
     }
     Map<String, PortfolioData> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
         call, PortfolioDataAdapter.getObject(csvPFData));
 
     try {
-      jsonParser.writeToFile(pfID+".json",PORTFOLIO_DATA_PATH,new Gson().toJson(updatedPF));
-    }
-    catch (IOException io) {
+      jsonParser.writeToFile(pfID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(updatedPF));
+    } catch (IOException io) {
       return "Unable to save Portfolio data";
     }
     return "Saved the updated portfolio!";
 
   }
 
+  @Override
+  public String[] getCostBasis(String pfID, String date) {
+    String csvPFData;
+    try {
+      csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+    } catch (FileNotFoundException f) {
+      return new String[]{"File not found!"};
+    }
+    Map<String, PortfolioData> loadedPF = PortfolioDataAdapter.getObject(csvPFData);
+
+    String latestDateBeforeGivenDate = Utility.getLatestDate
+        (FilterPortfolio.getPortfolioBeforeDate(loadedPF, date));
+
+    PortfolioData requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
+    float totalInvested = requiredEntry.getTotalInvested();
+    float totalCommission = requiredEntry.getTotalCommission();
+    float totalEarned = requiredEntry.getTotalEarned();
+    float totalCostBasis = totalInvested + totalCommission;
+
+    return new String[]{
+        String.valueOf(totalInvested),
+        String.valueOf(totalCommission),
+        String.valueOf(totalEarned),
+        String.valueOf(totalCostBasis)
+    };
+
+  }
+
   /**
-   * Shows the line chart performance of a specified portfolio over the timespan provided<p></p>
-   * by the user.
-   * @param pfId Portfolio id of the portfolio
+   * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
+   * the user.
+   *
+   * @param pfId      Portfolio id of the portfolio
    * @param startDate Starting date of the timespan
-   * @param endDate Ending date of the timespan
-   * @return performance of the portfolio for each timestamp in the form of stars which depict<p></p>
-   *          the value of the portfolio
+   * @param endDate   Ending date of the timespan
+   * @return performance of the portfolio for each timestamp in the form of stars which
+   * depict<p></p> the value of the portfolio
    */
 
   public String showPerformance(String pfId, String startDate, String endDate)

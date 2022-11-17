@@ -12,4 +12,6 @@ public interface IModelView {
   String[] getExistingPortfolios();
 
   String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException;
+
+  String[] getCostBasis(String pfID, String date);
 }

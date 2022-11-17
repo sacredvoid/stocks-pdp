@@ -126,4 +126,9 @@ public class ModelOrchestrator extends AOrchestrator {
       throws FileNotFoundException {
     return null;
   }
+
+  @Override
+  public String[] getCostBasis(String pfID, String date) {
+    return new String[0];
+  }
 }

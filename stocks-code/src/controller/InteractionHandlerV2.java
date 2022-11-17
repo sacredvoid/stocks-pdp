@@ -41,12 +41,18 @@ public class InteractionHandlerV2 extends AbstractHandler {
     acceptedCommands.put("2", s -> {
       // Using view to pull data from model using model-view
       this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
       this.ui.printText("Enter your portfolio ID:", "Y");
       String input = this.getInput(ValidateData.getRegex("portfolio"));
       return new GetPortfolioComposition(input);
     });
     acceptedCommands.put("3",s-> {
           this.ui.getExistingPortfolios();
+          if(this.ui.getStatus().contains("Failed")) {
+            return null;
+          }
           StringBuilder inputStockCalls = new StringBuilder();
           this.ui.printText("Enter Portfolio ID you want to edit shares for:", "Y");
           String pfID = this.getInput(ValidateData.getRegex("portfolio"));
@@ -62,6 +68,9 @@ public class InteractionHandlerV2 extends AbstractHandler {
 
     acceptedCommands.put("4", s -> {
       this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
       this.ui.printText("Enter portfolio ID you want to get value for:", "Y");
       String pfID = this.getInput("");
       this.ui.printText("Enter date you want to see value for", "Y");
@@ -81,13 +90,28 @@ public class InteractionHandlerV2 extends AbstractHandler {
     });
     acceptedCommands.put("6", s -> {
       this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
       this.ui.printText("Enter portfolio ID you want to view performance for:", "Y");
-      String pfId = this.getInput("");
+      String pfId = this.getInput(ValidateData.getRegex("portfolio"));
       this.ui.printText("Enter start date of the date range:", "Y");
       String startDate = this.getInput(ValidateData.getRegex("date"));
       this.ui.printText("Enter end date of the date range:", "Y");
       String endDate = this.getInput(ValidateData.getRegex("date"));
       return new PortfolioPerformance(pfId, startDate, endDate);
+    });
+    acceptedCommands.put("7", s-> {
+      this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
+      this.ui.printText("Enter Portfolio ID you want to see Cost-Basis for","Y");
+      String pfId = this.getInput(ValidateData.getRegex("portfolio"));
+      this.ui.printText("Enter the date that you want to see Cost-Basis evaluation for","Y");
+      String date = this.getInput(ValidateData.getRegex("date"));
+      this.ui.printCostBasis(pfId,date);
+      return null;
     });
   }
 
@@ -124,6 +148,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
         this.ui.printText("Command not recognized, retry.", "R");
       } else {
         commandObject = commandEntered.apply(scan);
+        if(commandObject==null) continue;
         commandObject.go(this.morch);
         this.ui.printText("Output:","Y");
         this.ui.printText(commandObject.getStatusMessage(),"G");

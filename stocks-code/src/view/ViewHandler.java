@@ -6,6 +6,8 @@ package view;
  */
 public interface ViewHandler {
 
+  void printCostBasis(String pfID, String date);
+
   /**
    * Method that takes in a string and color and attaches it to a PrintStream object.
    *

@@ -14,6 +14,9 @@ public class ModifyPortfolio extends APortfolioCommands {
 
   @Override
   public void go(Orchestrator m) {
+    if(this.portfolioID.isEmpty() || this.data.isEmpty()) {
+      setStatusMessage("");
+    }
     setStatusMessage(m.editExistingPortfolio(this.portfolioID,this.data));
   }
 }

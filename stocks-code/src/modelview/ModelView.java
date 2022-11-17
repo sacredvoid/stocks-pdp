@@ -30,4 +30,9 @@ public class ModelView implements IModelView{
   public String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException {
     return this.morch.getPortfolioCompositionByDate(date,pfID);
   }
+
+  @Override
+  public String[] getCostBasis(String pfID, String date) {
+    return this.morch.getCostBasis(pfID,date);
+  }
 }
