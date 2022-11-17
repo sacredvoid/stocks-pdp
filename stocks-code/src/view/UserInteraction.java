@@ -113,11 +113,16 @@ public class UserInteraction implements ViewHandler {
    *
    * @param pfData portfolio data as string
    */
-  public void printPortfolioData(String pfData) {
+  public void printTabularData(String pfData) {
     // Write a portfolio parser
     String[] columns = pfData.split("\n");
+    if(columns.length == 1) {
+      printText(columns[0],"R");
+      return;
+    }
     int rowCount = columns[0].split(",").length;
     String leftAlignF = "";
+
 
     if (rowCount == 2) {
       for (int i = 0; i < rowCount; i++) {
@@ -144,7 +149,7 @@ public class UserInteraction implements ViewHandler {
       }
       this.outStream.print("+\n");
       leftAlignF = "| %-15s | %-15s | %-15s |%n";
-      this.outStream.format("| Stock Name      | Quantity        | Value           |%n");
+      this.outStream.format("| Stock Name      | Quantity        | Value($)        |%n");
       for (int i = 0; i < rowCount; i++) {
         this.outStream.print("+-----------------");
       }
@@ -162,10 +167,14 @@ public class UserInteraction implements ViewHandler {
 
   public void printCostBasis(String pfID, String date) {
     String[] costBasisInfo = this.modelView.getCostBasis(pfID, date);
-    printText("Total Amount Invested:"+costBasisInfo[0],"G");
-    printText("Total Commission Charged:"+costBasisInfo[1],"G");
-    printText("Total Earned by Selling:"+costBasisInfo[2],"G");
-    printText("Total Amount+Commission"+costBasisInfo[3],"G");
+    if(costBasisInfo.length == 1) {
+      printText(costBasisInfo[0],"R");
+      return;
+    }
+    printText("Total Amount Invested    : $"+costBasisInfo[0],"Y");
+    printText("Total Commission Charged : $"+costBasisInfo[1],"R");
+    printText("Total Amount+Commission  : $"+costBasisInfo[3],"Y");
+    printText("Total Earned by Selling  : $"+costBasisInfo[2],"G");
   }
 
   public void printMenu() {

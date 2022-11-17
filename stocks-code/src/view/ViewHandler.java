@@ -21,5 +21,5 @@ public interface ViewHandler {
    *
    * @param data portfolio data as string
    */
-  void printPortfolioData(String data);
+  void printTabularData(String data);
 }

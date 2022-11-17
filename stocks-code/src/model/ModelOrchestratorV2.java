@@ -66,7 +66,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
-      return "0\nEnter date equal to or after " + oldestPurchaseDate.toString();
+      return "Enter date equal to or after " + oldestPurchaseDate.toString();
     }
     String stockCountList;
     try {
@@ -150,6 +150,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
     String latestDateBeforeGivenDate = Utility.getLatestDate
         (FilterPortfolio.getPortfolioBeforeDate(loadedPF, date));
+    if (latestDateBeforeGivenDate.contains("No data found to sort")) {
+      return new String[]{"No data before given date"};
+    }
 
     PortfolioData requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
     float totalInvested = requiredEntry.getTotalInvested();

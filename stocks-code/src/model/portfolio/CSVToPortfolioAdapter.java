@@ -1,8 +1,10 @@
 package model.portfolio;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import model.PortfolioValue;
+import model.validation.DateValidator;
 
 public class CSVToPortfolioAdapter {
 
@@ -34,13 +36,23 @@ public class CSVToPortfolioAdapter {
   ){
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested
+    DateValidator dateCheck = new DateValidator();
     String[] dataPerLine = stockData.split("\n");
     for (String line : dataPerLine
     ) {
       String[] stockQuantity = line.split(",");
       String date = stockQuantity[2];
       // validate
-      // calculate these two
+      try {
+        if(!dateCheck.checkData(date)) {
+          // Skip weekends and future dates
+          continue;
+        }
+      }
+      catch (ParseException e) {
+        // Invalid date format, skip
+        continue;
+      }
       float totalTransaction;
       float totalCommission = 1;
       float totalEarned = 0;

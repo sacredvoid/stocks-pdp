@@ -151,7 +151,12 @@ public class InteractionHandlerV2 extends AbstractHandler {
         if(commandObject==null) continue;
         commandObject.go(this.morch);
         this.ui.printText("Output:","Y");
-        this.ui.printText(commandObject.getStatusMessage(),"G");
+        if(commandObject.getIsTabularDataBoolean()) {
+          this.ui.printTabularData(commandObject.getStatusMessage());
+        }
+        else {
+          this.ui.printText(commandObject.getStatusMessage(),"G");
+        }
       }
     }
   }

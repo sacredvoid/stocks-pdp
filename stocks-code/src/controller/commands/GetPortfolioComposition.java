@@ -16,6 +16,7 @@ public class GetPortfolioComposition extends APortfolioCommands {
     try {
       String pfData = m.getLatestPortfolioComposition(this.pfID);
       setStatusMessage(pfData);
+      setIsTabularDataBoolean(true);
     } catch (FileNotFoundException f) {
       setStatusMessage("File not found!");
     }
