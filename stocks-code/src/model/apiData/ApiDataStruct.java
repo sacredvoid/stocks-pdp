@@ -1,7 +1,5 @@
 package model.apiData;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * ApiDataStruct class defines the structure of the API Stock Data.

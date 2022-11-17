@@ -34,16 +34,16 @@ public interface Orchestrator extends IModelView {
    */
   String generatePortfolioID();
 
-  //  /**
-//   * Fetches Portfolio Value as CSV Data in string format (stock,quantity,value) given a date and
-//   * portfolio data (in CSV). Since weekend data is unavailble for stocks, returns null if given
-//   * date is a weekend.
-//   *
-//   * @param date string like date in YYYY-MM-DD format
-//   * @param data string like CSV data of the portfolio (Stock,Quantity)
-//   * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
-//   * @throws ParseException throws when it's unable to read the given date/data
-//   */
+  /**
+   * Fetches Portfolio Value as CSV Data in string format (stock,quantity,value) given a date and
+   * portfolio data (in CSV). Since weekend data is unavailble for stocks, returns null if given
+   * date is a weekend.
+   *
+   * @param date string like date in YYYY-MM-DD format
+   * @param pfId string like CSV data of the portfolio (Stock,Quantity)
+   * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
+   * @throws ParseException throws when it's unable to read the given date/data
+   */
   String getPortfolioValue(String pfId, String date) throws ParseException;
 
   /**

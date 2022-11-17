@@ -3,12 +3,23 @@ package model.portfolio;
 import com.google.gson.Gson;
 import java.util.List;
 
+/**
+ * PortfolioData class defines the structure for the records of a portfolio.
+ */
 public class PortfolioData implements IPortfolioData {
 
   private List<StockData> stockData;
   private float totalInvested;
   private float totalCommission;
 
+  /**
+   * PortfolioData() constructor takes in the stock data list, total invested and total commission
+   * for a particular record creates a new PortfolioData object.
+   *
+   * @param sd              a list of stock data
+   * @param totalInvested   the total amount invested by the user
+   * @param totalCommission the total amount of commission taken by the application
+   */
   public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission) {
     this.stockData = sd;
     this.totalCommission = totalCommission;

@@ -9,6 +9,12 @@ import java.util.Map;
  */
 public class Utility {
 
+  /**
+   * getLatestDate() method returns back the most recent date from a portfolio.
+   *
+   * @param pfData PortfolioData object
+   * @return the most recent date key
+   */
   public static String getLatestDate(Map<String, PortfolioData> pfData) {
     ArrayList<String> sortedDates = new ArrayList<>(pfData.keySet());
     if (sortedDates.isEmpty()) {
@@ -18,6 +24,12 @@ public class Utility {
     return sortedDates.get(0);
   }
 
+  /**
+   * getOldestDate() method returns back the oldest date from a portfolio.
+   *
+   * @param pfData PortfolioData object
+   * @return the oldest date key
+   */
   public static String getOldestDate(Map<String, PortfolioData> pfData) {
     ArrayList<String> sortedDates = new ArrayList<>(pfData.keySet());
     if (sortedDates.isEmpty()) {

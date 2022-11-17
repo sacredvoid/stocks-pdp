@@ -15,6 +15,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import model.fileops.JSONFileOps;
 
+/**
+ * AplphaVantageAPI class defines and implements API operations for the AlphaVantageAPI.
+ */
 class AlphaVantageAPI implements ApiHandler {
 
   private String stockSymbol;
@@ -36,20 +39,40 @@ class AlphaVantageAPI implements ApiHandler {
   }
 
 
+  /**
+   * getBuilder() method return a new AlphaVantageApiBuilder object which is used for building the
+   * AlphaVantageAPI object
+   *
+   * @return
+   */
   static AlphaVantageApiBuilder getBuilder() {
     return new AlphaVantageApiBuilder();
   }
 
+  /**
+   * AlphaVantageApiBuilder class is a static class which is used to build the object of<p></p>
+   * AlphaVantageAPI class.
+   */
   static class AlphaVantageApiBuilder {
 
     private String stockSymbol;
 
+    /**
+     * stockSymbol() methods is setter method for stock symbol.
+     *
+     * @param stockSymbol the stock ticker
+     * @return the same AlphaVantageApiBuilder object after setting the stock symbol
+     */
     AlphaVantageApiBuilder stockSymbol(String stockSymbol) {
       this.stockSymbol = stockSymbol;
       return this;
     }
 
-
+    /**
+     * build() method creates a new AlphaVantageAPI object with the stock symbol.
+     *
+     * @return new AplhaVantageAPI object
+     */
     AlphaVantageAPI build() {
       return new AlphaVantageAPI(this.stockSymbol);
     }

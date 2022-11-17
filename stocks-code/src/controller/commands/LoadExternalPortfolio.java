@@ -1,5 +1,6 @@
 package controller.commands;
 
+import java.io.FileNotFoundException;
 import model.Orchestrator;
 
 public class LoadExternalPortfolio extends APortfolioCommands {
@@ -13,6 +14,10 @@ public class LoadExternalPortfolio extends APortfolioCommands {
 
   @Override
   public void go(Orchestrator m) {
-
+    try {
+      setStatusMessage(m.loadExternalPortfolio(this.path));
+    } catch (FileNotFoundException e) {
+      setStatusMessage("Could not find a file at "+ this.path);
+    }
   }
 }

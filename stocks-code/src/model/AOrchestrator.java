@@ -1,9 +1,12 @@
 package model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Random;
 
+/**
+ * AOrchestrator class defines the classes which are common to both inflexible and flexible
+ * portfolio operations.
+ */
 public abstract class AOrchestrator implements Orchestrator {
 
   protected String osSep = OSValidator.getOSSeparator();
