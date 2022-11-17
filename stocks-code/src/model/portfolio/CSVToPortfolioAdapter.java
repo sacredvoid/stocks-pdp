@@ -3,7 +3,7 @@ package model.portfolio;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import model.PortfolioValue;
+import model.apistockops.PortfolioValue;
 import model.validation.DateValidator;
 
 /**
@@ -62,7 +62,7 @@ public class CSVToPortfolioAdapter {
    * @return
    */
   public static Map<String, PortfolioData> buildPortfolioData(
-      String stockData, Map<String, PortfolioData> pfData
+      String stockData, Map<String, PortfolioData> pfData, float commissionFees
   ){
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested
@@ -84,7 +84,7 @@ public class CSVToPortfolioAdapter {
         continue;
       }
       float totalTransaction;
-      float totalCommission = 1;
+      float totalCommission = commissionFees;
       float totalEarned = 0;
 
       List<String> portfolioValue = PortfolioValue.getBuilder()
@@ -96,7 +96,7 @@ public class CSVToPortfolioAdapter {
       totalTransaction = Float.parseFloat(portfolioValue.get(1).split(",")[2]);
 
       StockData currentStock = new StockData(stockQuantity[0], Float.parseFloat(stockQuantity[1]));
-      CascadeV2.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
+      CascadeTransactions.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
           totalTransaction, totalCommission);
     }
     return pfData;

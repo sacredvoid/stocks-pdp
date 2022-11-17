@@ -1,11 +1,9 @@
-package model;
+package model.apistockops;
 
-import com.google.gson.JsonObject;
 import java.net.URL;
-import model.AlphaVantageAPI.AlphaVantageApiBuilder;
-//import model.StockHandler.StockHandlerBuilder;
+//import model.apistockops.StockHandler.StockHandlerBuilder;
 
-public class YahooStockAPI implements ApiHandler{
+public class YahooStockAPI implements ApiHandler {
 
   private String stockSymbol;
 

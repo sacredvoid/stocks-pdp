@@ -1,4 +1,4 @@
-package model;
+package model.apistockops;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +127,7 @@ public class PortfolioValue {
     return stockPrice * count;
   }
 
-  protected float stockCountValueForPerformance() {
+  public float stockCountValueForPerformance() {
     List<String> output = new ArrayList<>();
     String[] lines = stockCountList.split("\n");
     float sum = 0.00F;

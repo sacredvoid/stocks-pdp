@@ -1,7 +1,8 @@
-package model;
+package model.apistockops;
 
 import java.io.FileNotFoundException;
 import java.util.Map;
+import model.apistockops.AlphaVantageAPI;
 import model.apiData.ApiDataAdapter;
 import model.apiData.ApiDataStruct;
 import model.fileops.JSONFileOps;
@@ -11,7 +12,7 @@ import model.fileops.JSONFileOps;
  * RequestHandler class is responsible for creating APIcalls handling multiple API data<p></p>
  * sources by interacting with the respective API Classes.
  */
-class RequestHandler {
+public class RequestHandler {
 
   private String stockSymbol;
   private ApiHandler apiModel;

@@ -5,23 +5,25 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import model.portfolio.PortfolioData;
 
+/**
+ * The Json file ops class that extends Abstract File Ops and reads/writes a given JSON
+ * file/Object.
+ */
 public class JSONFileOps extends AFileOps {
 
   private Gson customJSONReader;
 
+  /**
+   * Instantiates a new Json file ops.
+   */
   public JSONFileOps() {
     customJSONReader = new GsonBuilder().setPrettyPrinting().create();
   }
@@ -53,17 +55,6 @@ public class JSONFileOps extends AFileOps {
     } catch (Exception e) {
       throw new IOException(e.getMessage());
     }
-  }
-
-  public static void main(String[] args) throws IOException {
-    JSONFileOps j = new JSONFileOps();
-    String out = j.readFile("1234.json", "PortfolioData");
-    Type typetoken = new TypeToken<HashMap<String, PortfolioData>>() {
-    }.getType();
-    Map<String, PortfolioData> pf = new Gson().fromJson(out, typetoken);
-    System.out.printf("****\n%s****\n", pf.get("2020-10-11").getStockList().get(0).getStockName());
-    System.out.println(out);
-    j.writeToFile("2345.json", "PortfolioData", out);
   }
 
 }

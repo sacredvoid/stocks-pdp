@@ -117,8 +117,10 @@ public class UserInteraction implements ViewHandler {
     // Write a portfolio parser
     String[] columns = pfData.split("\n");
     if(columns.length == 1) {
-      printText(columns[0],"R");
-      return;
+      if(columns[0].split(",").length == 1) {
+        printText(columns[0],"R");
+        return;
+      }
     }
     int rowCount = columns[0].split(",").length;
     String leftAlignF = "";
@@ -179,6 +181,7 @@ public class UserInteraction implements ViewHandler {
 
   public void printMenu() {
     this.printText("Choose from the following:","G");
+    this.printText("0 - Set Commission Fees","Y");
     this.printText("1 - Load External Portfolio","Y");
     this.printText("2 - View Portfolio Composition","Y");
     this.printText("3 - Modify existing Portfolio","Y");

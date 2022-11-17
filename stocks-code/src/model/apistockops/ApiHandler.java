@@ -1,6 +1,5 @@
-package model;
+package model.apistockops;
 
-import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

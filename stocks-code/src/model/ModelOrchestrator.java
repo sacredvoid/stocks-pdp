@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import model.apistockops.PortfolioValue;
 import model.fileops.CSVFileOps;
 import model.validation.DateValidator;
 import model.validation.IDataValidator;
@@ -130,5 +131,10 @@ public class ModelOrchestrator extends AOrchestrator {
   @Override
   public String[] getCostBasis(String pfID, String date) {
     return new String[0];
+  }
+
+  @Override
+  public void setCommissionFees(String commissionFees) {
+    return;
   }
 }
