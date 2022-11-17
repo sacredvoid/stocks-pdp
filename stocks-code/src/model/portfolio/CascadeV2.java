@@ -31,7 +31,11 @@ public class CascadeV2 {
       } else {
 //        Map<String, PortfolioData> oldRecords = FilterPortfolio.getPortfolioBeforeDate(currentPF,givenDate);
         PortfolioData f = getMostRecentStockList(currentPF,givenDate);
-        List<StockData> tempList = new ArrayList<>(f.getStockList());
+        List<StockData> tempList = new ArrayList<>();
+        for (StockData sd: f.getStockList()
+        ) {
+          tempList.add(new StockData(sd.getStockName(),sd.getQuantity()));
+        }
 //        tempList.add(newStockToAdd);
         PortfolioData tempP = new PortfolioData(tempList, totalTransaction+f.getTotalInvested(), totalCommission+f.getTotalCommission(), f.getTotalEarned());
         tempP.addStock(newStockToAdd);

@@ -179,6 +179,7 @@ public class UserInteraction implements ViewHandler {
 
   public void printMenu() {
     this.printText("Choose from the following:","G");
+    this.printText("0 - Set Commission Fees","Y");
     this.printText("1 - Load External Portfolio","Y");
     this.printText("2 - View Portfolio Composition","Y");
     this.printText("3 - Modify existing Portfolio","Y");

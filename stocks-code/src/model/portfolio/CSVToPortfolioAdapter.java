@@ -32,7 +32,7 @@ public class CSVToPortfolioAdapter {
   }
 
   public static Map<String, PortfolioData> buildPortfolioData(
-      String stockData, Map<String, PortfolioData> pfData
+      String stockData, Map<String, PortfolioData> pfData, float commissionFees
   ){
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested
@@ -54,7 +54,7 @@ public class CSVToPortfolioAdapter {
         continue;
       }
       float totalTransaction;
-      float totalCommission = 1;
+      float totalCommission = commissionFees;
       float totalEarned = 0;
 
       List<String> portfolioValue = PortfolioValue.getBuilder()

@@ -80,4 +80,5 @@ public interface Orchestrator extends IModelView {
       throws FileNotFoundException;
 
   String[] getCostBasis(String pfID, String date);
+  void setCommissionFees(String commissionFees);
 }

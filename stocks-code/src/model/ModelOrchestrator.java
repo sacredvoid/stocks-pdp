@@ -131,4 +131,9 @@ public class ModelOrchestrator extends AOrchestrator {
   public String[] getCostBasis(String pfID, String date) {
     return new String[0];
   }
+
+  @Override
+  public void setCommissionFees(String commissionFees) {
+    return;
+  }
 }

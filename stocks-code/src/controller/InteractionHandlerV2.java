@@ -33,6 +33,18 @@ public class InteractionHandlerV2 extends AbstractHandler {
   }
 
   private void initializeCommands() {
+    acceptedCommands.put("0", s -> {
+      this.ui.printText("By Default, we charge our users $1 per transaction (buy/sell).","Y");
+      this.ui.printText("The new commission fees that you set, will be reset every time you quit the application.","Y");
+      this.ui.printText("Please enter the Commission Fees per transaction that you would like to set for this time, or Q/q to quit","Y");
+      String commissionFees = this.getInput("[0-9]+|q|Q");
+      if (!commissionFees.equalsIgnoreCase("q")) {
+        this.morch.setCommissionFees(commissionFees);
+        this.ui.printText(
+            "Commission Fees for this application lifecycle was set to: " + commissionFees, "G");
+      }
+      return null;
+    });
     acceptedCommands.put("1", s -> {
       this.ui.printText("Enter path to JSON:", "Y");
       String input = this.getInput("");
@@ -86,6 +98,9 @@ public class InteractionHandlerV2 extends AbstractHandler {
               ValidateData.getComplexRegex(new String[]{"stock","quantity","date"})
               +"|"+ValidateData.getRegex("quit"),
               "create");
+      if(inputData.isEmpty()) {
+        return null;
+      }
       return new CreatePortfolio(inputData);
     });
     acceptedCommands.put("6", s -> {
@@ -151,11 +166,18 @@ public class InteractionHandlerV2 extends AbstractHandler {
         if(commandObject==null) continue;
         commandObject.go(this.morch);
         this.ui.printText("Output:","Y");
+        String color = "";
         if(commandObject.getIsTabularDataBoolean()) {
           this.ui.printTabularData(commandObject.getStatusMessage());
         }
         else {
-          this.ui.printText(commandObject.getStatusMessage(),"G");
+          if(commandObject.getStatusMessage().contains("Sorry")) {
+            color = "R";
+          }
+          else {
+            color = "G";
+          }
+          this.ui.printText(commandObject.getStatusMessage(),color);
         }
       }
     }
