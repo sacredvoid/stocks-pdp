@@ -118,8 +118,17 @@ public class ModelOrchestrator extends AOrchestrator {
   }
 
   @Override
+  public String editExistingPortfolio(String pfID, String call) {
+    return null;
+  }
+  @Override
   public String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException {
     return null;
+  }
+
+  @Override
+  public String[] getCostBasis(String pfID, String date) {
+    return new String[0];
   }
 }

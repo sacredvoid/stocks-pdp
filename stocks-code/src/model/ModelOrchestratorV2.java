@@ -1,18 +1,13 @@
 package model;
 
 import com.google.gson.Gson;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import model.apiData.ApiDataStruct;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
@@ -55,12 +50,11 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     String newPFID = this.generatePortfolioID();
     try {
       Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
-          portfolioData);
+          portfolioData, new HashMap<>());
       jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(translated));
     } catch (IOException io) {
       return "Failed to create portfolio";
     }
-
     return "Created Portfolio with ID: " + newPFID;
   }
 
@@ -86,7 +80,6 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     } catch (FileNotFoundException e) {
       return "Sorry, No stocks for given date"; // Get most recent stock list
     }
-
     if (stockCountList.contains("Sorry")) {
       return stockCountList;
     }
@@ -134,9 +127,16 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     if (path.substring(fileExtInd + 1).equals("csv")) {
       CSVFileOps pw = new CSVFileOps();
       String readCSVData = pw.readFile(path, "");
+      String [] readCSVDataLines = readCSVData.split("\n");
+      StringBuilder sb = new StringBuilder();
+      int i;
+      for( i=0;i<readCSVDataLines.length;i++){
+        sb.append(readCSVDataLines[i]+",BUY\n");
+      }
+
       try {
         Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
-            readCSVData.strip());
+            sb.toString().strip(),new HashMap<>());
         jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH,
             new Gson().toJson(translated));
       } catch (IOException e) {
@@ -149,11 +149,71 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   }
 
   @Override
+  public String editExistingPortfolio(String pfID, String call) {
+    String csvPFData;
+    try {
+      csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+    } catch (FileNotFoundException f) {
+      return "File not found!";
+    }
+    Map<String, PortfolioData> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
+        call, PortfolioDataAdapter.getObject(csvPFData));
+
+    try {
+      jsonParser.writeToFile(pfID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(updatedPF));
+    } catch (IOException io) {
+      return "Unable to save Portfolio data";
+    }
+    return "Saved the updated portfolio!";
+
+  }
+
+  @Override
+  public String[] getCostBasis(String pfID, String date) {
+    String csvPFData;
+    try {
+      csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+    } catch (FileNotFoundException f) {
+      return new String[]{"File not found!"};
+    }
+    Map<String, PortfolioData> loadedPF = PortfolioDataAdapter.getObject(csvPFData);
+
+    String latestDateBeforeGivenDate = Utility.getLatestDate
+        (FilterPortfolio.getPortfolioBeforeDate(loadedPF, date));
+    if (latestDateBeforeGivenDate.contains("No data found to sort")) {
+      return new String[]{"No data before given date"};
+    }
+
+    PortfolioData requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
+    float totalInvested = requiredEntry.getTotalInvested();
+    float totalCommission = requiredEntry.getTotalCommission();
+    float totalEarned = requiredEntry.getTotalEarned();
+    float totalCostBasis = totalInvested + totalCommission;
+
+    return new String[]{
+        String.valueOf(totalInvested),
+        String.valueOf(totalCommission),
+        String.valueOf(totalEarned),
+        String.valueOf(totalCostBasis)
+    };
+
+  }
+
+  /**
+   * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
+   * the user.
+   *
+   * @param pfId      Portfolio id of the portfolio
+   * @param startDate Starting date of the timespan
+   * @param endDate   Ending date of the timespan
+   * @return performance of the portfolio for each timestamp in the form of stars which
+   * depict<p></p> the value of the portfolio
+   */
+
   public String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException {
     String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
-
     LocalDate localSD = LocalDate.parse(startDate);
     LocalDate localED = LocalDate.parse(endDate);
 

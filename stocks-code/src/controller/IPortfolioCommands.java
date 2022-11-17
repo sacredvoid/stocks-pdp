@@ -9,5 +9,8 @@ public interface IPortfolioCommands {
 
   void setStatusMessage(String message);
 
+  boolean getIsTabularDataBoolean();
+  void setIsTabularDataBoolean(boolean bool);
+
   void go(Orchestrator m);
 }

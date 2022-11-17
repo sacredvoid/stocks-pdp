@@ -31,6 +31,10 @@ public interface IPortfolioData {
    */
   float getQuantity(String stockName);
 
+  String removeStock(StockData newStock);
+
+  void setStockList(List<StockData> newStockList);
+
   /**
    * setQuantity() sets the quantity of a stock in a portfolio.
    *
@@ -69,4 +73,7 @@ public interface IPortfolioData {
    * @param newCommission commission amount
    */
   void setTotalCommission(float newCommission);
+
+  float getTotalEarned();
+  void setTotalEarned(float newEarning);
 }

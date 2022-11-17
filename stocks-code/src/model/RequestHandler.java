@@ -118,14 +118,4 @@ class RequestHandler {
     }
     return data;
   }
-
-//  public static void main(String args[]){
-//    Map<String, ApiDataStruct> dataList ;
-//    dataList = RequestHandler.getBuilder().stockSymbol("GOOG").build().buildURL().fetch();
-//    for (Entry<String, ApiDataStruct> entry: dataList.entrySet()
-//    ) {
-//      System.out.println(entry.getKey());
-//      System.out.println(entry.getValue().getOpen());
-//    }
-//  }
 }

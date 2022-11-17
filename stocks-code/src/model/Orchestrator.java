@@ -64,6 +64,8 @@ public interface Orchestrator extends IModelView {
    */
   String loadExternalPortfolio(String path) throws FileNotFoundException;
 
+  String editExistingPortfolio(String pfID, String call);
+
   /**
    * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
    * the user.
@@ -76,4 +78,6 @@ public interface Orchestrator extends IModelView {
    */
   String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException;
+
+  String[] getCostBasis(String pfID, String date);
 }

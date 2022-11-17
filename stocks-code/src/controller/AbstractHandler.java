@@ -9,7 +9,6 @@ public abstract class AbstractHandler implements Handler {
 
   protected Scanner scan;
   protected UserInteraction ui;
-  protected Orchestrator modelOrch;
 
   /**
    * Function to accept inputs and returns the input from console as a String. Takes a Regular

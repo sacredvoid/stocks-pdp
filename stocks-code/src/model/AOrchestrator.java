@@ -29,7 +29,7 @@ public abstract class AOrchestrator implements Orchestrator {
     }
     String[] filesList = f.list();
     if (filesList.length == 0) {
-      return null;
+      return new String[]{};
     } else {
       return filesList;
     }
@@ -53,4 +53,5 @@ public abstract class AOrchestrator implements Orchestrator {
         .toString();
   }
 
+  public abstract String[] getCostBasis(String pfID, String date);
 }

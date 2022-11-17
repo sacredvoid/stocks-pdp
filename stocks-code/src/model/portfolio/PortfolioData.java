@@ -6,11 +6,13 @@ import java.util.List;
 /**
  * PortfolioData class defines the structure for the records of a portfolio.
  */
+
 public class PortfolioData implements IPortfolioData {
 
   private List<StockData> stockData;
   private float totalInvested;
   private float totalCommission;
+  private float totalEarned;
 
   /**
    * PortfolioData() constructor takes in the stock data list, total invested and total commission
@@ -20,11 +22,18 @@ public class PortfolioData implements IPortfolioData {
    * @param totalInvested   the total amount invested by the user
    * @param totalCommission the total amount of commission taken by the application
    */
-  public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission) {
+
+
+
+  public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission,
+      float totalEarned) {
+
     this.stockData = sd;
     this.totalCommission = totalCommission;
     this.totalInvested = totalInvested;
+    this.totalEarned = totalEarned;
   }
+
 
   @Override
   public String toString() {
@@ -52,6 +61,17 @@ public class PortfolioData implements IPortfolioData {
   }
 
   @Override
+  public float getTotalEarned() {
+    return this.totalEarned;
+  }
+
+  @Override
+  public void setTotalEarned(float newEarning) {
+    this.totalEarned = newEarning;
+  }
+
+
+  @Override
   public List<StockData> getStockList() {
     return stockData;
   }
@@ -59,11 +79,38 @@ public class PortfolioData implements IPortfolioData {
   @Override
   public String addStock(StockData newStock) {
     try {
+      for (StockData s : stockData) {
+        if (s.equals(newStock)) {
+          s.setQuantity(newStock.getQuantity()+s.getQuantity());
+          return "Adding successful";
+        }
+      }
       stockData.add(newStock);
     } catch (Exception e) {
       return "Adding stock failed: " + e.getMessage();
     }
     return "Adding successful";
+  }
+
+  @Override
+  public String removeStock(StockData newStock) {
+    try {
+      for (StockData s : stockData) {
+        if (s.equals(newStock)) {
+          s.setQuantity(s.getQuantity()-newStock.getQuantity());
+          return "Adding successful";
+        }
+      }
+      stockData.add(newStock);
+    } catch (Exception e) {
+      return "Removing stock failed: " + e.getMessage();
+    }
+    return "Removing successful";
+  }
+
+  @Override
+  public void setStockList(List<StockData> newStockList) {
+    this.stockData = newStockList;
   }
 
   @Override

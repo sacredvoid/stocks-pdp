@@ -1,9 +1,10 @@
 package model.portfolio;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+import model.PortfolioValue;
+import model.validation.DateValidator;
 
 /**
  * CSVToPortfolioAdapter class defines methods for converting data from CSV format to Portfolio
@@ -34,8 +35,9 @@ public class CSVToPortfolioAdapter {
   public static PortfolioData buildPortfolioData(
       List<StockData> stockDataList,
       float totalInvested,
-      float totalCommission) {
-    return new PortfolioData(stockDataList, totalInvested, totalCommission);
+      float totalCommission,
+      float totalEarned) {
+    return new PortfolioData(stockDataList, totalInvested, totalCommission, totalEarned);
   }
 
   /**
@@ -60,31 +62,42 @@ public class CSVToPortfolioAdapter {
    * @return
    */
   public static Map<String, PortfolioData> buildPortfolioData(
-      String stockData
-  ) {
+      String stockData, Map<String, PortfolioData> pfData
+  ){
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested
-    Map<String, PortfolioData> pfData = new HashMap<>();
+    DateValidator dateCheck = new DateValidator();
     String[] dataPerLine = stockData.split("\n");
     for (String line : dataPerLine
     ) {
       String[] stockQuantity = line.split(",");
       String date = stockQuantity[2];
       // validate
-      // calculate these two
-      float totalInvested = 0;
-      float totalCommission = 0;
+      try {
+        if(!dateCheck.checkData(date)) {
+          // Skip weekends and future dates
+          continue;
+        }
+      }
+      catch (ParseException e) {
+        // Invalid date format, skip
+        continue;
+      }
+      float totalTransaction;
+      float totalCommission = 1;
+      float totalEarned = 0;
+
+      List<String> portfolioValue = PortfolioValue.getBuilder()
+          .stockCountList(line)
+          .date(date)
+          .build()
+          .completePortfolioValue();
+
+      totalTransaction = Float.parseFloat(portfolioValue.get(1).split(",")[2]);
 
       StockData currentStock = new StockData(stockQuantity[0], Float.parseFloat(stockQuantity[1]));
-
-      if (pfData.containsKey(date)) {
-        pfData.get(date).addStock(currentStock);
-      } else {
-        List<StockData> tempList = new ArrayList<>();
-        tempList.add(currentStock);
-        PortfolioData tempP = new PortfolioData(tempList, totalInvested, totalCommission);
-        pfData.put(date, tempP);
-      }
+      CascadeV2.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
+          totalTransaction, totalCommission);
     }
     return pfData;
   }

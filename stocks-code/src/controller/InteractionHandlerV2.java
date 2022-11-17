@@ -6,16 +6,16 @@ import controller.commands.GetPortfolioValue;
 import controller.commands.LoadExternalPortfolio;
 import controller.commands.ModifyPortfolio;
 import controller.commands.PortfolioPerformance;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
-import model.ModelOrchestratorV2;
+import model.Orchestrator;
 import view.UserInteraction;
 
 public class InteractionHandlerV2 extends AbstractHandler {
 
+  Orchestrator morch;
   Map<String, Function<Scanner, IPortfolioCommands>> acceptedCommands = new HashMap<>();
 
   /**
@@ -23,11 +23,11 @@ public class InteractionHandlerV2 extends AbstractHandler {
    * view to display outputs from model to console.
    *
    * @param input  Readable type input object
-   * @param output Prinstream type output object
+   * @param morch Prinstream type output object
    */
-  public InteractionHandlerV2(Readable input, PrintStream output) {
-    this.modelOrch = new ModelOrchestratorV2();
-    this.ui = new UserInteraction(output, this.modelOrch);
+  public InteractionHandlerV2(Readable input, Orchestrator morch, UserInteraction ui) {
+    super.ui = ui;
+    this.morch = morch;
     this.scan = new Scanner(input);
     this.initializeCommands();
   }
@@ -41,54 +41,93 @@ public class InteractionHandlerV2 extends AbstractHandler {
     acceptedCommands.put("2", s -> {
       // Using view to pull data from model using model-view
       this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
       this.ui.printText("Enter your portfolio ID:", "Y");
-      String input = this.getInput("");
+      String input = this.getInput(ValidateData.getRegex("portfolio"));
       return new GetPortfolioComposition(input);
     });
-    acceptedCommands.put("3", s -> {
-      this.ui.printText("Enter Portfolio ID you want to edit shares for:", "Y");
-      String pfID = this.getInput("");
-      this.ui.printText("Enter STOCK,QUANTITY,DATE,CALL", "Y");
-      this.ui.printText("Example: AAPL,20,2020-10-13,BUY", "G");
-      String stockData = this.getInput("");
-      return new ModifyPortfolio(pfID, stockData);
-    });
+    acceptedCommands.put("3",s-> {
+          this.ui.getExistingPortfolios();
+          if(this.ui.getStatus().contains("Failed")) {
+            return null;
+          }
+          StringBuilder inputStockCalls = new StringBuilder();
+          this.ui.printText("Enter Portfolio ID you want to edit shares for:", "Y");
+          String pfID = this.getInput(ValidateData.getRegex("portfolio"));
+          this.ui.printText("Enter STOCK,QUANTITY,DATE,CALL, q/Q to stop entering", "Y");
+          this.ui.printText("Example: AAPL,20,2020-10-13,BUY", "G");
+          String callRequests = getMultilineInput
+              (inputStockCalls,
+              ValidateData.getComplexRegex(new String[]{"stock","quantity","date","call"})
+                  +"|"+ValidateData.getRegex("quit"),
+              "modify");
+          return new ModifyPortfolio(pfID, callRequests);
+        });
+
     acceptedCommands.put("4", s -> {
       this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
       this.ui.printText("Enter portfolio ID you want to get value for:", "Y");
       String pfID = this.getInput("");
       this.ui.printText("Enter date you want to see value for", "Y");
-      String date = this.getInput("");
+      String date = this.getInput(ValidateData.getRegex("date"));
       return new GetPortfolioValue(pfID, date);
     });
     acceptedCommands.put("5", s -> {
       StringBuilder inputStockData = new StringBuilder();
-      this.ui.printText("Enter STOCK, QUANTITY, DATE", "Y");
-      this.ui.printText("Enter q/Q to stop entering", "Y");
-      while (true) {
-        String data = this.getInput("");
-        if (data.equalsIgnoreCase("q")) {
-          if (inputStockData.toString().equals("")) {
-            return new CreatePortfolio("no data provided");
-          }
-          break;
-        } else {
-          inputStockData.append(data).append("\n");
-//          return new CreatePortfolio(inputStockData.toString());
-        }
-      }
-      return new CreatePortfolio(inputStockData.toString());
+      this.ui.printText("Enter STOCK, QUANTITY, DATE","Y");
+      this.ui.printText("Enter q/Q to stop entering","Y");
+      String inputData = getMultilineInput
+          (inputStockData,
+              ValidateData.getComplexRegex(new String[]{"stock","quantity","date"})
+              +"|"+ValidateData.getRegex("quit"),
+              "create");
+      return new CreatePortfolio(inputData);
     });
     acceptedCommands.put("6", s -> {
       this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
       this.ui.printText("Enter portfolio ID you want to view performance for:", "Y");
-      String pfId = this.getInput("");
+      String pfId = this.getInput(ValidateData.getRegex("portfolio"));
       this.ui.printText("Enter start date of the date range:", "Y");
-      String startDate = this.getInput("");
+      String startDate = this.getInput(ValidateData.getRegex("date"));
       this.ui.printText("Enter end date of the date range:", "Y");
-      String endDate = this.getInput("");
+      String endDate = this.getInput(ValidateData.getRegex("date"));
       return new PortfolioPerformance(pfId, startDate, endDate);
     });
+    acceptedCommands.put("7", s-> {
+      this.ui.getExistingPortfolios();
+      if(this.ui.getStatus().contains("Failed")) {
+        return null;
+      }
+      this.ui.printText("Enter Portfolio ID you want to see Cost-Basis for","Y");
+      String pfId = this.getInput(ValidateData.getRegex("portfolio"));
+      this.ui.printText("Enter the date that you want to see Cost-Basis evaluation for","Y");
+      String date = this.getInput(ValidateData.getRegex("date"));
+      this.ui.printCostBasis(pfId,date);
+      return null;
+    });
+  }
+
+  private String getMultilineInput(StringBuilder inputData, String regex, String caller) {
+    while (true) {
+      String data = this.getInput(regex);
+      if(data.equalsIgnoreCase("q")) {
+        break;
+      }
+      inputData.append(data);
+      if(caller.equals("create")) {
+        inputData.append(",BUY");
+      }
+      inputData.append("\n");
+    }
+    return inputData.toString();
   }
 
   @Override
@@ -109,9 +148,15 @@ public class InteractionHandlerV2 extends AbstractHandler {
         this.ui.printText("Command not recognized, retry.", "R");
       } else {
         commandObject = commandEntered.apply(scan);
-        commandObject.go(this.modelOrch);
-        this.ui.printText("Output:", "Y");
-        this.ui.printText(commandObject.getStatusMessage(), "G");
+        if(commandObject==null) continue;
+        commandObject.go(this.morch);
+        this.ui.printText("Output:","Y");
+        if(commandObject.getIsTabularDataBoolean()) {
+          this.ui.printTabularData(commandObject.getStatusMessage());
+        }
+        else {
+          this.ui.printText(commandObject.getStatusMessage(),"G");
+        }
       }
     }
   }
