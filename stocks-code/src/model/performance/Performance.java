@@ -1,4 +1,4 @@
-package model;
+package model.performance;
 
 import java.text.ParseException;
 import java.time.DayOfWeek;
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import model.apistockops.PortfolioValue;
 import model.portfolio.PortfolioData;
 import model.portfolio.PortfolioToCSVAdapter;
 import model.validation.DateValidator;

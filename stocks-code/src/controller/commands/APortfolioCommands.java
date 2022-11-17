@@ -1,10 +1,18 @@
 package controller.commands;
 
-import controller.IPortfolioCommands;
-
+/**
+ * The Abstract class for portfolio commands interface. It implements some of the common methods
+ * that are used to get and set status/booleans.
+ */
 public abstract class APortfolioCommands implements IPortfolioCommands {
 
+  /**
+   * The Status message.
+   */
   protected String statusMessage = "";
+  /**
+   * The determines if status message is tabular data.
+   */
   protected boolean isTabularData = false;
 
 
@@ -19,6 +27,7 @@ public abstract class APortfolioCommands implements IPortfolioCommands {
   public void setIsTabularDataBoolean(boolean bool) {
     this.isTabularData = bool;
   }
+
   public boolean getIsTabularDataBoolean() {
     return this.isTabularData;
   }

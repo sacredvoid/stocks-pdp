@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import model.apistockops.PortfolioValue;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
+import model.performance.Performance;
 import model.portfolio.CSVToPortfolioAdapter;
 import model.portfolio.PortfolioData;
 import model.portfolio.PortfolioDataAdapter;
@@ -75,11 +77,12 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     } catch (FileNotFoundException e) {
       return "Sorry, could not find the portfolio with id " + pfID;
     }
+
     Map<String, PortfolioData> pfJsonData = PortfolioDataAdapter.getObject(pfData);
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
-      return "0. No Portfolio Data before given date. Sorry, enter date equal to or after " + oldestPurchaseDate.toString();
+      return "0. No Portfolio Data before given date. Sorry! enter date equal to or after " + oldestPurchaseDate.toString();
     }
     String stockCountList;
     try {
@@ -106,15 +109,19 @@ public class ModelOrchestratorV2 extends AOrchestrator {
       throws FileNotFoundException {
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
-
-    Map<String, PortfolioData> filteredData = FilterPortfolio.getPortfolioBeforeDate(parsedPFData,
-        date);
-    String latestDate = Utility.getLatestDate(filteredData);
     List<StockData> stockDataForDate;
-    try {
-      stockDataForDate = filteredData.getOrDefault(latestDate, null).getStockList();
-    } catch (NullPointerException n) {
-      return "Sorry, no portfolio data found for given date/before it.";
+    if(parsedPFData.containsKey(date)) {
+      stockDataForDate = parsedPFData.getOrDefault(date,null).getStockList();
+    }
+    else {
+      Map<String, PortfolioData> filteredData = FilterPortfolio.getPortfolioBeforeDate(parsedPFData,
+          date);
+      String latestDate = Utility.getLatestDate(filteredData);
+      try {
+        stockDataForDate = filteredData.getOrDefault(latestDate, null).getStockList();
+      } catch (NullPointerException n) {
+        return "Sorry, no portfolio data found for given date/before it.";
+      }
     }
     if (stockDataForDate != null) {
       String stockDataCSV = PortfolioToCSVAdapter.buildStockQuantityList(stockDataForDate);

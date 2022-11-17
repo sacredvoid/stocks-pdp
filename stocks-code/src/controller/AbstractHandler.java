@@ -1,10 +1,12 @@
 package controller;
 
 import java.util.Scanner;
-import model.ModelOrchestrator;
-import model.Orchestrator;
 import view.UserInteraction;
 
+/**
+ * This class defines some common method that every controller on our platform needs to implement.
+ * This contains methods like getInput and validateInput.
+ */
 public abstract class AbstractHandler implements Handler {
 
   protected Scanner scan;

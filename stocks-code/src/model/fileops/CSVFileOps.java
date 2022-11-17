@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import model.OSValidator;
+import model.validation.OSValidator;
 import model.validation.DateValidator;
 import model.validation.IDataValidator;
 import model.validation.QuantityValidator;

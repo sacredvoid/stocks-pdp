@@ -4,8 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 import model.portfolio.PortfolioData;
 
+/**
+ * The Filter portfolio class which helps get a sub-hashmap of portfolio data that exists
+ * before/after a given date.
+ */
 public class FilterPortfolio {
 
+  /**
+   * Gets portfolio after date.
+   *
+   * @param parsedPFData the parsed pf data
+   * @param date         the date
+   * @return the portfolio after date
+   */
   public static Map<String, PortfolioData> getPortfolioAfterDate(
       Map<String, PortfolioData> parsedPFData,
       String date) {
@@ -19,6 +30,13 @@ public class FilterPortfolio {
     return filteredPFData;
   }
 
+  /**
+   * Gets portfolio before date.
+   *
+   * @param parsedPFData the parsed pf data
+   * @param date         the date
+   * @return the portfolio before date
+   */
   public static Map<String, PortfolioData> getPortfolioBeforeDate(
       Map<String, PortfolioData> parsedPFData,
       String date) {

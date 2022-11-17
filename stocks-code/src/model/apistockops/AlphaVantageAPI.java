@@ -1,24 +1,16 @@
-package model;
+package model.apistockops;
 
 import com.google.gson.JsonObject;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import model.fileops.JSONFileOps;
 
 /**
  * AplphaVantageAPI class defines and implements API operations for the AlphaVantageAPI.
  */
-class AlphaVantageAPI implements ApiHandler {
+public class AlphaVantageAPI implements ApiHandler {
 
   private String stockSymbol;
 

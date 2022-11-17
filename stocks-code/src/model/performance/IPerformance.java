@@ -1,4 +1,4 @@
-package model;
+package model.performance;
 
 import java.util.Map;
 import model.portfolio.PortfolioData;

@@ -117,8 +117,10 @@ public class UserInteraction implements ViewHandler {
     // Write a portfolio parser
     String[] columns = pfData.split("\n");
     if(columns.length == 1) {
-      printText(columns[0],"R");
-      return;
+      if(columns[0].split(",").length == 1) {
+        printText(columns[0],"R");
+        return;
+      }
     }
     int rowCount = columns[0].split(",").length;
     String leftAlignF = "";

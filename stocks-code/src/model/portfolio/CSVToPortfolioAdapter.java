@@ -3,7 +3,7 @@ package model.portfolio;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import model.PortfolioValue;
+import model.apistockops.PortfolioValue;
 import model.validation.DateValidator;
 
 /**
@@ -96,7 +96,7 @@ public class CSVToPortfolioAdapter {
       totalTransaction = Float.parseFloat(portfolioValue.get(1).split(",")[2]);
 
       StockData currentStock = new StockData(stockQuantity[0], Float.parseFloat(stockQuantity[1]));
-      CascadeV2.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
+      CascadeTransactions.updatePortfolio(stockQuantity[3], pfData, currentStock, date,
           totalTransaction, totalCommission);
     }
     return pfData;

@@ -1,7 +1,7 @@
 package model.fileops;
 
 import java.io.File;
-import model.OSValidator;
+import model.validation.OSValidator;
 
 public abstract class AFileOps implements FileOps {
 

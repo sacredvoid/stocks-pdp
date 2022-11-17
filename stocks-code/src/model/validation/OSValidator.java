@@ -1,4 +1,4 @@
-package model;
+package model.validation;
 
 /**
  * Helper class to identify the OS that is being used to help out with determining which file
