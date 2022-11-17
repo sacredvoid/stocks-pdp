@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
 import model.portfolio.CSVToPortfolioAdapter;
@@ -19,6 +20,11 @@ import model.portfolio.Utility;
 import model.portfolio.filters.FilterPortfolio;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Our model orchestrator class, as the name suggests, it is the link for the controller to call the
+ * internal model classes and provide abstraction to the functionalities of our application. It
+ * implements the Orchestrator interface.
+ */
 public class ModelOrchestratorV2 extends AOrchestrator {
 
   private static final String VALID_DATE_REGEX =
@@ -73,7 +79,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
-      return "Sorry, enter date equal to or after " + oldestPurchaseDate.toString();
+      return "0. No Portfolio Data before given date. Sorry, enter date equal to or after " + oldestPurchaseDate.toString();
     }
     String stockCountList;
     try {
@@ -122,7 +128,31 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   @Override
   public String loadExternalPortfolio(String path) throws FileNotFoundException {
-    return null;
+
+    int fileExtInd = path.lastIndexOf(".");
+    String newPFID = generatePortfolioID();
+    if (path.substring(fileExtInd + 1).equals("csv")) {
+      CSVFileOps pw = new CSVFileOps();
+      String readCSVData = pw.readFile(path, "");
+      String [] readCSVDataLines = readCSVData.split("\n");
+      StringBuilder sb = new StringBuilder();
+      int i;
+      for( i=0;i<readCSVDataLines.length;i++){
+        sb.append(readCSVDataLines[i]+",BUY\n");
+      }
+
+      try {
+        Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
+            sb.toString().strip(),new HashMap<>(), this.commissionFees);
+        jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH,
+            new Gson().toJson(translated));
+      } catch (IOException e) {
+        return "Failed to load";
+      }
+      return "Created Portfolio with ID: " + newPFID;
+    } else {
+      return "File Not a CSV";
+    }
   }
 
   @Override
@@ -240,10 +270,5 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public void setCommissionFees(String commissionFees) {
     this.commissionFees = Float.parseFloat(commissionFees);
-  }
-
-  public static void main(String args[]) throws FileNotFoundException {
-    ModelOrchestratorV2 mv2 = new ModelOrchestratorV2();
-    System.out.println(mv2.showPerformance("123455", "2021-09-11", "2021-11-11"));
   }
 }

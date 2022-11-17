@@ -130,7 +130,7 @@ class StockHandler {
 
     ApiDataStruct stockInfo = stockData.getOrDefault(this.date, null);
     if (stockInfo == null) {
-      if (requiredDate.after(todayTime)) {
+      if (requiredDate.after(todayTime) == false || todayTime.compareTo(requiredDate)<0) {
         return fetchCurrent(stockData);
       }
       return "no data found";
