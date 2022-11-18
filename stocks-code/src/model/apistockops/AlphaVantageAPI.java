@@ -33,7 +33,7 @@ public class AlphaVantageAPI implements ApiHandler {
 
   /**
    * getBuilder() method return a new AlphaVantageApiBuilder object which is used for building the
-   * AlphaVantageAPI object
+   * AlphaVantageAPI object.
    *
    * @return
    */

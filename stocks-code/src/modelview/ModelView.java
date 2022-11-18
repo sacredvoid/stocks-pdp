@@ -3,10 +3,18 @@ package modelview;
 import java.io.FileNotFoundException;
 import model.Orchestrator;
 
-public class ModelView implements IModelView{
+/**
+ * The type Model view.
+ */
+public class ModelView implements IModelView {
 
   private Orchestrator morch;
 
+  /**
+   * Instantiates a new Model view.
+   *
+   * @param modelOrchestrator the model orchestrator
+   */
   public ModelView(Orchestrator modelOrchestrator) {
     this.morch = modelOrchestrator;
   }
@@ -27,12 +35,13 @@ public class ModelView implements IModelView{
   }
 
   @Override
-  public String getPortfolioCompositionByDate(String date, String pfID) throws FileNotFoundException {
-    return this.morch.getPortfolioCompositionByDate(date,pfID);
+  public String getPortfolioCompositionByDate(String date, String pfID)
+      throws FileNotFoundException {
+    return this.morch.getPortfolioCompositionByDate(date, pfID);
   }
 
   @Override
   public String[] getCostBasis(String pfID, String date) {
-    return this.morch.getCostBasis(pfID,date);
+    return this.morch.getCostBasis(pfID, date);
   }
 }

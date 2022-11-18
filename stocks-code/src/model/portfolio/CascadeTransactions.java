@@ -24,8 +24,7 @@ public class CascadeTransactions {
    * @param totalCommission  the total commission
    * @return the map
    */
-  public static Map<String, PortfolioData> updatePortfolio
-  (
+  public static Map<String, PortfolioData> updatePortfolio(
       String operation,
       Map<String, PortfolioData> currentPF,
       StockData newStockToAdd,

@@ -2,7 +2,7 @@ package model.portfolio;
 
 /**
  * IStockData interface defines the method signatures required to perform various operations on
- * StockData objects
+ * StockData objects.
  */
 public interface IStockData {
 

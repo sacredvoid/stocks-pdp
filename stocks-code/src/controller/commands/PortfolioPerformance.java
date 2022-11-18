@@ -28,7 +28,7 @@ public class PortfolioPerformance extends APortfolioCommands {
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     try {
       setStatusMessage(m.showPerformance(portfolioId, startDate, endDate));
     } catch (FileNotFoundException e) {

@@ -1,6 +1,7 @@
 package controller;
 
 import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -11,8 +12,14 @@ import org.junit.Before;
 import org.junit.Test;
 import view.UserInteraction;
 
+/**
+ * The type Interaction handler v 2 test.
+ */
 public class InteractionHandlerV2Test {
 
+  /**
+   * The Ih.
+   */
   Handler ih;
 
   private final String yellow = "\u001B[33m";
@@ -24,6 +31,9 @@ public class InteractionHandlerV2Test {
   private Orchestrator model;
   private UserInteraction view;
 
+  /**
+   * Sets .
+   */
   @Before
   public void setup() {
     model = new ModelOrchestratorV2();
@@ -31,13 +41,16 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
   }
 
+  /**
+   * Test menu.
+   */
   @Test()
   public void testMenu() {
     Reader in = new StringReader("q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -54,16 +67,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Test negative commission.
+   */
   @Test()
   public void testNegativeCommission() {
     Reader in = new StringReader("0 -1 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -82,8 +98,10 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
         + "\u001B[33mq/Q - Quit Application\u001B[0m\n"
         + "\u001B[33mBy Default, we charge our users $1 per transaction (buy/sell).\u001B[0m\n"
-        + "\u001B[33mThe new commission fees that you set, will be reset every time you quit the application.\u001B[0m\n"
-        + "\u001B[33mPlease enter the Commission Fees per transaction that you would like to set for this time, or Q/q to quit\u001B[0m\n"
+        + "\u001B[33mThe new commission fees that you set, will be reset every time you quit the "
+        + "application.\u001B[0m\n"
+        + "\u001B[33mPlease enter the Commission Fees per transaction that you would like to set "
+        + "for this time, or Q/q to quit\u001B[0m\n"
         + "\u001B[31mSorry, input did not match requirements!\u001B[0m\n"
         + "\u001B[32mChoose from the following:\u001B[0m\n"
         + "\u001B[33m0 - Set Commission Fees\u001B[0m\n"
@@ -94,16 +112,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Test sell more than required.
+   */
   @Test()
   public void testSellMoreThanRequired() {
     Reader in = new StringReader("2 040340 3 040340 AAPL,20,2022-11-17,SELL\nq 2 040340 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -205,16 +226,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Test buy operation.
+   */
   @Test
-  public void testBuyOperation(){
+  public void testBuyOperation() {
     Reader in = new StringReader("2 190076 3 190076 AAPL,20,2022-11-17,BUY\nq 2 190076 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -286,16 +310,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Buying future date.
+   */
   @Test
-  public void buyingFutureDate(){
+  public void buyingFutureDate() {
     Reader in = new StringReader("2 190076 3 190076 AAPL,20,2022-12-01,BUY\nq 2 190076 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -368,16 +395,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Sell in past test.
+   */
   @Test
-  public void sellInPastTest(){
+  public void sellInPastTest() {
     Reader in = new StringReader("2 190076 3 190076 AAPL,20,1990-11-17,SELL\nq 2 190076 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -449,16 +479,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Print portfolio value.
+   */
   @Test
-  public void printPortfolioValue(){
+  public void printPortfolioValue() {
     Reader in = new StringReader("4 190076 2022-10-11 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -497,16 +530,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Create portfolio.
+   */
   @Test
-  public void createPortfolio(){
+  public void createPortfolio() {
     Reader in = new StringReader("5 2022-10-11 AAPL,20,2022-11-17\nIBM,10,2022-11-15\n q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -538,16 +574,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Testing previously created portfolio.
+   */
   @Test
-  public void testingPreviouslyCreatedPortfolio(){
+  public void testingPreviouslyCreatedPortfolio() {
     Reader in = new StringReader("2 718697 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -584,16 +623,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * View performance.
+   */
   @Test
-  public void viewPerformance(){
+  public void viewPerformance() {
     Reader in = new StringReader("6 190076 2019-10-11 2022-11-17 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -644,16 +686,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * View costbasis.
+   */
   @Test
-  public void viewCostbasis(){
+  public void viewCostbasis() {
     Reader in = new StringReader("7 190076 2022-11-17 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -688,16 +733,19 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m5 - Create New Portfolio\u001B[0m\n"
         + "\u001B[33m6 - View Portfolio Performance\u001B[0m\n"
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
-        + "\u001B[33mq/Q - Quit Application\u001B[0m",bytes.toString().strip());
+        + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Creating portfolio with commission change.
+   */
   @Test
-  public void creatingPortfolioWithCommissionChange(){
+  public void creatingPortfolioWithCommissionChange() {
     Reader in = new StringReader("0 2 5 AAPL,10,2021-10-11\n q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -716,8 +764,10 @@ public class InteractionHandlerV2Test {
         + "\u001B[33m7 - Get Cost-Basis for Portfolio and Date\u001B[0m\n"
         + "\u001B[33mq/Q - Quit Application\u001B[0m\n"
         + "\u001B[33mBy Default, we charge our users $1 per transaction (buy/sell).\u001B[0m\n"
-        + "\u001B[33mThe new commission fees that you set, will be reset every time you quit the application.\u001B[0m\n"
-        + "\u001B[33mPlease enter the Commission Fees per transaction that you would like to set for this time, or Q/q to quit\u001B[0m\n"
+        + "\u001B[33mThe new commission fees that you set, will be reset every time you quit the "
+        + "application.\u001B[0m\n"
+        + "\u001B[33mPlease enter the Commission Fees per transaction that you would like to set "
+        + "for this time, or Q/q to quit\u001B[0m\n"
         + "\u001B[32mCommission Fees for this application lifecycle was set to: 2\u001B[0m\n"
         + "\u001B[32mChoose from the following:\u001B[0m\n"
         + "\u001B[33m0 - Set Commission Fees\u001B[0m\n"
@@ -745,13 +795,16 @@ public class InteractionHandlerV2Test {
         + "\u001B[33mq/Q - Quit Application\u001B[0m", bytes.toString().strip());
   }
 
+  /**
+   * Cost basis after commission given.
+   */
   @Test
-  public void costBasisAfterCommissionGiven(){
+  public void costBasisAfterCommissionGiven() {
     Reader in = new StringReader("7 599526 2021-10-12 q q");
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
-    view = new UserInteraction(out,model);
+    view = new UserInteraction(out, model);
     ih = new InteractionHandlerV2(
         in,
         model,
@@ -759,7 +812,7 @@ public class InteractionHandlerV2Test {
     );
     ih.run();
 
-    assertEquals(" ",bytes.toString().strip());
+    assertEquals(" ", bytes.toString().strip());
   }
 
 

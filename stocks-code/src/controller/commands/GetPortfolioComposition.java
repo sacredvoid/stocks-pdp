@@ -20,7 +20,7 @@ public class GetPortfolioComposition extends APortfolioCommands {
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     try {
       String pfData = m.getLatestPortfolioComposition(this.pfID);
       setStatusMessage(pfData);

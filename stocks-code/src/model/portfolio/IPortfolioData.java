@@ -75,5 +75,6 @@ public interface IPortfolioData {
   void setTotalCommission(float newCommission);
 
   float getTotalEarned();
+
   void setTotalEarned(float newEarning);
 }

@@ -23,7 +23,7 @@ public class ModifyPortfolio extends APortfolioCommands {
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     if (this.portfolioID.isEmpty() || this.data.isEmpty()) {
       setStatusMessage("");
     }

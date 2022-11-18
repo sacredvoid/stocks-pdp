@@ -73,7 +73,7 @@ public class Performance implements IPerformance {
       String endDate) {
 
     List<String> dates = new ArrayList<>();
-    TreeMap<String, Float> dateValueDict = new TreeMap<String, Float>(); // Map to store the year and
+    TreeMap<String, Float> dateValueDict = new TreeMap<String, Float>();
 
     dates = getDailyIntervals(startDate, endDate);
     // storing the previous stockQtyList
@@ -129,7 +129,8 @@ public class Performance implements IPerformance {
     for (String yearAndMonth : yearAndMonths
     ) {
 
-      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData, yearAndMonth);
+      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
+          yearAndMonth);
 
       if (sortedSubMapByYearAndMonth.size() != 0) {
 
@@ -167,7 +168,8 @@ public class Performance implements IPerformance {
     String stockCountList = null;
     for (String yearAndMonth : yearAndMonths
     ) {
-      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData, yearAndMonth);
+      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
+          yearAndMonth);
 
       if (sortedSubMapByYearAndMonth.size() != 0) {
 
@@ -180,7 +182,8 @@ public class Performance implements IPerformance {
           continue;
         }
 
-        List<String> subYearAndMonths = getMonthlyIntervals(1, yearAndMonth + "-28",
+        List<String> subYearAndMonths = getMonthlyIntervals(1, yearAndMonth
+                + "-28",
             yearAndMonthValueDict.lastKey() + "-28", "sub");
         boolean flag = false;
         for (String subYearAndMonth : subYearAndMonths
@@ -196,7 +199,7 @@ public class Performance implements IPerformance {
           }
         }
 
-        if (flag == false) {
+        if (!flag) {
           if (prevStockCountList != null) {
             stockCountList = prevStockCountList;
           } else {
@@ -230,7 +233,8 @@ public class Performance implements IPerformance {
     for (String yearAndMonth : yearAndMonths
     ) {
 
-      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData, yearAndMonth);
+      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
+          yearAndMonth);
 
       if (sortedSubMapByYearAndMonth.size() != 0) {
 
@@ -242,7 +246,8 @@ public class Performance implements IPerformance {
           yearAndMonthValueDict.put(yearAndMonth, 0.0F);
           continue;
         }
-        List<String> subYearAndMonths = getMonthlyIntervals(1, yearAndMonth + "-28",
+        List<String> subYearAndMonths = getMonthlyIntervals(1, yearAndMonth +
+                "-28",
             yearAndMonthValueDict.lastKey() + "-28", "sub");
         boolean flag = false;
         for (String subYearAndMonth : subYearAndMonths
@@ -258,7 +263,7 @@ public class Performance implements IPerformance {
           }
         }
 
-        if (flag == false) {
+        if (!flag) {
           if (prevStockCountList != null) {
             stockCountList = prevStockCountList;
           } else {
@@ -285,8 +290,7 @@ public class Performance implements IPerformance {
     String endYear = endDate.substring(0, 4);
 
     List<String> years = new ArrayList<>();
-    TreeMap<String, Float> yearValueDict = new TreeMap<String, Float>(); // Map to store the year and
-
+    TreeMap<String, Float> yearValueDict = new TreeMap<>();
     String tempYear = startYear;
     while (!tempYear.equals(endYear)) {
       years.add(tempYear);

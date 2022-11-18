@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import model.apiData.ApiDataAdapter;
-import model.apiData.ApiDataStruct;
+import model.apidata.ApiDataAdapter;
+import model.apidata.ApiDataStruct;
 import model.fileops.JSONFileOps;
 
 
@@ -130,7 +130,7 @@ class StockHandler {
 
     ApiDataStruct stockInfo = stockData.getOrDefault(this.date, null);
     if (stockInfo == null) {
-      if (requiredDate.after(todayTime) == false || todayTime.compareTo(requiredDate)<0) {
+      if (!requiredDate.after(todayTime) || todayTime.compareTo(requiredDate) < 0) {
         return fetchCurrent(stockData);
       }
       return "no data found";

@@ -13,35 +13,7 @@ import model.validation.DateValidator;
 public class CSVToPortfolioAdapter {
 
   /**
-   * buildStockData() is used to create a StockData object.
-   *
-   * @param data Stock ticker and quantity as a string
-   * @return a new StockData object of the stock ticker and quantity
-   */
-  public static StockData buildStockData(String data) {
-    String[] dataSplit = data.split(",");
-    // Validate data
-    return new StockData(dataSplit[0], Float.parseFloat(dataSplit[1]));
-  }
-
-  /**
-   * buildPortfolioData() method creates a new PortfolioData object.
-   *
-   * @param stockDataList   a List of StockData objects
-   * @param totalInvested   total investment amount
-   * @param totalCommission total commision amount
-   * @return new PortfolioData object
-   */
-  public static PortfolioData buildPortfolioData(
-      List<StockData> stockDataList,
-      float totalInvested,
-      float totalCommission,
-      float totalEarned) {
-    return new PortfolioData(stockDataList, totalInvested, totalCommission, totalEarned);
-  }
-
-  /**
-   * appendPFDataByDate() appends a new record in to the portfolio
+   * appendPFDataByDate() appends a new record in to the portfolio.
    *
    * @param date          on for which a new record is to be entered
    * @param pfData        consisting StockQuntity,commision,investment and costbasis data
@@ -58,12 +30,16 @@ public class CSVToPortfolioAdapter {
   }
 
   /**
-   * @param stockData
-   * @return
+   * Build portfolio data map.
+   *
+   * @param stockData      the stock data
+   * @param pfData         the pf data
+   * @param commissionFees the commission fees
+   * @return the map
    */
   public static Map<String, PortfolioData> buildPortfolioData(
       String stockData, Map<String, PortfolioData> pfData, float commissionFees
-  ){
+  ) {
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested
     DateValidator dateCheck = new DateValidator();
@@ -74,12 +50,11 @@ public class CSVToPortfolioAdapter {
       String date = stockQuantity[2];
       // validate
       try {
-        if(!dateCheck.checkData(date)) {
+        if (!dateCheck.checkData(date)) {
           // Skip weekends and future dates
           continue;
         }
-      }
-      catch (ParseException e) {
+      } catch (ParseException e) {
         // Invalid date format, skip
         continue;
       }

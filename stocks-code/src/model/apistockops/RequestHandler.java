@@ -2,9 +2,8 @@ package model.apistockops;
 
 import java.io.FileNotFoundException;
 import java.util.Map;
-import model.apistockops.AlphaVantageAPI;
-import model.apiData.ApiDataAdapter;
-import model.apiData.ApiDataStruct;
+import model.apidata.ApiDataAdapter;
+import model.apidata.ApiDataStruct;
 import model.fileops.JSONFileOps;
 
 
@@ -15,9 +14,6 @@ import model.fileops.JSONFileOps;
 public class RequestHandler {
 
   private String stockSymbol;
-  private ApiHandler apiModel;
-
-  private Map<String, ApiDataStruct> data;
 
 
   private String status = "success";
@@ -85,9 +81,9 @@ public class RequestHandler {
    */
   public RequestHandler buildURL() {
 
-    apiModel = AlphaVantageAPI.getBuilder().stockSymbol(stockSymbol).build();
+    ApiHandler apiModel = AlphaVantageAPI.getBuilder().stockSymbol(stockSymbol).build();
     if (apiModel instanceof AlphaVantageAPI) {
-      if (apiModel.createURL() == null || apiModel.createURL().works() == false) {
+      if (apiModel.createURL() == null || !apiModel.createURL().works()) {
         urlFlag = false;
       } else {
         apiModel.writeJson();
@@ -109,6 +105,7 @@ public class RequestHandler {
       return null;
     }
 
+    Map<String, ApiDataStruct> data;
     try {
       data = ApiDataAdapter.getApiObject(
           new JSONFileOps().readFile(this.stockSymbol + "Data.json", "StocksJsonData"));
