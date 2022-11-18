@@ -180,6 +180,7 @@ public class UserInteraction implements ViewHandler {
   }
 
   public void printMenu() {
+    this.printText("Welcome to Aaka-Sam Stock Trading! What would you like to do today?","G");
     this.printText("Choose from the following:","G");
     this.printText("0 - Set Commission Fees","Y");
     this.printText("1 - Load External Portfolio","Y");

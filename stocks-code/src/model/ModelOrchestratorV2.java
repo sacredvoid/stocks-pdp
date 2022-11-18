@@ -191,14 +191,19 @@ public class ModelOrchestratorV2 extends AOrchestrator {
       return new String[]{"File not found!"};
     }
     Map<String, PortfolioData> loadedPF = PortfolioDataAdapter.getObject(csvPFData);
-
-    String latestDateBeforeGivenDate = Utility.getLatestDate
-        (FilterPortfolio.getPortfolioBeforeDate(loadedPF, date));
-    if (latestDateBeforeGivenDate.contains("No data found to sort")) {
-      return new String[]{"No data before given date"};
+    PortfolioData requiredEntry;
+    if(loadedPF.containsKey(date)) {
+      requiredEntry = loadedPF.get(date);
+    }
+    else {
+      String latestDateBeforeGivenDate = Utility.getLatestDate
+          (FilterPortfolio.getPortfolioBeforeDate(loadedPF, date));
+      if (latestDateBeforeGivenDate.contains("No data found to sort")) {
+        return new String[]{"No data before given date"};
+      }
+      requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
     }
 
-    PortfolioData requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
     float totalInvested = requiredEntry.getTotalInvested();
     float totalCommission = requiredEntry.getTotalCommission();
     float totalEarned = requiredEntry.getTotalEarned();
