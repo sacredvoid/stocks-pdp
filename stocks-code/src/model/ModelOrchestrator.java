@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import model.apistockops.PortfolioValue;
 import model.fileops.CSVFileOps;
 import model.validation.DateValidator;
 import model.validation.IDataValidator;
@@ -25,7 +26,7 @@ public class ModelOrchestrator extends AOrchestrator {
    * @param portfolioID Portfolio ID (6 digit number)
    * @return portfolio data stored in the given PortfolioID csv file
    */
-  public String getPortfolio(String portfolioID) throws FileNotFoundException {
+  public String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException {
 
     // if portfolio exists, return data
     // else throw exception
@@ -50,7 +51,6 @@ public class ModelOrchestrator extends AOrchestrator {
     }
     return String.format("Portfolio ID: %s Saved!", newPortfolioID);
   }
-
 
 
   /**
@@ -87,6 +87,12 @@ public class ModelOrchestrator extends AOrchestrator {
     }
   }
 
+  @Override
+  public String getPortfolioCompositionByDate(String date, String pfID)
+      throws FileNotFoundException {
+    return null;
+  }
+
   /**
    * Loads an external CSV: firstly reads the given path to CSV file and then writes it into the
    * './app_data/PortfolioData' directory with a generated Portfolio ID.
@@ -110,5 +116,26 @@ public class ModelOrchestrator extends AOrchestrator {
     } else {
       return "File Not a CSV";
     }
+  }
+
+  @Override
+  public String editExistingPortfolio(String pfID, String call) {
+    return null;
+  }
+
+  @Override
+  public String showPerformance(String pfId, String startDate, String endDate)
+      throws FileNotFoundException {
+    return null;
+  }
+
+  @Override
+  public String[] getCostBasis(String pfID, String date) {
+    return new String[0];
+  }
+
+  @Override
+  public void setCommissionFees(String commissionFees) {
+    return;
   }
 }

@@ -3,21 +3,29 @@ package controller.commands;
 import java.io.FileNotFoundException;
 import model.Orchestrator;
 
-public class GetPortfolioComposition extends APortfolioCommands{
+/**
+ * The command to Get portfolio composition for a given Portfolio ID.
+ */
+public class GetPortfolioComposition extends APortfolioCommands {
 
   private String pfID;
 
+  /**
+   * Instantiates a new Get portfolio composition and sets it's PFid.
+   *
+   * @param pfID the pf id
+   */
   public GetPortfolioComposition(String pfID) {
     this.pfID = pfID;
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     try {
-      String pfData = m.getPortfolio(this.pfID);
+      String pfData = m.getLatestPortfolioComposition(this.pfID);
       setStatusMessage(pfData);
-    }
-    catch (FileNotFoundException f) {
+      setIsTabularDataBoolean(true);
+    } catch (FileNotFoundException f) {
       setStatusMessage("File not found!");
     }
   }

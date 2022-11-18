@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * DateValidator class defines methods to check and validate dates.
+ */
 public class DateValidator implements IDataValidator {
 
   /**
@@ -15,17 +18,18 @@ public class DateValidator implements IDataValidator {
    * @param inputDate Date type date in YYYY-MM-DD format
    * @return true/false given if the date is weekend or not
    */
-  private static boolean isWeekend(Date inputDate) {
+  private boolean isWeekend(Date inputDate) {
     Calendar cal = Calendar.getInstance();
     cal.setTime(inputDate);
     int day = cal.get(Calendar.DAY_OF_WEEK);
     return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
   }
 
-  private static boolean isFuture(Date limit, Date input) {
+  private boolean isFuture(Date limit, Date input) {
     return input.after(limit);
   }
 
+  @Override
   public boolean checkData(String date) throws ParseException {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     Date inputDate = formatter.parse(date);

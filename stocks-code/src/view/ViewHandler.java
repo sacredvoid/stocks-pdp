@@ -7,6 +7,13 @@ package view;
 public interface ViewHandler {
 
   /**
+   * Gets the given PF and date's cost basis calculation.
+   * @param pfID string pfid
+   * @param date string date
+   */
+  void printCostBasis(String pfID, String date);
+
+  /**
    * Method that takes in a string and color and attaches it to a PrintStream object.
    *
    * @param text  to print/attach to PrintStream object
@@ -19,5 +26,5 @@ public interface ViewHandler {
    *
    * @param data portfolio data as string
    */
-  void printPortfolioData(String data);
+  void printTabularData(String data);
 }

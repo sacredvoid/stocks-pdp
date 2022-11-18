@@ -1,14 +1,13 @@
 package model.fileops;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import model.OSValidator;
+import model.validation.OSValidator;
 import model.validation.DateValidator;
 import model.validation.IDataValidator;
 import model.validation.QuantityValidator;
@@ -21,7 +20,6 @@ public class CSVFileOps extends AFileOps {
 
   private String readStatus;
   final String splitBy = ",";
-  private final String osPathSeparator;
   private List<List<String>> csvData;
   private StringBuilder csvStringData;
 
@@ -33,7 +31,7 @@ public class CSVFileOps extends AFileOps {
    * (\\ for windows and / for linux).
    */
   public CSVFileOps() {
-    this.osPathSeparator = OSValidator.getOSSeparator();
+    String osPathSeparator = OSValidator.getOSSeparator();
   }
 
   /**
@@ -59,8 +57,7 @@ public class CSVFileOps extends AFileOps {
         if (data.length <= 2) {
           try {
             dataCheck(data);
-          }
-          catch (Exception p) {
+          } catch (Exception p) {
             return "Some error! while reading";
           }
         } else {

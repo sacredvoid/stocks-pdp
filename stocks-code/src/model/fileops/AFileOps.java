@@ -1,8 +1,11 @@
 package model.fileops;
 
 import java.io.File;
-import model.OSValidator;
+import model.validation.OSValidator;
 
+/**
+ * The type A file ops.
+ */
 public abstract class AFileOps implements FileOps {
 
   private String osPathSeparator = OSValidator.getOSSeparator();

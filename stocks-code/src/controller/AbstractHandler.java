@@ -1,15 +1,16 @@
 package controller;
 
 import java.util.Scanner;
-import model.ModelOrchestrator;
-import model.Orchestrator;
 import view.UserInteraction;
 
-public abstract class AbstractHandler implements Handler{
+/**
+ * This class defines some common method that every controller on our platform needs to implement.
+ * This contains methods like getInput and validateInput.
+ */
+public abstract class AbstractHandler implements Handler {
 
   protected Scanner scan;
   protected UserInteraction ui;
-  protected Orchestrator modelOrch;
 
   /**
    * Function to accept inputs and returns the input from console as a String. Takes a Regular
@@ -25,10 +26,7 @@ public abstract class AbstractHandler implements Handler{
     }
     return scan.next();
   }
-//
-//  protected String getMultiInput(String regex) {
-//    while()
-//  }
+
 
   /**
    * Function which checks if input from user matches our specifications or not, like pre-defined

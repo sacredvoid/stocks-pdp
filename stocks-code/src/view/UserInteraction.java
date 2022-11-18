@@ -1,5 +1,6 @@
 package view;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import model.Orchestrator;
 import modelview.ModelView;
@@ -8,7 +9,6 @@ import modelview.ModelView;
  * Our ViewHandler implementation which shows the outputs from our model to the user via
  * PrintStream.
  */
-
 public class UserInteraction implements ViewHandler {
 
   private final String yellow = "\u001B[33m";
@@ -18,15 +18,20 @@ public class UserInteraction implements ViewHandler {
 
   private PrintStream outStream;
   private ModelView modelView;
+  private ByteArrayOutputStream outData;
+
+  private String status;
 
   /**
    * Default constructor that takes in a PrintStream object and initializes the class attribute.
    *
-   * @param out PrintStream object
+   * @param out   PrintStream object
+   * @param model the model
    */
   public UserInteraction(PrintStream out, Orchestrator model) {
     this.outStream = out;
     this.modelView = new ModelView(model);
+    this.outData = new ByteArrayOutputStream();
   }
 
   /**
@@ -36,6 +41,33 @@ public class UserInteraction implements ViewHandler {
   public void printHeader() {
     printText("Welcome To Aaka-Sam Stock Trading!", "G");
     printText("You can always quit the platform by pressing 'q'", "Y");
+  }
+
+  /**
+   * Gets out data.
+   *
+   * @return the out data
+   */
+  public ByteArrayOutputStream getOutData() {
+    return this.outData;
+  }
+
+  /**
+   * Sets status.
+   *
+   * @param statusMSG the status msg
+   */
+  public void setStatus(String statusMSG) {
+    this.status = statusMSG;
+  }
+
+  /**
+   * Gets status.
+   *
+   * @return the status
+   */
+  public String getStatus() {
+    return this.status;
   }
 
   /**
@@ -74,13 +106,19 @@ public class UserInteraction implements ViewHandler {
 
   /**
    * Method that takes in a list of strings (portfolio data) and prints it neatly.
-   *
    */
   public void getExistingPortfolios() {
-    for (String file : this.modelView.getExistingPortfolios()
+    String[] existingPortfolios = this.modelView.getExistingPortfolios();
+    if (existingPortfolios.length == 0) {
+      printText("No Portfolios Found! You can create one though.", "R");
+      setStatus("Failed to load portfolios");
+      return;
+    }
+    for (String file : existingPortfolios
     ) {
       printText(file, "");
     }
+    setStatus("Portfolio view successful");
   }
 
   /**
@@ -89,9 +127,15 @@ public class UserInteraction implements ViewHandler {
    *
    * @param pfData portfolio data as string
    */
-  public void printPortfolioData(String pfData) {
+  public void printTabularData(String pfData) {
     // Write a portfolio parser
     String[] columns = pfData.split("\n");
+    if (columns.length == 1) {
+      if (columns[0].split(",").length == 1) {
+        printText(columns[0], "R");
+        return;
+      }
+    }
     int rowCount = columns[0].split(",").length;
     String leftAlignF = "";
 
@@ -120,7 +164,7 @@ public class UserInteraction implements ViewHandler {
       }
       this.outStream.print("+\n");
       leftAlignF = "| %-15s | %-15s | %-15s |%n";
-      this.outStream.format("| Stock Name      | Quantity        | Value           |%n");
+      this.outStream.format("| Stock Name      | Quantity        | Value($)        |%n");
       for (int i = 0; i < rowCount; i++) {
         this.outStream.print("+-----------------");
       }
@@ -136,13 +180,33 @@ public class UserInteraction implements ViewHandler {
     }
   }
 
+  @Override
+  public void printCostBasis(String pfID, String date) {
+    String[] costBasisInfo = this.modelView.getCostBasis(pfID, date);
+    if (costBasisInfo.length == 1) {
+      printText(costBasisInfo[0], "R");
+      return;
+    }
+    printText("Total Amount Invested    : $" + costBasisInfo[0], "Y");
+    printText("Total Commission Charged : $" + costBasisInfo[1], "R");
+    printText("Total Amount+Commission  : $" + costBasisInfo[3], "Y");
+    printText("Total Earned by Selling  : $" + costBasisInfo[2], "G");
+  }
+
+  /**
+   * Print menu.
+   */
   public void printMenu() {
-    this.printText("Choose from the following:","G");
-    this.printText("1 - Load External Portfolio","Y");
-    this.printText("2 - View Portfolio Composition","Y");
-    this.printText("3 - Modify existing Portfolio","Y");
-    this.printText("4 - Get Portfolio Value","Y");
-    this.printText("5 - Create New Portfolio","Y");
-    this.printText("q/Q - Quit Application","Y");
+    this.printText("Welcome to Aaka-Sam Stock Trading! What would you like to do today?", "G");
+    this.printText("Choose from the following:", "G");
+    this.printText("0 - Set Commission Fees", "Y");
+    this.printText("1 - Load External Portfolio", "Y");
+    this.printText("2 - View Portfolio Composition", "Y");
+    this.printText("3 - Modify existing Portfolio", "Y");
+    this.printText("4 - Get Portfolio Value", "Y");
+    this.printText("5 - Create New Portfolio", "Y");
+    this.printText("6 - View Portfolio Performance", "Y");
+    this.printText("7 - Get Cost-Basis for Portfolio and Date", "Y");
+    this.printText("q/Q - Quit Application", "Y");
   }
 }

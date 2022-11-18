@@ -15,7 +15,6 @@ import view.UserInteraction;
 public class InteractionHandler extends AbstractHandler {
 
   private final UserInteraction ui;
-  private Scanner scan;
 
   private Orchestrator modelOrch;
   private final String portfolioRegex = "q|Q|[0-9]{6}";
@@ -36,7 +35,7 @@ public class InteractionHandler extends AbstractHandler {
   public InteractionHandler(Readable input, PrintStream output) {
     this.modelOrch = new ModelOrchestrator();
     this.ui = new UserInteraction(output, this.modelOrch);
-    this.scan = new Scanner(input);
+    Scanner scan = new Scanner(input);
   }
 
   /**
@@ -94,10 +93,10 @@ public class InteractionHandler extends AbstractHandler {
         }
         this.ui.printText("Your portfolio number:" + input, "G");
         try {
-          String pfData = this.modelOrch.getPortfolio(input);
+          String pfData = this.modelOrch.getLatestPortfolioComposition(input);
           if (!pfData.isEmpty()) {
             this.ui.printText("Here's your data!", "Y");
-            this.ui.printPortfolioData(pfData);
+            this.ui.printTabularData(pfData);
             dateLoop:
             while (!input.equalsIgnoreCase("b")) {
               this.ui.printText(
@@ -111,7 +110,7 @@ public class InteractionHandler extends AbstractHandler {
                 try {
                   String pfValue = this.modelOrch.getPortfolioValue(input, pfData);
                   if (pfValue != null) {
-                    this.ui.printPortfolioData(pfValue);
+                    this.ui.printTabularData(pfValue);
                   } else {
                     this.ui.printText(
                         "Sorry, the date entered is either a "

@@ -1,12 +1,12 @@
 # stocks-pdp
 
-Assignment: Stocks-1
+Assignment: Stocks-2
 
 ## Our Program Features
 
 1. **Creation of Portfolio**
 
-- [x] User Input (Stocks,Quantity) into console
+- [x] User Input (Stocks,Quantity, Date) into console
 - [x] User Input (path to external CSV) into console
 
 2. **View existing Portfolios**
@@ -22,19 +22,26 @@ Assignment: Stocks-1
 
 4. **Portfolio persistance**
 
-- [x] Portfolio data saved as CSV file in `./app_data/PortfolioData`
+- [x] Portfolio data saved as JSON file in `./app_data/PortfolioData`
 
-5. **Extras**
+5. **Portfolio Updation**
+
+- [x] Update the given portfolio depending on user operation ie. BUY/SELL
+- [x] Does not update the transaction if executed on a weekend/future
+- [x] Also handles if there's no entry of a stock, won't be able to sell.
+
+6. **Stock Data API Modification**
+
+- [x] Add support for integrating other APIs that are there example Yahoo through well designed
+  stock data interfaces
+
+7. **Cost Basis + Commission**
+- [x] Calculates the stock data cost basis (total invested + commission)
+- [x] Commission can be entered by the user and cannot be negative or zero
+
+8. **Performance of Portfolio**
+- [x] The performance graph needs a minimum of 5 days, and can render maximum upto 30 years graph
+
+9. **Extras**
 
 - [x] Data Validation (Stock Scrip checked with a regex, quantity rounded off to nearest int)
-
-## Limitations
-
-1. Our application supports any stock realistically, but the user will see an `API Limit Reached`
-   message in the Portfolio Table for any stock not in our 30 stock list and also if the user
-   wants latest data, we have a feature that fetches latest data from the API after 5pm, so that
-   is also when you'll see an `API Limit Reached`. Retrying every min, it should go away and show
-   the value.
-2. No other limitation, but we have a really strict data validator that will check for valid stock
-   symbols and rounds off any non-integer quantity, also ignores rows with missing data (Like GOOG,)
-   .

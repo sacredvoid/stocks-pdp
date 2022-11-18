@@ -2,7 +2,12 @@ package model;
 
 import java.io.File;
 import java.util.Random;
+import model.validation.OSValidator;
 
+/**
+ * AOrchestrator class defines the classes which are common to both inflexible and flexible
+ * portfolio operations.
+ */
 public abstract class AOrchestrator implements Orchestrator {
 
   protected String osSep = OSValidator.getOSSeparator();
@@ -25,7 +30,7 @@ public abstract class AOrchestrator implements Orchestrator {
     }
     String[] filesList = f.list();
     if (filesList.length == 0) {
-      return null;
+      return new String[]{};
     } else {
       return filesList;
     }
@@ -49,4 +54,5 @@ public abstract class AOrchestrator implements Orchestrator {
         .toString();
   }
 
+  public abstract String[] getCostBasis(String pfID, String date);
 }
