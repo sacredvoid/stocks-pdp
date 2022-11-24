@@ -44,7 +44,7 @@ public interface Orchestrator extends IModelView {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  String getPortfolioValue(String pfId, String date) throws ParseException;
+  String getPortfolioValue(String date, String pfId) throws ParseException;
 
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed

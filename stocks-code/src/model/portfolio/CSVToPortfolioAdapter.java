@@ -60,7 +60,6 @@ public class CSVToPortfolioAdapter {
       }
       float totalTransaction;
       float totalCommission = commissionFees;
-      float totalEarned = 0;
 
       List<String> portfolioValue = PortfolioValue.getBuilder()
           .stockCountList(line)
