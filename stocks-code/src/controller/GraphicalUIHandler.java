@@ -53,7 +53,7 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
     String[] status;
     String json = pfID.split("\\.")[0];
     try {
-      status = model.getCostBasis(pfID, date);
+      status = model.getCostBasis(json, date);
     }
     catch (Exception e) {
       status = new String[] {};

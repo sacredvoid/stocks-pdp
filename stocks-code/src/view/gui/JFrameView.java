@@ -75,8 +75,10 @@ public class JFrameView extends JFrame {
 
   public void setFeatures(GraphicalUIFeatures features) {
     this.features = features;
-    portfolioPanel.selectedButton.addActionListener(e -> features.getPortfolioInformation(
-        portfolioPanel.selected,""));
+    portfolioPanel.selectedButton.addActionListener(e -> {
+      features.getPortfolioInformation(portfolioPanel.selected,"");
+      features.getCostBasis(portfolioPanel.selected, "");
+    });
   }
 
   private void setupPortfolioInfoPanel() {
