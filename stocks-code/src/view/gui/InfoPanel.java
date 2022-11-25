@@ -55,12 +55,14 @@ public class InfoPanel extends JPanel {
     setTableToPanel(pfData, portfolioData, dataModel, columnNames);
   }
 
-  private void setTableToPanel(JPanel panel, JTable component, String[][] dataModel, String[] column) {
-    panel.remove(component);
-    component = new JTable(dataModel, column);
-    component.setDefaultEditor(Object.class, null);
-    panel.add(component, BorderLayout.CENTER);
-    panel.add(component.getTableHeader(), BorderLayout.NORTH);
+  private void setTableToPanel(JPanel panel, JTable table, String[][] dataModel, String[] column) {
+    panel.remove(table);
+    JTable tempTable = new JTable(dataModel, column);
+//    table = tempTable;
+    table.getTableHeader().setReorderingAllowed(false);
+    table.setDefaultEditor(Object.class, null);
+    panel.add(tempTable, BorderLayout.CENTER);
+    panel.add(tempTable.getTableHeader(), BorderLayout.NORTH);
     panel.revalidate();
     panel.repaint();
   }
