@@ -17,10 +17,8 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
 
   @Override
   public void run() {
-    String[] portfolios = model.getExistingPortfolios();
-    jFrameView = new JFrameView();
+    jFrameView = new JFrameView(model);
     setGraphicalUIFeatures();
-    jFrameView.setPortfolioIDLabel(portfolios);
     jFrameView.startUI();
     jFrameView.populateStockList();
   }

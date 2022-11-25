@@ -22,7 +22,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.jdesktop.swingx.JXDatePicker;
+import model.Orchestrator;
+import modelview.IModelView;
+import modelview.ModelView;
 
 public class JFrameView extends JFrame implements ActionListener {
 
@@ -37,12 +39,14 @@ public class JFrameView extends JFrame implements ActionListener {
   private JTable portfolioData;
   private InfoPanel infoPanel;
   private GraphicalUIFeatures features;
-  private JXDatePicker datePicker;
+
+  private IModelView modelView;
 
   private JFrameView swingUI;
 
-  public JFrameView() {
+  public JFrameView(Orchestrator model) {
     super();
+    this.modelView = new ModelView(model);
     this.swingUI = this;
   }
 
@@ -65,11 +69,8 @@ public class JFrameView extends JFrame implements ActionListener {
   }
 
   public void populateStockList() {
+    portfolioList = modelView.getExistingPortfolios();
     portfolioPanel.setupPortfolioList(this.portfolioList,this.features);
-  }
-
-  public void setPortfolioIDLabel(String[] portfolios) {
-    this.portfolioList = portfolios;
   }
 
   public void setFeatures(GraphicalUIFeatures features) {
