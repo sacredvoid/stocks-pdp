@@ -3,6 +3,7 @@ package view.gui;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -11,6 +12,8 @@ public class InfoPanel extends JPanel {
   private JPanel datePickerPanel;
   private JPanel tablePanel;
   private JTable portfolioData;
+  private JPanel costBasis;
+  private JLabel costBasisData;
 
   public InfoPanel() {
     super();
@@ -29,6 +32,22 @@ public class InfoPanel extends JPanel {
     portfolioData = new JTable();
     // Add the table to the table panel
     tablePanel.add(portfolioData);
+
+    costBasis = new JPanel();
+    add(costBasis);
+  }
+
+  public void setCostBasisData(String[] incomingData) {
+    StringBuilder temp = new StringBuilder();
+    System.out.println(incomingData.toString());
+    for (String s: incomingData
+    ) {
+      temp.append(s).append("|");
+    }
+    costBasisData = new JLabel(temp.toString());
+    costBasis.add(costBasisData);
+    costBasis.revalidate();
+    costBasis.repaint();
   }
 
   public void setPortfolioInformationTable(String pfInfo) {

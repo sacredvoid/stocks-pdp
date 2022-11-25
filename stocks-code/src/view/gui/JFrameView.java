@@ -26,7 +26,7 @@ import model.Orchestrator;
 import modelview.IModelView;
 import modelview.ModelView;
 
-public class JFrameView extends JFrame implements ActionListener {
+public class JFrameView extends JFrame {
 
   private JPanel mainPanel;
   private PortfolioListPanel portfolioPanel;
@@ -75,6 +75,8 @@ public class JFrameView extends JFrame implements ActionListener {
 
   public void setFeatures(GraphicalUIFeatures features) {
     this.features = features;
+    portfolioPanel.selectedButton.addActionListener(e -> features.getPortfolioInformation(
+        portfolioPanel.selected,""));
   }
 
   private void setupPortfolioInfoPanel() {
@@ -85,6 +87,10 @@ public class JFrameView extends JFrame implements ActionListener {
 
   public void setInfoPanelData(String csv) {
     infoPanel.setPortfolioInformationTable(csv);
+  }
+
+  public void setCostBasisData(String[] costBasisData) {
+    infoPanel.setCostBasisData(costBasisData);
   }
 
   private void setupInputPanel() {
@@ -100,12 +106,6 @@ public class JFrameView extends JFrame implements ActionListener {
     graphPanel = new JPanel();
     graphPanel.setBackground(Color.lightGray);
     mainPanel.add(graphPanel);
-  }
-
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-
   }
 
   public void startUI() {

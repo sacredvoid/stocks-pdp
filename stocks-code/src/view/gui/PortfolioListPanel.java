@@ -8,8 +8,8 @@ import javax.swing.JPanel;
 
 public class PortfolioListPanel extends JPanel {
   private JComboBox<String> portfolioOptions;
-  private String selected;
-  private JButton selectedButton;
+  public String selected;
+  public JButton selectedButton;
 
   public PortfolioListPanel() {
     super();
@@ -34,11 +34,9 @@ public class PortfolioListPanel extends JPanel {
       portfolioOptions = new JComboBox<>(portfolios);
       portfolioOptions.addActionListener(e -> selected = (String) portfolioOptions.getSelectedItem());
       System.out.println(selected);
-      selectedButton = new JButton("Show Info");
-      selectedButton.addActionListener(e -> {
-        features.getPortfolioInformation(selected);
-        System.out.println(selected);
-      });
+      selectedButton = new JButton("Show Portfolio Info");
+      selectedButton.setActionCommand("Show Portfolio Info");
+
       add(portfolioOptions);
       add(selectedButton);
     }
