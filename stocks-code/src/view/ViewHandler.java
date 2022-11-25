@@ -6,6 +6,11 @@ package view;
  */
 public interface ViewHandler {
 
+  /**
+   * Gets the given PF and date's cost basis calculation.
+   * @param pfID string pfid
+   * @param date string date
+   */
   void printCostBasis(String pfID, String date);
 
   /**

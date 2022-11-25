@@ -46,7 +46,7 @@ public class StockData implements IStockData {
 
   @Override
   public boolean equals(Object obj) {
-    if(!(obj instanceof StockData)) {
+    if (!(obj instanceof StockData)) {
       return false;
     }
     return stockName.equals(((StockData) obj).stockName);
@@ -54,7 +54,7 @@ public class StockData implements IStockData {
 
   @Override
   public int hashCode() {
-    return 15*stockName.hashCode();
+    return 15 * stockName.hashCode();
   }
 
 }

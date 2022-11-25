@@ -3,42 +3,56 @@ package model.apistockops;
 import java.net.URL;
 //import model.apistockops.StockHandler.StockHandlerBuilder;
 
+/**
+ * The type Yahoo stock api.
+ */
 public class YahooStockAPI implements ApiHandler {
-
-  private String stockSymbol;
 
   private StringBuilder data;
   private URL url;
-//  private final String apiKey = "YX2FGEIVWJY89MVU";
-//  private final String alphaVantageAPI = "https://www.alphavantage"
-//      + ".co/query?function=TIME_SERIES_DAILY"
-//      + "&outputsize=full"
-//      + "&symbol"
-//      + "=";
 
   private YahooStockAPI(String stockSymbol) {
-    this.stockSymbol = stockSymbol;
   }
 
 
+  /**
+   * Gets builder.
+   *
+   * @return the builder
+   */
   static YahooStockApiBuilder getBuilder() {
     return new YahooStockApiBuilder();
   }
 
+  /**
+   * The type Yahoo stock api builder.
+   */
   static class YahooStockApiBuilder {
 
     private String stockSymbol;
 
+    /**
+     * Stock symbol yahoo stock api builder.
+     *
+     * @param stockSymbol the stock symbol
+     * @return the yahoo stock api builder
+     */
     YahooStockApiBuilder stockSymbol(String stockSymbol) {
       this.stockSymbol = stockSymbol;
       return this;
     }
 
 
+    /**
+     * Build yahoo stock api.
+     *
+     * @return the yahoo stock api
+     */
     YahooStockAPI build() {
       return new YahooStockAPI(this.stockSymbol);
     }
   }
+
   @Override
   public ApiHandler createURL() {
     return null;
@@ -51,7 +65,7 @@ public class YahooStockAPI implements ApiHandler {
 
   @Override
   public void writeJson() {
-//    return null;
+    // return null
   }
 
   @Override

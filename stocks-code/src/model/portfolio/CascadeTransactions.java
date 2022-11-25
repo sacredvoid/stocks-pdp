@@ -24,8 +24,7 @@ public class CascadeTransactions {
    * @param totalCommission  the total commission
    * @return the map
    */
-  public static Map<String, PortfolioData> updatePortfolio
-  (
+  public static Map<String, PortfolioData> updatePortfolio(
       String operation,
       Map<String, PortfolioData> currentPF,
       StockData newStockToAdd,
@@ -48,11 +47,7 @@ public class CascadeTransactions {
         // cascade
       } else {
         PortfolioData f = getMostRecentStockList(currentPF, givenDate);
-        List<StockData> tempList = new ArrayList<>();
-        for (StockData sd : f.getStockList()
-        ) {
-          tempList.add(new StockData(sd.getStockName(), sd.getQuantity()));
-        }
+        List<StockData> tempList = deepCopy(f.getStockList());
         PortfolioData tempP = new PortfolioData(tempList, totalTransaction + f.getTotalInvested(),
             totalCommission + f.getTotalCommission(), f.getTotalEarned());
         tempP.addStock(newStockToAdd);
@@ -83,11 +78,7 @@ public class CascadeTransactions {
         cascade(currentPF, newStockToAdd, givenDate, "sell", totalTransaction, totalCommission);
       } else {
         PortfolioData f = getMostRecentStockList(currentPF, givenDate);
-        List<StockData> tempList = new ArrayList<>();
-        for (StockData sd : f.getStockList()
-        ) {
-          tempList.add(new StockData(sd.getStockName(), sd.getQuantity()));
-        }
+        List<StockData> tempList = deepCopy(f.getStockList());
         PortfolioData tempP = new PortfolioData(tempList, f.getTotalInvested(),
             totalCommission + f.getTotalCommission(), totalTransaction + f.getTotalEarned());
         if (tempP.getQuantity(newStockToAdd.getStockName()) >= newStockToAdd.getQuantity()) {
@@ -102,6 +93,15 @@ public class CascadeTransactions {
     return currentPF;
   }
 
+  private static List<StockData> deepCopy(List<StockData> oldStockList) {
+    List<StockData> newList = new ArrayList<>();
+    for (StockData s: oldStockList
+    ) {
+      newList.add(new StockData(s.getStockName(),s.getQuantity()));
+    }
+    return newList;
+  }
+
   private static PortfolioData getMostRecentStockList(Map<String, PortfolioData> currentPF,
       String givenDate) {
     List<StockData> tempList = new ArrayList<>();
@@ -111,12 +111,7 @@ public class CascadeTransactions {
     if (filteredBeforeDateMap.size() > 0) {
       String mostRecentPFBeforeDate = Utility.getLatestDate(filteredBeforeDateMap);
       lastPFData = filteredBeforeDateMap.get(mostRecentPFBeforeDate);
-      List<StockData> oldStockList = lastPFData.getStockList();
-      for (StockData s : oldStockList
-      ) {
-        StockData sCopy = new StockData(s.getStockName(), s.getQuantity());
-        tempList.add(sCopy);
-      }
+      tempList = deepCopy(lastPFData.getStockList());
     }
     if (lastPFData == null) {
       return new PortfolioData(new ArrayList<>(), 0, 0, 0);

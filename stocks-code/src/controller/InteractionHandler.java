@@ -15,7 +15,6 @@ import view.UserInteraction;
 public class InteractionHandler extends AbstractHandler {
 
   private final UserInteraction ui;
-  private Scanner scan;
 
   private Orchestrator modelOrch;
   private final String portfolioRegex = "q|Q|[0-9]{6}";
@@ -36,7 +35,7 @@ public class InteractionHandler extends AbstractHandler {
   public InteractionHandler(Readable input, PrintStream output) {
     this.modelOrch = new ModelOrchestrator();
     this.ui = new UserInteraction(output, this.modelOrch);
-    this.scan = new Scanner(input);
+    Scanner scan = new Scanner(input);
   }
 
   /**

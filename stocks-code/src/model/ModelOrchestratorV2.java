@@ -55,11 +55,11 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     try {
       Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
           portfolioData, new HashMap<>(), this.commissionFees);
-      if(translated.size() > 0) {
-        jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(translated));
+      if (translated.size() > 0) {
+        jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH,
+            new Gson().toJson(translated));
         return "Created Portfolio with ID: " + newPFID;
-      }
-      else {
+      } else {
         return "Sorry, no data to create a portfolio with, date entered is invalid(weekend/future)";
       }
     } catch (IOException io) {
@@ -70,7 +70,6 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   @Override
   public String getPortfolioValue(String date, String pfID) throws ParseException {
-//    String stockCountList;
     String pfData;
     LocalDate reqDate = LocalDate.parse(date);
     try {
@@ -83,7 +82,8 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
-      return "0. No Portfolio Data before given date. Sorry! enter date equal to or after " + oldestPurchaseDate.toString();
+      return "0. No Portfolio Data before given date. Sorry! enter date equal to or after "
+          + oldestPurchaseDate.toString();
     }
     String stockCountList;
     try {
@@ -111,10 +111,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
     List<StockData> stockDataForDate;
-    if(parsedPFData.containsKey(date)) {
-      stockDataForDate = parsedPFData.getOrDefault(date,null).getStockList();
-    }
-    else {
+    if (parsedPFData.containsKey(date)) {
+      stockDataForDate = parsedPFData.getOrDefault(date, null).getStockList();
+    } else {
       Map<String, PortfolioData> filteredData = FilterPortfolio.getPortfolioBeforeDate(parsedPFData,
           date);
       String latestDate = Utility.getLatestDate(filteredData);
@@ -142,16 +141,16 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     if (path.substring(fileExtInd + 1).equals("csv")) {
       CSVFileOps pw = new CSVFileOps();
       String readCSVData = pw.readFile(path, "");
-      String [] readCSVDataLines = readCSVData.split("\n");
+      String[] readCSVDataLines = readCSVData.split("\n");
       StringBuilder sb = new StringBuilder();
       int i;
-      for( i=0;i<readCSVDataLines.length;i++){
-        sb.append(readCSVDataLines[i]+",BUY\n");
+      for (i = 0; i < readCSVDataLines.length; i++) {
+        sb.append(readCSVDataLines[i] + ",BUY\n");
       }
 
       try {
         Map<String, PortfolioData> translated = CSVToPortfolioAdapter.buildPortfolioData(
-            sb.toString().strip(),new HashMap<>(), this.commissionFees);
+            sb.toString().strip(), new HashMap<>(), this.commissionFees);
         jsonParser.writeToFile(newPFID + ".json", PORTFOLIO_DATA_PATH,
             new Gson().toJson(translated));
       } catch (IOException e) {
@@ -192,14 +191,18 @@ public class ModelOrchestratorV2 extends AOrchestrator {
       return new String[]{"File not found!"};
     }
     Map<String, PortfolioData> loadedPF = PortfolioDataAdapter.getObject(csvPFData);
-
-    String latestDateBeforeGivenDate = Utility.getLatestDate
-        (FilterPortfolio.getPortfolioBeforeDate(loadedPF, date));
-    if (latestDateBeforeGivenDate.contains("No data found to sort")) {
-      return new String[]{"No data before given date"};
+    PortfolioData requiredEntry;
+    if (loadedPF.containsKey(date)) {
+      requiredEntry = loadedPF.get(date);
+    } else {
+      String latestDateBeforeGivenDate = Utility.getLatestDate(FilterPortfolio
+          .getPortfolioBeforeDate(loadedPF, date));
+      if (latestDateBeforeGivenDate.contains("No data found to sort")) {
+        return new String[]{"No data before given date"};
+      }
+      requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
     }
 
-    PortfolioData requiredEntry = loadedPF.get(latestDateBeforeGivenDate);
     float totalInvested = requiredEntry.getTotalInvested();
     float totalCommission = requiredEntry.getTotalCommission();
     float totalEarned = requiredEntry.getTotalEarned();
@@ -218,11 +221,10 @@ public class ModelOrchestratorV2 extends AOrchestrator {
    * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
    * the user.
    *
-   * @param pfId      Portfolio id of the portfolio
-   * @param startDate Starting date of the timespan
-   * @param endDate   Ending date of the timespan
-   * @return performance of the portfolio for each timestamp in the form of stars which
-   * depict<p></p> the value of the portfolio
+   * @param pfId        Portfolio id of the portfolio
+   * @param startDate   Starting date of the timespan
+   * @param endDate     Ending date of the timespan
+   * @return            performance of the portfolio for each timestamp in the form of stars
    */
 
   public String showPerformance(String pfId, String startDate, String endDate)

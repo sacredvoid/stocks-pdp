@@ -1,4 +1,4 @@
-package model.apiData;
+package model.apidata;
 
 
 /**

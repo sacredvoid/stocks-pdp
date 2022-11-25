@@ -24,6 +24,6 @@ public class DateAfterPredicate {
    */
   public boolean test(String toCheck) {
     int check = this.date.compareTo(toCheck);
-    return check <0;
+    return check < 0;
   }
 }

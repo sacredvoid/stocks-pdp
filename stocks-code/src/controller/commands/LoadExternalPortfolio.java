@@ -20,7 +20,7 @@ public class LoadExternalPortfolio extends APortfolioCommands {
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     try {
       setStatusMessage(m.loadExternalPortfolio(this.path));
     } catch (FileNotFoundException e) {

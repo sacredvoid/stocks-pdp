@@ -44,7 +44,7 @@ public class JSONFileOps extends AFileOps {
     String staticDataPath = pathResolver("", dir);
 
     Path staticPath = Path.of(staticDataPath);
-    if (Files.isDirectory(staticPath) == false) {
+    if (!Files.isDirectory(staticPath)) {
       Files.createDirectory(staticPath);
     }
 

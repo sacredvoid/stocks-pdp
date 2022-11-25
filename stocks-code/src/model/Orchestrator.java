@@ -44,7 +44,7 @@ public interface Orchestrator extends IModelView {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  String getPortfolioValue(String pfId, String date) throws ParseException;
+  String getPortfolioValue(String date, String pfId) throws ParseException;
 
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed
@@ -70,15 +70,15 @@ public interface Orchestrator extends IModelView {
    * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
    * the user.
    *
-   * @param pfId      Portfolio id of the portfolio
-   * @param startDate Starting date of the timespan
-   * @param endDate   Ending date of the timespan
-   * @return performance of the portfolio for each timestamp in the form of stars which
-   * depict<p></p> the value of the portfolio
+   * @param pfId        Portfolio id of the portfolio
+   * @param startDate   Starting date of the timespan
+   * @param endDate     Ending date of the timespan
+   * @return            performance of the portfolio for each timestamp in the form of stars
    */
   String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException;
 
   String[] getCostBasis(String pfID, String date);
+
   void setCommissionFees(String commissionFees);
 }

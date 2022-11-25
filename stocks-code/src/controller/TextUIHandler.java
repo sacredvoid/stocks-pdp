@@ -19,42 +19,43 @@ import view.UserInteraction;
  * controller gets the user input, designates the commands from user to the respective functions and
  * passes information to view.
  */
-public class InteractionHandlerV2 extends AbstractHandler {
+public class TextUIHandler extends AbstractHandler {
 
   /**
    * The Model object.
    */
-  Orchestrator morch;
+  private Orchestrator morch;
   /**
    * The Accepted commands hashmap.
    */
-  Map<String, Function<Scanner, IPortfolioCommands>> acceptedCommands = new HashMap<>();
+  private Map<String, Function<Scanner, IPortfolioCommands>> acceptedCommands = new HashMap<>();
 
   /**
    * Constructor class which takes a Readable input and Printstream output, which is used by our
    * view to display outputs from model to console.
    *
-   * @param input Readable type input object
+   * @param scanner Scanner type input object
    * @param morch Prinstream type output object
    * @param ui    the ui
    */
-  public InteractionHandlerV2(Readable input, Orchestrator morch, UserInteraction ui) {
+  public TextUIHandler(Scanner scanner, Orchestrator morch, UserInteraction ui) {
     super.ui = ui;
     this.morch = morch;
-    this.scan = new Scanner(input);
+    this.scan = scanner;
     this.initializeCommands();
   }
 
   private void initializeCommands() {
     // Command to set the commission fees
     acceptedCommands.put("0", s -> {
-      this.ui.printText("By Default, we charge our users $1 per transaction (buy/sell).", "Y");
-      this.ui.printText(
-          "The new commission fees that you set, will be reset every time you quit the application.",
+      this.ui.printText("By Default, we charge our users $1 per transaction (buy/sell).",
           "Y");
       this.ui.printText(
-          "Please enter the Commission Fees per transaction that you would like to set for this time, or Q/q to quit",
-          "Y");
+          "The new commission fees that you set, will be reset every time you quit the "
+              + "application.", "Y");
+      this.ui.printText(
+          "Please enter the Commission Fees per transaction that you would like to set for this "
+              + "time, or Q/q to quit", "Y");
       String commissionFees = this.getInput("[0-9]+|q|Q");
       if (!commissionFees.equalsIgnoreCase("q")) {
         if (commissionFees.equals("0")) {
@@ -63,7 +64,8 @@ public class InteractionHandlerV2 extends AbstractHandler {
         }
         this.morch.setCommissionFees(commissionFees);
         this.ui.printText(
-            "Commission Fees for this application lifecycle was set to: " + commissionFees, "G");
+            "Commission Fees for this application lifecycle was set to: " + commissionFees,
+            "G");
       }
       return null;
     });
@@ -95,11 +97,10 @@ public class InteractionHandlerV2 extends AbstractHandler {
       String pfID = this.getInput(ValidateData.getRegex("portfolio"));
       this.ui.printText("Enter STOCK,QUANTITY,DATE,CALL, q/Q to stop entering", "Y");
       this.ui.printText("Example: AAPL,20,2020-10-13,BUY", "G");
-      String callRequests = getMultilineInput
-          (inputStockCalls,
-              ValidateData.getComplexRegex(new String[]{"stock", "quantity", "date", "call"})
-                  + "|" + ValidateData.getRegex("quit"),
-              "modify");
+      String callRequests = getMultilineInput(inputStockCalls,
+          ValidateData.getComplexRegex(new String[]{"stock", "quantity", "date", "call"})
+              + "|" + ValidateData.getRegex("quit"),
+          "modify");
       return new ModifyPortfolio(pfID, callRequests);
     });
     // Command to get the value for a portfolio
@@ -119,11 +120,10 @@ public class InteractionHandlerV2 extends AbstractHandler {
       StringBuilder inputStockData = new StringBuilder();
       this.ui.printText("Enter STOCK, QUANTITY, DATE", "Y");
       this.ui.printText("Enter q/Q to stop entering", "Y");
-      String inputData = getMultilineInput
-          (inputStockData,
-              ValidateData.getComplexRegex(new String[]{"stock", "quantity", "date"})
-                  + "|" + ValidateData.getRegex("quit"),
-              "create");
+      String inputData = getMultilineInput(inputStockData,
+          ValidateData.getComplexRegex(new String[]{"stock", "quantity", "date"})
+              + "|" + ValidateData.getRegex("quit"),
+          "create");
       if (inputData.isEmpty()) {
         return null;
       }
@@ -151,7 +151,8 @@ public class InteractionHandlerV2 extends AbstractHandler {
       }
       this.ui.printText("Enter Portfolio ID you want to see Cost-Basis for", "Y");
       String pfId = this.getInput(ValidateData.getRegex("portfolio"));
-      this.ui.printText("Enter the date that you want to see Cost-Basis evaluation for", "Y");
+      this.ui.printText("Enter the date that you want to see Cost-Basis evaluation for",
+          "Y");
       String date = this.getInput(ValidateData.getRegex("date"));
       this.ui.printCostBasis(pfId, date);
       return null;
@@ -159,10 +160,11 @@ public class InteractionHandlerV2 extends AbstractHandler {
   }
 
   /**
-   * Helper method to take multiline inputs and append them to a string
+   * Helper method to take multiline inputs and append them to a string.
+   *
    * @param inputData the stringbuilder object that we'll return to the command containing the data
-   * @param regex the regex to check the input with
-   * @param caller the indicator from where this method was called, defines behaviour
+   * @param regex     the regex to check the input with
+   * @param caller    the indicator from where this method was called, defines behaviour
    * @return String containing the aggregated data
    */
   private String getMultilineInput(StringBuilder inputData, String regex, String caller) {
@@ -201,7 +203,7 @@ public class InteractionHandlerV2 extends AbstractHandler {
         if (commandObject == null) {
           continue;
         }
-        commandObject.go(this.morch);
+        commandObject.runCommand(this.morch);
         this.ui.printText("Output:", "Y");
         String color = "";
         if (commandObject.getIsTabularDataBoolean()) {

@@ -23,7 +23,7 @@ public class GetPortfolioValue extends APortfolioCommands {
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     try {
       setStatusMessage(m.getPortfolioValue(date, pfID));
       setIsTabularDataBoolean(true);

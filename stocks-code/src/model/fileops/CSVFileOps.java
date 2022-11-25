@@ -20,7 +20,6 @@ public class CSVFileOps extends AFileOps {
 
   private String readStatus;
   final String splitBy = ",";
-  private final String osPathSeparator;
   private List<List<String>> csvData;
   private StringBuilder csvStringData;
 
@@ -32,7 +31,7 @@ public class CSVFileOps extends AFileOps {
    * (\\ for windows and / for linux).
    */
   public CSVFileOps() {
-    this.osPathSeparator = OSValidator.getOSSeparator();
+    String osPathSeparator = OSValidator.getOSSeparator();
   }
 
   /**

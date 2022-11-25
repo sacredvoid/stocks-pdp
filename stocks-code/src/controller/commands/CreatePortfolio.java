@@ -20,7 +20,7 @@ public class CreatePortfolio extends APortfolioCommands {
   }
 
   @Override
-  public void go(Orchestrator m) {
+  public void runCommand(Orchestrator m) {
     setStatusMessage(m.createPortfolio(this.stockData));
   }
 }

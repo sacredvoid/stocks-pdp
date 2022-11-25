@@ -127,6 +127,12 @@ public class PortfolioValue {
     return stockPrice * count;
   }
 
+
+  /**
+   * Stock count value for performance float.
+   *
+   * @return the float
+   */
   public float stockCountValueForPerformance() {
     List<String> output = new ArrayList<>();
     String[] lines = stockCountList.split("\n");
@@ -143,14 +149,4 @@ public class PortfolioValue {
     }
     return sum;
   }
-//  public static void main(String args[]){
-//    String stockCountList ="AAPL,10\nIBM,10\nMADARA,30";
-//    String date = "2022-11-07";
-//
-//    List<String> portfolioValue = PortfolioValue.getBuilder().stockCountList(stockCountList).date(date).build().completePortfolioValue();
-//    for (String s: portfolioValue
-//    ) {
-//      System.out.println(s);
-//    }
-//  }
 }

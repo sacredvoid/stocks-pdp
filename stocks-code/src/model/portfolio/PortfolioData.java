@@ -24,7 +24,6 @@ public class PortfolioData implements IPortfolioData {
    */
 
 
-
   public PortfolioData(List<StockData> sd, float totalInvested, float totalCommission,
       float totalEarned) {
 
@@ -81,7 +80,7 @@ public class PortfolioData implements IPortfolioData {
     try {
       for (StockData s : stockData) {
         if (s.equals(newStock)) {
-          s.setQuantity(newStock.getQuantity()+s.getQuantity());
+          s.setQuantity(newStock.getQuantity() + s.getQuantity());
           return "Adding successful";
         }
       }
@@ -97,7 +96,7 @@ public class PortfolioData implements IPortfolioData {
     try {
       for (StockData s : stockData) {
         if (s.equals(newStock)) {
-          s.setQuantity(s.getQuantity()-newStock.getQuantity());
+          s.setQuantity(s.getQuantity() - newStock.getQuantity());
           return "Adding successful";
         }
       }

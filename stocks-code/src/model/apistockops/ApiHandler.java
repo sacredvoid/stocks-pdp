@@ -67,7 +67,6 @@ public interface ApiHandler {
         output.append((char) b);
       }
     } catch (IOException e) {
-//
       return null;
     } catch (NullPointerException e) {
       return null;

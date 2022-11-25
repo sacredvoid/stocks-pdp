@@ -44,5 +44,5 @@ public interface IPortfolioCommands {
    *
    * @param m Orchestrator (model) object
    */
-  void go(Orchestrator m);
+  void runCommand(Orchestrator m);
 }
