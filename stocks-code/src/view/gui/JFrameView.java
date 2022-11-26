@@ -1,26 +1,15 @@
 package view.gui;
 
 import controller.GraphicalUIFeatures;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Arrays;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import model.Orchestrator;
@@ -33,7 +22,7 @@ public class JFrameView extends JFrame {
   private PortfolioListPanel portfolioPanel;
   private String[] portfolioList = new String[]{};
   private JPanel graphPanel;
-  private JPanel inputPanel;
+  private InputPanel inputPanel;
   private JScrollPane mainScrollPane;
   private InfoPanel infoPanel;
   private GraphicalUIFeatures features;
@@ -74,10 +63,23 @@ public class JFrameView extends JFrame {
 
   public void setFeatures(GraphicalUIFeatures features) {
     this.features = features;
+    // Get portfolio composition and cost-basis for given date
     portfolioPanel.selectedButton.addActionListener(e -> {
-      features.getPortfolioInformation(portfolioPanel.selected,"");
-      features.getCostBasis(portfolioPanel.selected, "");
+      features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
     });
+
+    // Create new portfolio
+    inputPanel.createNewPortfolio.addActionListener(e -> {
+      inputPanel.createPortfolioButtonDialog();
+      if(inputPanel.createPortfolioPressed != -3) {
+        if(inputPanel.createPortfolioPressed == JOptionPane.OK_OPTION) {
+          features.createPortfolio(inputPanel.newPortfolioData);
+          portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+        }
+      }
+    });
+
   }
 
   private void setupPortfolioInfoPanel() {
@@ -101,6 +103,13 @@ public class JFrameView extends JFrame {
     inputPanel = new InputPanel();
     inputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(inputPanel);
+  }
+
+  public void displayStatusMessage(String message) {
+    portfolioPanel.appStatusUpdates.append("\n"+message);
+    portfolioPanel.appStatusUpdates.validate();
+    JScrollBar vertical = portfolioPanel.scrollStatusPane.getVerticalScrollBar();
+    vertical.setValue(vertical.getMaximum());
   }
 
   private void setupGraphPanel() {

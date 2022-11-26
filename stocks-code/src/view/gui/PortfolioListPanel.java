@@ -3,15 +3,21 @@ package view.gui;
 import controller.GraphicalUIFeatures;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 import org.jdesktop.swingx.JXDatePicker;
@@ -21,13 +27,15 @@ public class PortfolioListPanel extends JPanel {
   public String selected;
   public JButton selectedButton;
   private JXDatePicker datePicker;
+  public JScrollPane scrollStatusPane;
 
   private JPanel selectionPanel;
-  private JPanel statusPanel;
-  private Date selectedDate;
+  public JPanel statusPanel;
+  public Date selectedDate;
+  public String selectedDateString;
   private JLabel showSelectedDate;
-  private JTextArea appStatusUpdates;
-  private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+  public JTextArea appStatusUpdates;
+  public final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   public PortfolioListPanel() {
     super();
@@ -35,12 +43,16 @@ public class PortfolioListPanel extends JPanel {
     selectionPanel = new JPanel();
     add(selectionPanel);
     statusPanel = new JPanel();
-    appStatusUpdates = new JTextArea();
+    statusPanel.setLayout(new BoxLayout(statusPanel,BoxLayout.PAGE_AXIS));
+    appStatusUpdates = new JTextArea(7,0);
     appStatusUpdates.setEditable(false);
-    appStatusUpdates.setText("Status Updates go here");
-    Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
+    appStatusUpdates.setText("Welcome! You can start by viewing existing Portfolios");
+    Border border = BorderFactory.createTitledBorder("Application Status Updates");
     appStatusUpdates.setBorder(border);
-    statusPanel.add(appStatusUpdates);
+    scrollStatusPane = new JScrollPane(appStatusUpdates);
+    scrollStatusPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    statusPanel.add(scrollStatusPane);
+    add(Box.createRigidArea(new Dimension(0,300)));
     add(statusPanel);
   }
 
@@ -53,6 +65,7 @@ public class PortfolioListPanel extends JPanel {
       selectionPanel.add(new JLabel("Select One of The Portfolios"),BorderLayout.LINE_START);
       showSelectedDate = new JLabel();
       portfolioOptions = new JComboBox<>(portfolios);
+      selected = portfolioOptions.getItemAt(0);
       portfolioOptions.addActionListener(e -> selected = (String) portfolioOptions.getSelectedItem());
       selectedButton = new JButton("Show Portfolio Info");
       selectionPanel.add(portfolioOptions, BorderLayout.CENTER);
@@ -60,6 +73,10 @@ public class PortfolioListPanel extends JPanel {
       selectionPanel.add(selectedButton,BorderLayout.LINE_END);
       selectionPanel.add(showSelectedDate);
     }
+  }
+
+  public void updatePortfolioList(String[] portfolios) {
+    portfolioOptions.setModel(new DefaultComboBoxModel<>(portfolios));
   }
 
   private void setDatePicker() {
@@ -78,7 +95,8 @@ public class PortfolioListPanel extends JPanel {
   }
 
   private void updateSelectedDateStatus(Date selectedDate) {
-    showSelectedDate.setText("Selected Date is: "+simpleDateFormat.format(selectedDate));
+    selectedDateString = simpleDateFormat.format(selectedDate);
+    showSelectedDate.setText("Selected Date is: "+selectedDateString);
   }
 
   private void setCalendarLimits(Calendar calendar) {

@@ -42,6 +42,7 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
       status = "Could not read data";
     }
     this.jFrameView.setInfoPanelData(status);
+    this.jFrameView.displayStatusMessage("Showing details for Portfolio ID: "+json+" on date: "+date);
   }
 
   @Override
@@ -59,6 +60,18 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
       status = new String[] {};
     }
     this.jFrameView.setCostBasisData(status);
+  }
+
+  @Override
+  public void createPortfolio(String pfData) {
+    String status;
+    if(pfData.equals("")) {
+      status = this.model.createPortfolio("no data provided");
+    }
+    else {
+      status = this.model.createPortfolio(pfData);
+    }
+    this.jFrameView.displayStatusMessage(status);
   }
 
 }
