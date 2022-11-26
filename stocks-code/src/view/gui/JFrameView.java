@@ -72,14 +72,36 @@ public class JFrameView extends JFrame {
     // Create new portfolio
     inputPanel.createNewPortfolio.addActionListener(e -> {
       inputPanel.createPortfolioButtonDialog();
-      if(inputPanel.createPortfolioPressed != -3) {
-        if(inputPanel.createPortfolioPressed == JOptionPane.OK_OPTION) {
+      if(inputPanel.jdialogButtonPressed != -3) {
+        if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
           features.createPortfolio(inputPanel.newPortfolioData);
           portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
         }
       }
     });
 
+    // Edit existing (BUY) portfolio
+    inputPanel.buyStocks.addActionListener(e -> {
+      inputPanel.createBuyStocksDialog();
+      executeBuySell(features);
+    });
+
+    // Edit existing (SELL) portfolio
+    inputPanel.sellStocks.addActionListener(e -> {
+      inputPanel.createSellStocksDialog();
+      executeBuySell(features);
+    });
+
+  }
+
+  private void executeBuySell(GraphicalUIFeatures features) {
+    if(inputPanel.jdialogButtonPressed != -3) {
+      if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
+        features.modifyPortfolio(portfolioPanel.selected, inputPanel.newPortfolioData);
+        features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
+        features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      }
+    }
   }
 
   private void setupPortfolioInfoPanel() {

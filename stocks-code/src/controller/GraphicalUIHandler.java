@@ -74,4 +74,12 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
     this.jFrameView.displayStatusMessage(status);
   }
 
+  @Override
+  public void modifyPortfolio(String pfID, String call) {
+    String status;
+    String json = pfID.split("\\.")[0];
+    status = this.model.editExistingPortfolio(json,call);
+    this.jFrameView.displayStatusMessage(status);
+  }
+
 }

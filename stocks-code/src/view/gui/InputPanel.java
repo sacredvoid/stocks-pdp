@@ -12,14 +12,13 @@ import org.jdesktop.swingx.JXDatePicker;
 public class InputPanel extends JPanel {
 
   public JButton createNewPortfolio;
-  public int createPortfolioPressed = -3;
+  public int jdialogButtonPressed = -3;
   public String newPortfolioData;
   public JButton buyStocks;
   public JButton sellStocks;
   public JButton dollarCost;
   public JButton createSIP;
 
-  public final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
   public InputPanel() {
     super();
     createNewPortfolio = new JButton("Create New Portfolio");
@@ -31,20 +30,24 @@ public class InputPanel extends JPanel {
   }
 
   public void createPortfolioButtonDialog() {
-    JTextField stockName = new JTextField();
-    JTextField stockQuantity = new JTextField();
-    JXDatePicker transactionDate = new JXDatePicker(new Date());
-    transactionDate.setFormats(simpleDateFormat);
-    Object[] dialog = {
-        "Stock Name: ", stockName,
-        "Stock Quantity: ", stockQuantity,
-        "Buy Date: ", transactionDate
-    };
+    StockInputPanel s = new StockInputPanel();
+    jdialogButtonPressed = s.jdialogButtonPressed;
+    newPortfolioData = s.newPortfolioData;
+    newPortfolioData = newPortfolioData+",BUY";
+  }
 
-    createPortfolioPressed = JOptionPane.showConfirmDialog(this, dialog, "Create New Portfolio", JOptionPane.OK_CANCEL_OPTION);
-    StringBuilder csvData = new StringBuilder();
-    csvData.append(stockName.getText()).append(",").append(stockQuantity.getText()).append(",").append(simpleDateFormat.format(transactionDate.getDate())).append(",BUY");
-    newPortfolioData = csvData.toString();
+  public void createBuyStocksDialog() {
+    StockInputPanel s = new StockInputPanel();
+    jdialogButtonPressed = s.jdialogButtonPressed;
+    newPortfolioData = s.newPortfolioData;
+    newPortfolioData = newPortfolioData+",BUY";
+  }
+
+  public void createSellStocksDialog() {
+    StockInputPanel s = new StockInputPanel();
+    jdialogButtonPressed = s.jdialogButtonPressed;
+    newPortfolioData = s.newPortfolioData;
+    newPortfolioData = newPortfolioData+",SELL";
   }
 
   private void addButtonsToTarget(JComponent target, JComponent[] buttons) {

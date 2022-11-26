@@ -7,4 +7,6 @@ public interface GraphicalUIFeatures {
   void getCostBasis(String pfID,String date);
 
   void createPortfolio(String pfData);
+
+  void modifyPortfolio(String pfID, String call);
 }

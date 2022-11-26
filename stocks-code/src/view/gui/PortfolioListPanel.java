@@ -2,10 +2,7 @@ package view.gui;
 
 import controller.GraphicalUIFeatures;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
