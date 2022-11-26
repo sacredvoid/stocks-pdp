@@ -1,0 +1,47 @@
+{
+  "2022-11-02": {
+    "stockData": [
+      {
+        "stockName": "AAPL",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "TSLA",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "GOOG",
+        "quantity": 15.0
+      }
+    ],
+    "totalInvested": 44338.15,
+    "totalCommission": 3.0,
+    "totalEarned": 0.0
+  },
+  "2021-07-15": {
+    "stockData": [
+      {
+        "stockName": "GOOG",
+        "quantity": 15.0
+      }
+    ],
+    "totalInvested": 39379.95,
+    "totalCommission": 1.0,
+    "totalEarned": 0.0
+  },
+  "2022-10-10": {
+    "stockData": [
+      {
+        "stockName": "AAPL",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "GOOG",
+        "quantity": 15.0
+      }
+    ],
+    "totalInvested": 42188.348,
+    "totalCommission": 2.0,
+    "totalEarned": 0.0
+  }
+}
