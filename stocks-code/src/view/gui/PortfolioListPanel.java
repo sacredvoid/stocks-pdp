@@ -2,14 +2,18 @@ package view.gui;
 
 import controller.GraphicalUIFeatures;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.border.Border;
 import org.jdesktop.swingx.JXDatePicker;
 
 public class PortfolioListPanel extends JPanel {
@@ -22,6 +26,7 @@ public class PortfolioListPanel extends JPanel {
   private JPanel statusPanel;
   private Date selectedDate;
   private JLabel showSelectedDate;
+  private JTextArea appStatusUpdates;
   private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   public PortfolioListPanel() {
@@ -30,6 +35,12 @@ public class PortfolioListPanel extends JPanel {
     selectionPanel = new JPanel();
     add(selectionPanel);
     statusPanel = new JPanel();
+    appStatusUpdates = new JTextArea();
+    appStatusUpdates.setEditable(false);
+    appStatusUpdates.setText("Status Updates go here");
+    Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
+    appStatusUpdates.setBorder(border);
+    statusPanel.add(appStatusUpdates);
     add(statusPanel);
   }
 
@@ -39,15 +50,6 @@ public class PortfolioListPanel extends JPanel {
       add(emptyList);
     }
     else {
-//      for (String pfID: portfolios
-//      ) {
-//        JButton thisPFID = new JButton(pfID);
-//        thisPFID.setForeground(Color.BLUE.darker());
-//        thisPFID.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-//        thisPFID.addActionListener( e -> this.features.getPortfolioInformation(pfID));
-//        portfolioListPanel.add(thisPFID);
-//
-//      }
       selectionPanel.add(new JLabel("Select One of The Portfolios"),BorderLayout.LINE_START);
       showSelectedDate = new JLabel();
       portfolioOptions = new JComboBox<>(portfolios);

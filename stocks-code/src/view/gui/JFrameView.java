@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,10 +34,7 @@ public class JFrameView extends JFrame {
   private String[] portfolioList = new String[]{};
   private JPanel graphPanel;
   private JPanel inputPanel;
-  private JPanel tablePanel;
-  private JPanel datePickerPanel;
   private JScrollPane mainScrollPane;
-  private JTable portfolioData;
   private InfoPanel infoPanel;
   private GraphicalUIFeatures features;
 
@@ -55,7 +53,7 @@ public class JFrameView extends JFrame {
     setSize(750,750);
     //TODO Test different layouts
     mainPanel = new JPanel();
-    mainPanel.setLayout(new GridLayout(0,2));
+    mainPanel.setLayout(new GridLayout(0,2, -1, -1));
     mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
   }
@@ -65,6 +63,7 @@ public class JFrameView extends JFrame {
   private void setupStockListPanel() {
     //TODO read json files and list them here
     portfolioPanel = new PortfolioListPanel();
+    portfolioPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(portfolioPanel);
   }
 
@@ -83,6 +82,7 @@ public class JFrameView extends JFrame {
 
   private void setupPortfolioInfoPanel() {
     infoPanel = new InfoPanel();
+    infoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(infoPanel);
     // Create date and table panel
   }
@@ -98,8 +98,8 @@ public class JFrameView extends JFrame {
   private void setupInputPanel() {
     //TODO Create buttons here for new portfolio
     //TODO Create input flow for buying/selling and sending info to controller
-    inputPanel = new JPanel();
-    inputPanel.setBackground(Color.GRAY);
+    inputPanel = new InputPanel();
+    inputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(inputPanel);
   }
 
@@ -107,6 +107,7 @@ public class JFrameView extends JFrame {
     // TODO Generate stock performance graph here
     graphPanel = new JPanel();
     graphPanel.setBackground(Color.lightGray);
+    graphPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(graphPanel);
   }
 
