@@ -1,16 +1,12 @@
 package view.gui;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.filechooser.FileSystemView;
-import org.jdesktop.swingx.JXDatePicker;
 
 public class InputPanel extends JPanel {
 

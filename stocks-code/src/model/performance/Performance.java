@@ -81,12 +81,8 @@ public class Performance implements IPerformance {
     String stockCountList;
     for (String date : dates
     ) {
-      try {
-        if (!new DateValidator().checkData(date)) {
-          continue;
-        }
-      } catch (ParseException e) {
-        //
+      if (!new DateValidator().checkData(date)) {
+        continue;
       }
 
       TreeMap<String, PortfolioData> sortedSubMapByDate = fetchSubMap(pfData, date);

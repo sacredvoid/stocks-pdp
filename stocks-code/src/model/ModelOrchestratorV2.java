@@ -21,6 +21,7 @@ import model.portfolio.StockData;
 import model.portfolio.Utility;
 import model.portfolio.filters.FilterPortfolio;
 import java.time.temporal.ChronoUnit;
+import model.validation.DateValidator;
 
 /**
  * Our model orchestrator class, as the name suggests, it is the link for the controller to call the
@@ -29,9 +30,8 @@ import java.time.temporal.ChronoUnit;
  */
 public class ModelOrchestratorV2 extends AOrchestrator {
 
-  private static final String VALID_DATE_REGEX =
-      "q|Q|(19|20)[0-9]{2}-[0-9]{2}-[0-9]{2}";
   private FileOps jsonParser = new JSONFileOps();
+  private final DateValidator dateValidator = new DateValidator();
   private float commissionFees = 1;
 
   @Override
@@ -70,6 +70,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String getPortfolioValue(String date, String pfID) throws ParseException {
     String pfData;
+    if(!dateValidator.checkData(date)) {
+      return "Sorry! Invalid date entered!";
+    }
     LocalDate reqDate = LocalDate.parse(date);
     try {
       pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
@@ -107,6 +110,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String getPortfolioCompositionByDate(String date, String pfID)
       throws FileNotFoundException {
+    if(!dateValidator.checkData(date)) {
+      return "Sorry! Invalid date entered!";
+    }
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
     List<StockData> stockDataForDate;
@@ -184,6 +190,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String[] getCostBasis(String pfID, String date) {
     String csvPFData;
+    if(!dateValidator.checkData(date)) {
+      return new String[]{"Sorry! Invalid date entered!"};
+    }
     try {
       csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     } catch (FileNotFoundException f) {
@@ -228,6 +237,9 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   public String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException {
+    if(!dateValidator.checkData(startDate) || !dateValidator.checkData(endDate)) {
+      return "Sorry! invalid date entered!";
+    }
     String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
     LocalDate localSD = LocalDate.parse(startDate);
@@ -279,12 +291,11 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String setCommissionFees(String commissionFees) {
     float value = Float.parseFloat(commissionFees);
-    if(value < 0) {
+    if (value < 0) {
       return "Cannot set negative commission";
-    }
-    else {
+    } else {
       this.commissionFees = value;
-      return "Commission Fees set to: "+value;
+      return "Commission Fees set to: " + value;
     }
   }
 }
