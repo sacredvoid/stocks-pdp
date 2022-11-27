@@ -2,7 +2,10 @@ package model.validation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -30,12 +33,34 @@ public class DateValidator implements IDataValidator {
   }
 
   @Override
-  public boolean checkData(String date) throws ParseException {
+  public boolean checkData(String date) {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Date inputDate = formatter.parse(date);
-    LocalDateTime now = LocalDateTime.now();
-    Date baseDate = formatter.parse(String.valueOf(now));
-    return !(isWeekend(inputDate) || isFuture(baseDate, inputDate));
+    Date inputDate;
+    LocalDateTime now;
+    Date baseDate;
+    try {
+      inputDate = formatter.parse(date);
+      now = LocalDateTime.now();
+      baseDate = formatter.parse(String.valueOf(now));
+    }
+    catch (ParseException e) {
+      return false;
+    }
+    return !(isWeekend(inputDate) || isFuture(baseDate, inputDate)) ;
   }
+
+//  private boolean checkDateFormat(String date) {
+//    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd",Locale.US).withResolverStyle(
+//        ResolverStyle.STRICT);
+//
+//    try {
+//      dateTimeFormatter.parse(date);
+//    }
+//    catch (DateTimeException e) {
+//      return false;
+//    }
+//    return true;
+//  }
+
 
 }

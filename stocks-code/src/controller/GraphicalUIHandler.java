@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,6 +43,7 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
       status = "Could not read data";
     }
     this.jFrameView.setInfoPanelData(status);
+    this.jFrameView.displayStatusMessage("Showing details for Portfolio ID: "+json+" on date: "+date);
   }
 
   @Override
@@ -53,12 +55,56 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
     String[] status;
     String json = pfID.split("\\.")[0];
     try {
-      status = model.getCostBasis(pfID, date);
+      status = model.getCostBasis(json, date);
     }
     catch (Exception e) {
       status = new String[] {};
     }
     this.jFrameView.setCostBasisData(status);
+  }
+
+  @Override
+  public void createPortfolio(String pfData) {
+    String status;
+    if(pfData.equals("")) {
+      status = this.model.createPortfolio("no data provided");
+    }
+    else {
+      status = this.model.createPortfolio(pfData);
+    }
+    this.jFrameView.displayStatusMessage(status);
+  }
+
+  @Override
+  public void modifyPortfolio(String pfID, String call) {
+    String status;
+    String json = pfID.split("\\.")[0];
+    status = this.model.editExistingPortfolio(json,call);
+    if(status.equalsIgnoreCase("sorry")) {
+      this.jFrameView.displayStatusMessage(status);
+    }
+    else {
+      String editStatus = "Executed:\n"+ String.join(" ",call.split(","));
+      this.jFrameView.displayStatusMessage(editStatus);
+    }
+  }
+
+  @Override
+  public void setCommission(String commission) {
+    String status = this.model.setCommissionFees(commission);
+    this.jFrameView.displayStatusMessage(status);
+  }
+
+  @Override
+  public void loadExternalPortfolio(String path) {
+    String status = "";
+    try {
+      status = this.model.loadExternalPortfolio(path);
+    }
+    catch (FileNotFoundException e) {
+      this.jFrameView.displayStatusMessage("Load: File not found!");
+    }
+    this.jFrameView.displayStatusMessage("Load:"+status);
   }
 
 }

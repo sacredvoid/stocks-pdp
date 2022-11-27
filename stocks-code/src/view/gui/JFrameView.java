@@ -1,25 +1,17 @@
 package view.gui;
 
 import controller.GraphicalUIFeatures;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
+import java.util.Arrays;
+import javax.swing.BorderFactory;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import model.Orchestrator;
@@ -32,11 +24,8 @@ public class JFrameView extends JFrame {
   private PortfolioListPanel portfolioPanel;
   private String[] portfolioList = new String[]{};
   private JPanel graphPanel;
-  private JPanel inputPanel;
-  private JPanel tablePanel;
-  private JPanel datePickerPanel;
+  private InputPanel inputPanel;
   private JScrollPane mainScrollPane;
-  private JTable portfolioData;
   private InfoPanel infoPanel;
   private GraphicalUIFeatures features;
 
@@ -52,19 +41,17 @@ public class JFrameView extends JFrame {
 
   private void setupMainJFrame() {
     setTitle("Aakasam Stock Trading");
-    setSize(750,750);
+    setSize(0,0);
     //TODO Test different layouts
     mainPanel = new JPanel();
-    mainPanel.setLayout(new GridLayout(0,2));
+    mainPanel.setLayout(new GridLayout(0,2, -1, -1));
     mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
   }
 
-  // TODO Add features to map commands
-
   private void setupStockListPanel() {
-    //TODO read json files and list them here
     portfolioPanel = new PortfolioListPanel();
+    portfolioPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(portfolioPanel);
   }
 
@@ -75,12 +62,65 @@ public class JFrameView extends JFrame {
 
   public void setFeatures(GraphicalUIFeatures features) {
     this.features = features;
-    portfolioPanel.selectedButton.addActionListener(e -> features.getPortfolioInformation(
-        portfolioPanel.selected,""));
+    // Get portfolio composition and cost-basis for given date
+    portfolioPanel.selectedButton.addActionListener(e -> {
+      features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+    });
+
+    // Create new portfolio
+    inputPanel.createNewPortfolio.addActionListener(e -> {
+      inputPanel.createPortfolioButtonDialog();
+      if(inputPanel.jdialogButtonPressed != -3) {
+        if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
+          features.createPortfolio(inputPanel.newPortfolioData);
+          portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+        }
+      }
+    });
+
+    // Edit existing (BUY) portfolio
+    inputPanel.buyStocks.addActionListener(e -> {
+      inputPanel.createBuyStocksDialog();
+      executeBuySell(features);
+    });
+
+    // Edit existing (SELL) portfolio
+    inputPanel.sellStocks.addActionListener(e -> {
+      inputPanel.createSellStocksDialog();
+      executeBuySell(features);
+    });
+
+    // Set commission
+    inputPanel.setCommission.addActionListener(e -> {
+      inputPanel.createCommissionDialog();
+      this.features.setCommission(inputPanel.commissionValue);
+    });
+
+    // Load external portfolio
+    inputPanel.loadExternalPF.addActionListener(e -> {
+      inputPanel.createLoadExternalPFDialog();
+      if(inputPanel.jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
+        this.features.loadExternalPortfolio(inputPanel.selectedPath);
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+      }
+    });
+
+  }
+
+  private void executeBuySell(GraphicalUIFeatures features) {
+    if(inputPanel.jdialogButtonPressed != -3) {
+      if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
+        features.modifyPortfolio(portfolioPanel.selected, inputPanel.newPortfolioData);
+        features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
+        features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      }
+    }
   }
 
   private void setupPortfolioInfoPanel() {
     infoPanel = new InfoPanel();
+    infoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(infoPanel);
     // Create date and table panel
   }
@@ -94,17 +134,23 @@ public class JFrameView extends JFrame {
   }
 
   private void setupInputPanel() {
-    //TODO Create buttons here for new portfolio
-    //TODO Create input flow for buying/selling and sending info to controller
-    inputPanel = new JPanel();
-    inputPanel.setBackground(Color.GRAY);
+    inputPanel = new InputPanel();
+    inputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(inputPanel);
+  }
+
+  public void displayStatusMessage(String message) {
+    portfolioPanel.appStatusUpdates.append("\n"+message);
+    portfolioPanel.appStatusUpdates.validate();
+    JScrollBar vertical = portfolioPanel.scrollStatusPane.getVerticalScrollBar();
+    vertical.setValue(vertical.getMaximum());
   }
 
   private void setupGraphPanel() {
     // TODO Generate stock performance graph here
     graphPanel = new JPanel();
     graphPanel.setBackground(Color.lightGray);
+    graphPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(graphPanel);
   }
 
@@ -120,6 +166,7 @@ public class JFrameView extends JFrame {
 
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      UIManager.put("OptionPane.minimumSize",new Dimension(480,0));
     } catch (UnsupportedLookAndFeelException e) {
       throw new RuntimeException(e);
     } catch (ClassNotFoundException e) {

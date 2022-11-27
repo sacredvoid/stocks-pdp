@@ -1,0 +1,117 @@
+{
+  "2022-10-10": {
+    "stockData": [
+      {
+        "stockName": "AAPL",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "GOOG",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "MSFT",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "TSLA",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "AMZN",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "IBM",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "JPM",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "UNH",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "V",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "XOM",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "VZ",
+        "quantity": 10.0
+      },
+      {
+        "stockName": "NKE",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "PFE",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "WMT",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "ORCL",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "KO",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "MCD",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "BAC",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "MA",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "CVX",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "NVDA",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "TXN",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "HD",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "NFLX",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "JNJ",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "COP",
+        "quantity": 20.0
+      },
+      {
+        "stockName": "ABBV",
+        "quantity": 20.0
+      }
+    ],
+    "totalInvested": 64256.504,
+    "totalCommission": 27.0,
+    "totalEarned": 0.0
+  }
+}

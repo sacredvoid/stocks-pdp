@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 
 /**
- * The interface Model view.
+ * The Interface for our ModelView class which is used by the View to pull data from model to reduce
+ * friction in the application.
  */
 public interface IModelView {
 

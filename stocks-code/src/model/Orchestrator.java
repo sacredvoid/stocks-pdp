@@ -80,5 +80,5 @@ public interface Orchestrator extends IModelView {
 
   String[] getCostBasis(String pfID, String date);
 
-  void setCommissionFees(String commissionFees);
+  String setCommissionFees(String commissionFees);
 }
