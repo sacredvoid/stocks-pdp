@@ -11,4 +11,6 @@ public interface GraphicalUIFeatures {
   void modifyPortfolio(String pfID, String call);
 
   void setCommission(String commission);
+
+  void loadExternalPortfolio(String path);
 }

@@ -5,9 +5,11 @@ import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileSystemView;
 import org.jdesktop.swingx.JXDatePicker;
 
 public class InputPanel extends JPanel {
@@ -22,6 +24,7 @@ public class InputPanel extends JPanel {
   public JButton loadExternalPF;
   public JButton setCommission;
   public String commissionValue;
+  public String selectedPath;
 
   public InputPanel() {
     super();
@@ -33,6 +36,7 @@ public class InputPanel extends JPanel {
     dollarCost = new JButton("Add Dollar-Cost Averaging Strategy");
     loadExternalPF = new JButton("Load External Portfolio");
     setCommission = new JButton("Set Commission Fees");
+    // TODO Give error message to user if sold more/on a weekend
 
     addButtonsToTarget(this,new JComponent[]{createNewPortfolio,createSIP,buyStocks,sellStocks,dollarCost, loadExternalPF, setCommission});
   }
@@ -56,10 +60,15 @@ public class InputPanel extends JPanel {
   }
 
   public void createCommissionDialog() {
-    commissionValue = JOptionPane.showInputDialog("Enter Commission (only set for this session)");
+    commissionValue = JOptionPane.showInputDialog("Enter Commission (only set for this session). Default: $1 per transaction.");
   }
 
   // TODO: Filepicker to load external portfolio
+  public void createLoadExternalPFDialog() {
+    JFileChooser jFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+    jdialogButtonPressed = jFileChooser.showOpenDialog(null);
+    selectedPath = jFileChooser.getSelectedFile().getAbsolutePath();
+  }
 
   private void addButtonsToTarget(JComponent target, JComponent[] buttons) {
     for (JComponent comp: buttons

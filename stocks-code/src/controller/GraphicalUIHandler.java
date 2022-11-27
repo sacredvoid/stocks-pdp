@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -92,6 +93,18 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
   public void setCommission(String commission) {
     String status = this.model.setCommissionFees(commission);
     this.jFrameView.displayStatusMessage(status);
+  }
+
+  @Override
+  public void loadExternalPortfolio(String path) {
+    String status = "";
+    try {
+      status = this.model.loadExternalPortfolio(path);
+    }
+    catch (FileNotFoundException e) {
+      this.jFrameView.displayStatusMessage("Load: File not found!");
+    }
+    this.jFrameView.displayStatusMessage("Load:"+status);
   }
 
 }

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -94,6 +95,15 @@ public class JFrameView extends JFrame {
     inputPanel.setCommission.addActionListener(e -> {
       inputPanel.createCommissionDialog();
       this.features.setCommission(inputPanel.commissionValue);
+    });
+
+    // Load external portfolio
+    inputPanel.loadExternalPF.addActionListener(e -> {
+      inputPanel.createLoadExternalPFDialog();
+      if(inputPanel.jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
+        this.features.loadExternalPortfolio(inputPanel.selectedPath);
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+      }
     });
 
   }

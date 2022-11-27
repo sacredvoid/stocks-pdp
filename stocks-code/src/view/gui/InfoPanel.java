@@ -13,8 +13,8 @@ public class InfoPanel extends JPanel {
   private JPanel cbData;
   private JPanel pfData;
 
-  private final String[] costBasisColumns = new String[] {"Total Amount Invested","Total Commission Charged","Total Earned by Selling","Total Invested+Commission"};
-  private final String[] portfolioDataColumns = new String[] {"Stock","Quantity","Value"};
+  private final String[] costBasisColumns = new String[] {"Total Amount Invested ($)","Total Commission Charged ($)","Total Earned by Selling ($)","Total Invested+Commission ($)"};
+  private final String[] portfolioDataColumns = new String[] {"Stock","Quantity","Value ($)"};
 
   public InfoPanel() {
     super();
