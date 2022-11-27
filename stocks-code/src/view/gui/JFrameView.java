@@ -2,6 +2,7 @@ package view.gui;
 
 import controller.GraphicalUIFeatures;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
@@ -47,10 +48,7 @@ public class JFrameView extends JFrame {
     add(mainScrollPane);
   }
 
-  // TODO Add features to map commands
-
   private void setupStockListPanel() {
-    //TODO read json files and list them here
     portfolioPanel = new PortfolioListPanel();
     portfolioPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(portfolioPanel);
@@ -120,8 +118,6 @@ public class JFrameView extends JFrame {
   }
 
   private void setupInputPanel() {
-    //TODO Create buttons here for new portfolio
-    //TODO Create input flow for buying/selling and sending info to controller
     inputPanel = new InputPanel();
     inputPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(inputPanel);
@@ -154,6 +150,7 @@ public class JFrameView extends JFrame {
 
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+      UIManager.put("OptionPane.minimumSize",new Dimension(500,500));
     } catch (UnsupportedLookAndFeelException e) {
       throw new RuntimeException(e);
     } catch (ClassNotFoundException e) {
