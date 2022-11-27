@@ -9,4 +9,6 @@ public interface GraphicalUIFeatures {
   void createPortfolio(String pfData);
 
   void modifyPortfolio(String pfID, String call);
+
+  void setCommission(String commission);
 }

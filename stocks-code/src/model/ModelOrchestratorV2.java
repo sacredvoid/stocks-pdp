@@ -277,7 +277,14 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   }
 
   @Override
-  public void setCommissionFees(String commissionFees) {
-    this.commissionFees = Float.parseFloat(commissionFees);
+  public String setCommissionFees(String commissionFees) {
+    float value = Float.parseFloat(commissionFees);
+    if(value < 0) {
+      return "Cannot set negative commission";
+    }
+    else {
+      this.commissionFees = value;
+      return "Commission Fees set to: "+value;
+    }
   }
 }

@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -24,37 +25,40 @@ public class StockInputPanel {
   public String newPortfolioData;
 
   private String operation;
-  public JPanel inputPanel;
   public JPanel listOfInputPanels;
   public JPanel mainPanel;
   public JPanel addButtonPanel;
+  public JScrollPane scrollListOfInputs;
 
 
-  public StockInputPanel(String operation) {
+  public StockInputPanel(String operation, String title) {
     super();
     this.operation = operation;
     mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.PAGE_AXIS));
     addButtonPanel = new JPanel();
-    inputPanel = new JPanel();
     listOfInputPanels = new JPanel();
-    listOfInputPanels.add(inputPanel);
-    mainPanel.add(listOfInputPanels);
+    listOfInputPanels.setLayout(new GridLayout(0,1,2,2));
+    scrollListOfInputs = new JScrollPane(listOfInputPanels);
+    mainPanel.add(scrollListOfInputs);
     mainPanel.add(addButtonPanel);
     newInputPanel();
     JButton addMoreInput = new JButton("+");
+    mainPanel.setSize(480,10);
+    mainPanel.setSize(480,mainPanel.getPreferredSize().height);
 //    JButton subtractInput = new JButton("-");
     addMoreInput.addActionListener(e -> {
-      newInputPanel();
+      int selected = JOptionPane.showConfirmDialog(null,"You want to enter another transaction?","Confirm",JOptionPane.YES_NO_OPTION);
+      if(selected == JOptionPane.YES_OPTION) {
+        newInputPanel();
+      }
     });
     addButtonPanel.add(addMoreInput);
 
-    jdialogButtonPressed = JOptionPane.showConfirmDialog(null, mainPanel, "Create New Portfolio", JOptionPane.OK_CANCEL_OPTION);
-//    StringBuilder csvData = new StringBuilder();
-//    csvData.append(stockName.getText()).append(",").append(stockQuantity.getText()).append(",").append(simpleDateFormat.format(transactionDate.getDate()));
-//    newPortfolioData = csvData.toString();
-    newPortfolioData = extractData();
-    System.out.println(newPortfolioData);
+    jdialogButtonPressed = JOptionPane.showConfirmDialog(null, mainPanel, title, JOptionPane.OK_CANCEL_OPTION);
+    if(jdialogButtonPressed == JOptionPane.OK_OPTION) {
+      newPortfolioData = extractData();
+    }
   }
 
   private void newInputPanel() {

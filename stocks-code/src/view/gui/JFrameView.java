@@ -40,7 +40,7 @@ public class JFrameView extends JFrame {
 
   private void setupMainJFrame() {
     setTitle("Aakasam Stock Trading");
-    setSize(750,750);
+    setSize(0,0);
     //TODO Test different layouts
     mainPanel = new JPanel();
     mainPanel.setLayout(new GridLayout(0,2, -1, -1));
@@ -88,6 +88,12 @@ public class JFrameView extends JFrame {
     inputPanel.sellStocks.addActionListener(e -> {
       inputPanel.createSellStocksDialog();
       executeBuySell(features);
+    });
+
+    // Set commission
+    inputPanel.setCommission.addActionListener(e -> {
+      inputPanel.createCommissionDialog();
+      this.features.setCommission(inputPanel.commissionValue);
     });
 
   }
@@ -150,7 +156,7 @@ public class JFrameView extends JFrame {
 
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-      UIManager.put("OptionPane.minimumSize",new Dimension(500,500));
+      UIManager.put("OptionPane.minimumSize",new Dimension(480,0));
     } catch (UnsupportedLookAndFeelException e) {
       throw new RuntimeException(e);
     } catch (ClassNotFoundException e) {

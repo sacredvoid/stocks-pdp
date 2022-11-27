@@ -88,4 +88,10 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
     }
   }
 
+  @Override
+  public void setCommission(String commission) {
+    String status = this.model.setCommissionFees(commission);
+    this.jFrameView.displayStatusMessage(status);
+  }
+
 }

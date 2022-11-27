@@ -135,7 +135,7 @@ public class ModelOrchestrator extends AOrchestrator {
   }
 
   @Override
-  public void setCommissionFees(String commissionFees) {
-    return;
+  public String setCommissionFees(String commissionFees) {
+    return null;
   }
 }
