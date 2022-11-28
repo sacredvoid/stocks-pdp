@@ -59,11 +59,16 @@ public class InputPanel extends JPanel {
     commissionValue = JOptionPane.showInputDialog("Enter Commission (only set for this session). Default: $1 per transaction.");
   }
 
-  // TODO: Filepicker to load external portfolio
   public void createLoadExternalPFDialog() {
     JFileChooser jFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
     jdialogButtonPressed = jFileChooser.showOpenDialog(null);
-    selectedPath = jFileChooser.getSelectedFile().getAbsolutePath();
+    if(jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
+      selectedPath = jFileChooser.getSelectedFile().getAbsolutePath();
+    }
+  }
+
+  public void createDCADialog() {
+    StrategyInputPanel strategyInputPanel = new StrategyInputPanel("Create a new Portfolio with Strategy");
   }
 
   private void addButtonsToTarget(JComponent target, JComponent[] buttons) {

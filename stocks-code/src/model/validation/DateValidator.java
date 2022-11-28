@@ -3,8 +3,10 @@ package model.validation;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +16,8 @@ import java.util.Locale;
  * DateValidator class defines methods to check and validate dates.
  */
 public class DateValidator implements IDataValidator {
+
+  private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
   /**
    * Checks if the given date (YYYY-MM-DD) is a weekend and returns true if it is, false otherwise.
@@ -28,39 +32,40 @@ public class DateValidator implements IDataValidator {
     return day == Calendar.SATURDAY || day == Calendar.SUNDAY;
   }
 
-  private boolean isFuture(Date limit, Date input) {
-    return input.after(limit);
-  }
-
-  @Override
-  public boolean checkData(String date) {
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    Date inputDate;
-    LocalDateTime now;
+  private boolean isFuture(Date input) {
+    LocalDateTime now = LocalDateTime.now();
     Date baseDate;
     try {
-      inputDate = formatter.parse(date);
-      now = LocalDateTime.now();
       baseDate = formatter.parse(String.valueOf(now));
     }
     catch (ParseException e) {
       return false;
     }
-    return !(isWeekend(inputDate) || isFuture(baseDate, inputDate)) ;
+    return input.after(baseDate);
   }
 
-//  private boolean checkDateFormat(String date) {
-//    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd",Locale.US).withResolverStyle(
-//        ResolverStyle.STRICT);
-//
-//    try {
-//      dateTimeFormatter.parse(date);
-//    }
-//    catch (DateTimeException e) {
-//      return false;
-//    }
-//    return true;
-//  }
+  @Override
+  public boolean checkData(String date) {
+
+    Date inputDate;
+    try {
+      inputDate = formatter.parse(date);
+    }
+    catch (ParseException e) {
+      return false;
+    }
+    return !(isWeekend(inputDate) || isFuture(inputDate)) ;
+  }
+
+  public static boolean checkDateFormat (String date) {
+    try {
+      formatter.parse(date);
+    }
+    catch (ParseException e) {
+      return false;
+    }
+    return true;
+  }
 
 
 }

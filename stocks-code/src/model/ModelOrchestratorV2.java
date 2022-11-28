@@ -4,10 +4,13 @@ import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.StringJoiner;
 import model.apistockops.PortfolioValue;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
@@ -33,6 +36,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   private FileOps jsonParser = new JSONFileOps();
   private final DateValidator dateValidator = new DateValidator();
   private float commissionFees = 1;
+  public String rejectedTransactions;
 
   @Override
   public String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException {
@@ -68,12 +72,16 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   }
 
   @Override
-  public String getPortfolioValue(String date, String pfID) throws ParseException {
+  public String getPortfolioValue(String date, String pfID) {
     String pfData;
-    if(!dateValidator.checkData(date)) {
-      return "Sorry! Invalid date entered!";
+    LocalDate reqDate;
+    try {
+      reqDate = LocalDate.parse(date);
     }
-    LocalDate reqDate = LocalDate.parse(date);
+    catch (DateTimeParseException e) {
+      return "Sorry! Invalid date format!";
+    }
+
     try {
       pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     } catch (FileNotFoundException e) {
@@ -110,7 +118,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String getPortfolioCompositionByDate(String date, String pfID)
       throws FileNotFoundException {
-    if(!dateValidator.checkData(date)) {
+    if(!DateValidator.checkDateFormat(date)) {
       return "Sorry! Invalid date entered!";
     }
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
@@ -170,28 +178,40 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String editExistingPortfolio(String pfID, String call) {
     String csvPFData;
+//    String date = call.spl
+
+    String filteredCall = getValidTransactions(call);
+    if(filteredCall.isEmpty()) {
+      return "Sorry, can make transactions on weekdays only. No changes made to PF ID: "+pfID;
+    }
+
     try {
       csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     } catch (FileNotFoundException f) {
       return "Sorry, file not found!";
     }
     Map<String, PortfolioData> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
-        call, PortfolioDataAdapter.getObject(csvPFData), this.commissionFees);
+        filteredCall, PortfolioDataAdapter.getObject(csvPFData), this.commissionFees);
 
     try {
       jsonParser.writeToFile(pfID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(updatedPF));
     } catch (IOException io) {
       return "Sorry, unable to save Portfolio data";
     }
-    return "Saved the updated Portfolio:"+pfID;
+    if(rejectedTransactions.isEmpty()) {
+      return "Executed transactions:\n"+filteredCall+"\nSaved the updated Portfolio: "+pfID;
+    }
+    else {
+      return "Executed transactions:\n"+filteredCall+"\nFailed transactions:\n"+rejectedTransactions+"\n since they were executed on a weekend. Please retry with a weekday!";
+    }
 
   }
 
   @Override
   public String[] getCostBasis(String pfID, String date) {
     String csvPFData;
-    if(!dateValidator.checkData(date)) {
-      return new String[]{"Sorry! Invalid date entered!"};
+    if(!DateValidator.checkDateFormat(date)){
+      return new String[] {"Sorry! Invalid date entered!"};
     }
     try {
       csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
@@ -238,7 +258,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   public String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException {
     if(!dateValidator.checkData(startDate) || !dateValidator.checkData(endDate)) {
-      return "Sorry! invalid date entered!";
+      return "Sorry! Invalid date entered!";
     }
     String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
     Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
@@ -295,7 +315,27 @@ public class ModelOrchestratorV2 extends AOrchestrator {
       return "Cannot set negative commission";
     } else {
       this.commissionFees = value;
-      return "Commission Fees set to: " + value;
+      return "Commission Fees set to: $" + value;
     }
+  }
+
+  private String getValidTransactions(String csv) {
+    // Go through all rows of the data, get the date and then delete rows that have incorrect dates,
+    // return error message to user
+    String[] lines = csv.split("\n");
+    StringJoiner newLines = new StringJoiner("\n");
+    StringJoiner rejectedTrades = new StringJoiner("\n");
+    for (String line: lines
+    ) {
+      String date = line.split(",")[2];
+      if(dateValidator.checkData(date)) {
+        newLines.add(line);
+      }
+      else {
+        rejectedTrades.add(line);
+      }
+    }
+    rejectedTransactions = rejectedTrades.toString();
+    return newLines.toString();
   }
 }
