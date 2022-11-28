@@ -77,8 +77,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     LocalDate reqDate;
     try {
       reqDate = LocalDate.parse(date);
-    }
-    catch (DateTimeParseException e) {
+    } catch (DateTimeParseException e) {
       return "Sorry! Invalid date format!";
     }
 
@@ -118,7 +117,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String getPortfolioCompositionByDate(String date, String pfID)
       throws FileNotFoundException {
-    if(!DateValidator.checkDateFormat(date)) {
+    if (!DateValidator.checkDateFormat(date)) {
       return "Sorry! Invalid date entered!";
     }
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
@@ -181,8 +180,8 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 //    String date = call.spl
 
     String filteredCall = getValidTransactions(call);
-    if(filteredCall.isEmpty()) {
-      return "Sorry, can make transactions on weekdays only. No changes made to PF ID: "+pfID;
+    if (filteredCall.isEmpty()) {
+      return "Sorry, can make transactions on weekdays only. No changes made to PF ID: " + pfID;
     }
 
     try {
@@ -198,11 +197,12 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     } catch (IOException io) {
       return "Sorry, unable to save Portfolio data";
     }
-    if(rejectedTransactions.isEmpty()) {
-      return "Executed transactions:\n"+filteredCall+"\nSaved the updated Portfolio: "+pfID;
-    }
-    else {
-      return "Executed transactions:\n"+filteredCall+"\nFailed transactions:\n"+rejectedTransactions+"\n since they were executed on a weekend. Please retry with a weekday!";
+    if (rejectedTransactions.isEmpty()) {
+      return "Executed transactions:\n" + filteredCall + "\nSaved the updated Portfolio: " + pfID;
+    } else {
+      return "Executed transactions:\n" + filteredCall + "\nFailed transactions:\n"
+          + rejectedTransactions
+          + "\n since they were executed on a weekend. Please retry with a weekday!";
     }
 
   }
@@ -210,8 +210,8 @@ public class ModelOrchestratorV2 extends AOrchestrator {
   @Override
   public String[] getCostBasis(String pfID, String date) {
     String csvPFData;
-    if(!DateValidator.checkDateFormat(date)){
-      return new String[] {"Sorry! Invalid date entered!"};
+    if (!DateValidator.checkDateFormat(date)) {
+      return new String[]{"Sorry! Invalid date entered!"};
     }
     try {
       csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
@@ -249,15 +249,15 @@ public class ModelOrchestratorV2 extends AOrchestrator {
    * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
    * the user.
    *
-   * @param pfId        Portfolio id of the portfolio
-   * @param startDate   Starting date of the timespan
-   * @param endDate     Ending date of the timespan
-   * @return            performance of the portfolio for each timestamp in the form of stars
+   * @param pfId      Portfolio id of the portfolio
+   * @param startDate Starting date of the timespan
+   * @param endDate   Ending date of the timespan
+   * @return performance of the portfolio for each timestamp in the form of stars
    */
 
   public String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException {
-    if(!dateValidator.checkData(startDate) || !dateValidator.checkData(endDate)) {
+    if (!dateValidator.checkData(startDate) || !dateValidator.checkData(endDate)) {
       return "Sorry! Invalid date entered!";
     }
     String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
@@ -325,17 +325,23 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     String[] lines = csv.split("\n");
     StringJoiner newLines = new StringJoiner("\n");
     StringJoiner rejectedTrades = new StringJoiner("\n");
-    for (String line: lines
+    for (String line : lines
     ) {
       String date = line.split(",")[2];
-      if(dateValidator.checkData(date)) {
+      if (dateValidator.checkData(date)) {
         newLines.add(line);
-      }
-      else {
+      } else {
         rejectedTrades.add(line);
       }
     }
     rejectedTransactions = rejectedTrades.toString();
     return newLines.toString();
   }
+
+  // DCA (investment, start, end, map[stock,weight]) {
+  // strategy key-value pair -> calculate stock amount to be bought (subtract commission)
+  // stock,quantity,date/n -> editExistingPortfolio()
+  // append(existing pfid json) -> add strategy -> update the existing pfID json
+  //
+  //}
 }

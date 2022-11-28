@@ -19,7 +19,7 @@ public class InputPanel extends JPanel {
   public JButton createSIP;
   public JButton loadExternalPF;
   public JButton setCommission;
-  public String commissionValue;
+  public String commissionValue = "";
   public String selectedPath;
 
   public InputPanel() {

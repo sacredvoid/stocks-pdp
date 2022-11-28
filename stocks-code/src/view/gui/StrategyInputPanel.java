@@ -30,6 +30,7 @@ public class StrategyInputPanel {
   public JTextField recurringAmount;
   public JXDatePicker startDate;
   public JXDatePicker endDate;
+  public JTextField recurringCycle;
 
 
   public StrategyInputPanel(String title) {
@@ -39,7 +40,7 @@ public class StrategyInputPanel {
     addButtonPanel = new JPanel();
     // DCA Inputs
     DCAInputsPanel = new JPanel();
-    DCAInputsPanel.setLayout(new BoxLayout(DCAInputsPanel,BoxLayout.PAGE_AXIS));
+    DCAInputsPanel.setLayout(new GridLayout(0,1,2,2));
     recurringAmount = new JTextField();
     recurringAmount.setBorder(BorderFactory.createTitledBorder("Amount to Invest Monthly"));
     startDate = new JXDatePicker();
@@ -48,7 +49,10 @@ public class StrategyInputPanel {
     endDate = new JXDatePicker();
     endDate.setBorder(BorderFactory.createTitledBorder("Strategy End Date"));
     endDate.setFormats(simpleDateFormat);
+    recurringCycle = new JTextField();
+    recurringCycle.setBorder(BorderFactory.createTitledBorder("Recurring Cycle"));
     DCAInputsPanel.add(recurringAmount);
+    DCAInputsPanel.add(recurringCycle);
     DCAInputsPanel.add(startDate);
     DCAInputsPanel.add(endDate);
 
