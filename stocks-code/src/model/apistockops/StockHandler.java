@@ -17,7 +17,7 @@ import model.fileops.JSONFileOps;
  * StockHandler class defines the methods required for fetching the stock data according to the
  * requirement of the user on a passed particular date.
  */
-class StockHandler {
+public class StockHandler {
 
   private String name;
   private String date;
@@ -38,7 +38,7 @@ class StockHandler {
    *
    * @return a StockHandlerBuilder object
    */
-  static StockHandlerBuilder getBuilder() {
+  public static StockHandlerBuilder getBuilder() {
     return new StockHandlerBuilder();
   }
 
@@ -46,7 +46,7 @@ class StockHandler {
    * StockHandlerBuilder class is a static class which is used to build the object of<p></p>
    * StockHandler class.
    */
-  static class StockHandlerBuilder {
+  public static class StockHandlerBuilder {
 
     private String name;
     private String date = null;
@@ -58,7 +58,7 @@ class StockHandler {
      * @param name name or symbol of the stock
      * @return the same StockHandlerBuilder object with the stock symbol stored as an attribute.
      */
-    StockHandlerBuilder name(String name) {
+    public StockHandlerBuilder name(String name) {
       this.name = name;
       return this;
     }
@@ -69,7 +69,7 @@ class StockHandler {
      * @param date to retrieve the data fo the specific stock on that day
      * @return the same StockHandlerBuilder object with the date stored as an attribute.
      */
-    StockHandlerBuilder date(String date) {
+    public StockHandlerBuilder date(String date) {
       this.date = date;
       return this;
     }
@@ -80,7 +80,7 @@ class StockHandler {
      *
      * @return new object of the StockHanlder class
      */
-    StockHandler build() {
+    public StockHandler build() {
       return new StockHandler(this.name, this.date);
     }
   }
@@ -91,7 +91,7 @@ class StockHandler {
    *
    * @return Stock data on that particular date as a String.
    */
-  String fetchByDate() {
+  public String fetchByDate() {
     Map<String, ApiDataStruct> stockData;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
