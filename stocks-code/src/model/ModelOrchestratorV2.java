@@ -2,19 +2,25 @@ package model;
 
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import model.apistockops.PortfolioValue;
+import model.dollarcostavg.DollarCostAvgStrategy;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
 import model.performance.Performance;
 import model.portfolio.CSVToPortfolioAdapter;
+import model.portfolio.DollarCostAveragePortfolio;
 import model.portfolio.PortfolioData;
 import model.portfolio.PortfolioDataAdapter;
 import model.portfolio.PortfolioToCSVAdapter;
@@ -298,5 +304,68 @@ public class ModelOrchestratorV2 extends AOrchestrator {
       this.commissionFees = value;
       return "Commission Fees set to: " + value;
     }
+  }
+
+  public String createDCAPortfolio(Map<String, DollarCostAvgStrategy> strategyMap)
+      throws IOException {
+    List<StockData> stockDataList = new ArrayList<>();
+    Map<String,Float> tempStockQtyMap = new HashMap<>();
+
+    float totalInvested =0.0F;
+    float totalCommision = 0.0F;
+
+    for (Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()
+    ) {
+      DollarCostAvgStrategy strategy = strategyRecord.getValue();
+      String stockQtyList  = strategy.dcgStockQtyList(strategy.getStartDate(),
+          strategy.getRecurrInvAmt()-(this.commissionFees * strategy.getStockPercentMap().size()));
+
+      List<String> stockQtyArrayList = List.of(stockQtyList.split("\n"));
+
+      for(String stockQty: stockQtyArrayList){
+        String stockName = stockQty.split(",")[0];
+        Float qty = Float.valueOf(stockQty.split(",")[1]);
+        if(!tempStockQtyMap.containsKey(stockQty.split(",")[0])){
+          tempStockQtyMap.put(stockName, qty);
+        }
+        else{
+          tempStockQtyMap.put(stockName,tempStockQtyMap.get(stockName)+qty);
+        }
+
+      }
+
+      totalCommision += this.commissionFees*strategy.getStockPercentMap().size();
+      totalInvested+=strategy.getRecurrInvAmt()-this.commissionFees*strategy.getStockPercentMap().size();
+
+    }
+
+    for (Entry<String,Float> entry: tempStockQtyMap.entrySet()
+    ) {
+      stockDataList.add(new StockData(entry.getKey(),entry.getValue()));
+    }
+
+    DollarCostAveragePortfolio newDCApf = new DollarCostAveragePortfolio(stockDataList,
+        totalInvested,totalCommision,0.0F,strategyMap);
+
+    String newPFID = this.generatePortfolioID();
+    new JSONFileOps().writeToFile(newPFID+".json","DcaPortfolioData",newDCApf.toString());
+    return "Created Portfolio with ID: " + newPFID;
+
+  }
+
+  public static void main(String args[]) throws IOException {
+    ModelOrchestratorV2 m = new ModelOrchestratorV2();
+    m.setCommissionFees(String.valueOf(2.0F));
+    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
+    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
+    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
+    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
+    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
+    }.getType()));
+    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
+    }.getType()));
+
+    strategyMap.put("start3",new Gson().fromJson(test3Data, new TypeToken<DollarCostAvgStrategy>(){}.getType()));
+    m.createDCAPortfolio(strategyMap);
   }
 }

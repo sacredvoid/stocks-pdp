@@ -2,21 +2,19 @@ package model.portfolio;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import model.ModelOrchestratorV2;
 import model.apistockops.StockHandler;
-import model.costbasis.CostBasisStrategy;
+import model.dollarcostavg.DollarCostAvgStrategy;
 import model.fileops.JSONFileOps;
 
-public class CostBasisPortfolioData extends PortfolioData{
+public class DollarCostAveragePortfolio extends PortfolioData{
 
-  private Map<String,CostBasisStrategy> costBasisStrategy;
+  private Map<String, DollarCostAvgStrategy> costBasisStrategy;
 
   /**
    * PortfolioData() constructor takes in the stock data list, total invested and total commission for
@@ -27,27 +25,27 @@ public class CostBasisPortfolioData extends PortfolioData{
    * @param totalCommission the total amount of commission taken by the application
    * @param totalEarned
    */
-  public CostBasisPortfolioData(List<StockData> sd, float totalInvested,
-      float totalCommission, float totalEarned, Map<String,CostBasisStrategy> costBasisStrategy ) {
+  public DollarCostAveragePortfolio(List<StockData> sd, float totalInvested,
+      float totalCommission, float totalEarned, Map<String, DollarCostAvgStrategy> costBasisStrategy ) {
     super(sd, totalInvested, totalCommission, totalEarned);
     this.costBasisStrategy =costBasisStrategy;
   }
 
-  public Map<String,CostBasisStrategy> getCostBasisStrategy() {
+  public Map<String, DollarCostAvgStrategy> getCostBasisStrategy() {
     return costBasisStrategy;
   }
 
-  public void setCostBasisStrategy(Map<String,CostBasisStrategy> costBasisStrategy) {
+  public void setCostBasisStrategy(Map<String, DollarCostAvgStrategy> costBasisStrategy) {
     this.costBasisStrategy = costBasisStrategy;
   }
 
   public static void main(String args[]) throws IOException {
     String cbsData = new JSONFileOps().readFile("test.json", "PortfolioData");
-    Map<String,CostBasisStrategy> cbs = new LinkedHashMap<>();
-    cbs.put("strategy1",new Gson().fromJson(cbsData, new TypeToken<CostBasisStrategy>() {
+    Map<String, DollarCostAvgStrategy> cbs = new LinkedHashMap<>();
+    cbs.put("strategy1",new Gson().fromJson(cbsData, new TypeToken<DollarCostAvgStrategy>() {
     }.getType()));
 
-    CostBasisStrategy cbs1 = cbs.getOrDefault("strategy1",null);
+    DollarCostAvgStrategy cbs1 = cbs.getOrDefault("strategy1",null);
     List<StockData> lStockData = new ArrayList<>();
     float totalInvest  = cbs1.getRecurrInvAmt();
     for (Entry<String,Float> e: cbs1.getStockPercentMap().entrySet()
@@ -66,7 +64,7 @@ public class CostBasisPortfolioData extends PortfolioData{
 //      StockData sd = new StockData(stock_name,nttotalInvest/)
     }
 
-    CostBasisPortfolioData pfd = new CostBasisPortfolioData(lStockData,totalInvest, 2.0F, 0.0F,cbs);
+    DollarCostAveragePortfolio pfd = new DollarCostAveragePortfolio(lStockData,totalInvest, 2.0F, 0.0F,cbs);
 
     new JSONFileOps().writeToFile("testCostBasisPF.json","PortfolioData",pfd.toString());
 
