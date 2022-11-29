@@ -5,7 +5,9 @@ import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import model.ModelOrchestratorV2;
 import model.apistockops.StockHandler;
@@ -14,7 +16,7 @@ import model.fileops.JSONFileOps;
 
 public class CostBasisPortfolioData extends PortfolioData{
 
-  private CostBasisStrategy costBasisStrategy;
+  private Map<String,CostBasisStrategy> costBasisStrategy;
 
   /**
    * PortfolioData() constructor takes in the stock data list, total invested and total commission for
@@ -26,27 +28,29 @@ public class CostBasisPortfolioData extends PortfolioData{
    * @param totalEarned
    */
   public CostBasisPortfolioData(List<StockData> sd, float totalInvested,
-      float totalCommission, float totalEarned, CostBasisStrategy costBasisStrategy ) {
+      float totalCommission, float totalEarned, Map<String,CostBasisStrategy> costBasisStrategy ) {
     super(sd, totalInvested, totalCommission, totalEarned);
     this.costBasisStrategy =costBasisStrategy;
   }
 
-  public CostBasisStrategy getCostBasisStrategy() {
+  public Map<String,CostBasisStrategy> getCostBasisStrategy() {
     return costBasisStrategy;
   }
 
-  public void setCostBasisStrategy(CostBasisStrategy costBasisStrategy) {
+  public void setCostBasisStrategy(Map<String,CostBasisStrategy> costBasisStrategy) {
     this.costBasisStrategy = costBasisStrategy;
   }
 
   public static void main(String args[]) throws IOException {
     String cbsData = new JSONFileOps().readFile("test.json", "PortfolioData");
-    CostBasisStrategy cbs = new Gson().fromJson(cbsData, new TypeToken<CostBasisStrategy>() {
-    }.getType());
+    Map<String,CostBasisStrategy> cbs = new LinkedHashMap<>();
+    cbs.put("strategy1",new Gson().fromJson(cbsData, new TypeToken<CostBasisStrategy>() {
+    }.getType()));
 
+    CostBasisStrategy cbs1 = cbs.getOrDefault("strategy1",null);
     List<StockData> lStockData = new ArrayList<>();
-    float totalInvest  = cbs.getRecurrInvAmt();
-    for (Entry<String,Float> e: cbs.getStockPercentMap().entrySet()
+    float totalInvest  = cbs1.getRecurrInvAmt();
+    for (Entry<String,Float> e: cbs1.getStockPercentMap().entrySet()
     ) {
       String stock_name = e.getKey();
       float percentage = e.getValue();
