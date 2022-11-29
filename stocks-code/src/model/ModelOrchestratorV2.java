@@ -338,6 +338,17 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     return newLines.toString();
   }
 
+  public String getPredefinedStrategies() throws FileNotFoundException {
+    // Read the strategies json file and get the strategy names and things
+    Object o = jsonParser.readFile(".\\app_data\\strategies.json","");
+    System.out.println(o.toString());
+    return null;
+  }
+  public static void main(String[] args) throws FileNotFoundException {
+    ModelOrchestratorV2 m = new ModelOrchestratorV2();
+    m.getPredefinedStrategies();
+  }
+
   // DCA (investment, start, end, map[stock,weight]) {
   // strategy key-value pair -> calculate stock amount to be bought (subtract commission)
   // stock,quantity,date/n -> editExistingPortfolio()

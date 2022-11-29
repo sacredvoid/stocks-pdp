@@ -64,6 +64,7 @@ public class StrategyInputPanel {
     mainPanel.add(scrollListOfInputs);
     mainPanel.add(addButtonPanel);
     newInputPanel();
+    // TODO Get the dynamic weightage calculation done
     JButton addMoreInput = new JButton("+");
     mainPanel.setSize(480,10);
     mainPanel.setSize(480,mainPanel.getPreferredSize().height);
@@ -122,4 +123,5 @@ public class StrategyInputPanel {
     }
     return data.toString().strip();
   }
+
 }
