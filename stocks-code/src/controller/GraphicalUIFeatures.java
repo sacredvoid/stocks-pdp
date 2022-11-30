@@ -1,5 +1,7 @@
 package controller;
 
+import org.jfree.chart.JFreeChart;
+
 public interface GraphicalUIFeatures {
 
   void getPortfolioInformation(String pfID, String date);
@@ -13,4 +15,6 @@ public interface GraphicalUIFeatures {
   void setCommission(String commission);
 
   void loadExternalPortfolio(String path);
+
+  JFreeChart getChart(String pfID, String startDate, String endDate);
 }

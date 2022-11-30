@@ -3,6 +3,7 @@ package model;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import modelview.IModelView;
+import org.jfree.chart.JFreeChart;
 
 /**
  * The base model class for our application which defines the basic methods which other model like
@@ -46,6 +47,10 @@ public interface Orchestrator extends IModelView {
    */
   String getPortfolioValue(String date, String pfId) throws ParseException;
 
+  String getBuildGUIGraphStatus();
+
+  String getCheckDateStatus();
+
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed
    * to store all Portfolios. Also creates the mentioned directory if not present.
@@ -81,4 +86,6 @@ public interface Orchestrator extends IModelView {
   String[] getCostBasis(String pfID, String date);
 
   String setCommissionFees(String commissionFees);
+
+  public abstract JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate);
 }

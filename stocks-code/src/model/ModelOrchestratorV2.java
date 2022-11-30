@@ -3,14 +3,14 @@ package model;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.TreeMap;
 import model.apistockops.PortfolioValue;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
@@ -25,6 +25,15 @@ import model.portfolio.Utility;
 import model.portfolio.filters.FilterPortfolio;
 import java.time.temporal.ChronoUnit;
 import model.validation.DateValidator;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYSeries;
+
 
 /**
  * Our model orchestrator class, as the name suggests, it is the link for the controller to call the
@@ -40,8 +49,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   @Override
   public String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException {
-    String pfData = jsonParser.readFile(portfolioID + ".json", PORTFOLIO_DATA_PATH);
-    Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
+    Map<String, PortfolioData> parsedPFData = getPFDataObject(portfolioID);
     String latestDate = Utility.getLatestDate(parsedPFData);
     String csvPortfolio = PortfolioToCSVAdapter.buildStockQuantityList(
         parsedPFData.get(latestDate).getStockList()
@@ -73,21 +81,19 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   @Override
   public String getPortfolioValue(String date, String pfID) {
-    String pfData;
     LocalDate reqDate;
     try {
       reqDate = LocalDate.parse(date);
     } catch (DateTimeParseException e) {
       return "Sorry! Invalid date format!";
     }
-
+    Map<String, PortfolioData> pfJsonData;
     try {
-      pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+       pfJsonData = getPFDataObject(pfID);
     } catch (FileNotFoundException e) {
       return "Sorry, could not find the portfolio with id " + pfID;
     }
 
-    Map<String, PortfolioData> pfJsonData = PortfolioDataAdapter.getObject(pfData);
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
@@ -120,8 +126,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     if (!DateValidator.checkDateFormat(date)) {
       return "Sorry! Invalid date entered!";
     }
-    String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
-    Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
+    Map<String, PortfolioData> parsedPFData = getPFDataObject(pfID);
     List<StockData> stockDataForDate;
     if (parsedPFData.containsKey(date)) {
       stockDataForDate = parsedPFData.getOrDefault(date, null).getStockList();
@@ -209,16 +214,15 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
   @Override
   public String[] getCostBasis(String pfID, String date) {
-    String csvPFData;
     if (!DateValidator.checkDateFormat(date)) {
       return new String[]{"Sorry! Invalid date entered!"};
     }
+    Map<String, PortfolioData> loadedPF;
     try {
-      csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+       loadedPF = getPFDataObject(pfID);
     } catch (FileNotFoundException f) {
       return new String[]{"File not found!"};
     }
-    Map<String, PortfolioData> loadedPF = PortfolioDataAdapter.getObject(csvPFData);
     PortfolioData requiredEntry;
     if (loadedPF.containsKey(date)) {
       requiredEntry = loadedPF.get(date);
@@ -260,18 +264,73 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     if (!dateValidator.checkData(startDate) || !dateValidator.checkData(endDate)) {
       return "Sorry! Invalid date entered!";
     }
-    String pfData = jsonParser.readFile(pfId + ".json", PORTFOLIO_DATA_PATH);
-    Map<String, PortfolioData> parsedPFData = PortfolioDataAdapter.getObject(pfData);
+    TreeMap<String, Float> dataPoints;
+    Map<String, PortfolioData> parsedPFData = getPFDataObject(pfId);
     LocalDate localSD = LocalDate.parse(startDate);
     LocalDate localED = LocalDate.parse(endDate);
 
+    Long[] units = checkDates(localSD,localED,parsedPFData);
+    if(units == null) {
+      return checkDateStatus;
+    }
+
+    Performance performance = Performance.getBuilder().portfolioId(pfId).build();
+    dataPoints = performance.getGraphDataPoints(parsedPFData, units[0], units[1], units[2], startDate,
+        endDate);
+    if (dataPoints == null) {
+      return "Sorry, time range too big to display as graph. (More than 30 years)";
+    } else {
+      return performance.printGraph(dataPoints);
+    }
+  }
+
+  // write method to fetch data points
+  // write method to create timeseries data from those datapoints
+  // make a new chart and send that new chart to view
+  @Override
+  public JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate) {
+    Map<String, PortfolioData> parsedPFData;
+    try {
+       parsedPFData = getPFDataObject(pfID);
+    }
+    catch (FileNotFoundException e) {
+      buildGUIGraphStatus = "Sorry, file not found!";
+      return null;
+    }
+
+    Long[] units = checkDates(LocalDate.parse(startDate),LocalDate.parse(endDate),parsedPFData);
+    if(units == null) {
+      buildGUIGraphStatus = checkDateStatus;
+      return null;
+    }
+
+    Performance performance = Performance.getBuilder().portfolioId(pfID).build();
+    TreeMap<String, Float> dataPoints = performance.getGraphDataPoints(parsedPFData, units[0],units[1],units[2], startDate, endDate);
+    if(dataPoints == null) {
+      buildGUIGraphStatus = "Sorry, enough data not available";
+      return null;
+    }
+
+    DefaultCategoryDataset stockDataTimeSeries = new DefaultCategoryDataset();
+    for(Map.Entry<String, Float> entry: dataPoints.entrySet()) {
+      stockDataTimeSeries.addValue(entry.getValue(), "Portfolio ID: "+pfID, entry.getKey());
+    }
+    return ChartFactory.createBarChart("Portfolio Performance", "Date Range", "Value",stockDataTimeSeries,
+        PlotOrientation.VERTICAL , true , true , false);
+  }
+
+  public Long[] checkDates(LocalDate localSD, LocalDate localED,
+      Map<String, PortfolioData> parsedPFData) {
+
     if (localSD.isAfter(localED)) {
-      return "Sorry, start date cannot be after end date";
+      checkDateStatus = "Sorry, start date cannot be after end date";
+      return null;
     }
     String firstMostDate = Utility.getOldestDate(parsedPFData);
     if (localED.isBefore(LocalDate.parse(firstMostDate))) {
-      return "Sorry, end date is not in the portfolio. "
+      checkDateStatus = "Sorry, end date is not in the portfolio. "
           + "Kindly try giving end date on or after " + Utility.getOldestDate(parsedPFData);
+      return null;
 
     }
     long months = 99999;
@@ -279,34 +338,25 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     long days = ChronoUnit.DAYS.between(localSD, localED);
 
     if (days == 0) {
-      return "Sorry, please enter different dates for 2 ranges";
+      checkDateStatus = "Sorry, please enter different dates for 2 ranges";
+      return null;
     } else if (days < 5) {
-      return "Sorry, please enter date range with more than 5 days";
+      checkDateStatus = "Sorry, please enter date range with more than 5 days";
+      return null;
     } else if (days > 31) {
       months = ChronoUnit.MONTHS.between(localSD, localED);
     }
 
-    if (months < 5) {
-      return "Sorry, please enter date range with more than 5 months";
-    } else if (months > 180) {
+    if (months <= 5) {
+      checkDateStatus = "Sorry, please enter date range with more than 5 months";
+      return null;
+    }
+    if (months > 180) {
       years = ChronoUnit.YEARS.between(localSD, localED);
     }
-    Performance performance = Performance.getBuilder().portfolioId(pfId).build();
-
-    if (days >= 5 && days <= 31) {
-      return performance.showPerformanceByDate(parsedPFData, startDate, endDate);
-    } else if (months >= 5 && months <= 30) {
-      return performance.showPerformanceByMonth(parsedPFData, startDate, endDate);
-    } else if (months >= 15 && months <= 90) {
-      return performance.showPerformanceByQuarter(parsedPFData, startDate, endDate);
-    } else if (months >= 30 && months <= 180) {
-      return performance.showPerformanceByHalfYear(parsedPFData, startDate, endDate);
-    } else if (years <= 30) {
-      return performance.showPerformanceByYear(parsedPFData, startDate, endDate);
-    } else {
-      return "Sorry, time range too big to display as graph. (More than 30 years)";
-    }
+    return new Long[]{days, months, years};
   }
+
 
   @Override
   public String setCommissionFees(String commissionFees) {
@@ -338,21 +388,15 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     return newLines.toString();
   }
 
+  private Map<String, PortfolioData> getPFDataObject(String pfID) throws FileNotFoundException {
+    String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+    return PortfolioDataAdapter.getObject(pfData);
+  }
+
   public String getPredefinedStrategies() throws FileNotFoundException {
     // Read the strategies json file and get the strategy names and things
-    Object o = jsonParser.readFile(".\\app_data\\strategies.json","");
+    Object o = jsonParser.readFile(".\\app_data\\strategies.json", "");
     System.out.println(o.toString());
     return null;
   }
-  public static void main(String[] args) throws FileNotFoundException {
-    ModelOrchestratorV2 m = new ModelOrchestratorV2();
-    m.getPredefinedStrategies();
-  }
-
-  // DCA (investment, start, end, map[stock,weight]) {
-  // strategy key-value pair -> calculate stock amount to be bought (subtract commission)
-  // stock,quantity,date/n -> editExistingPortfolio()
-  // append(existing pfid json) -> add strategy -> update the existing pfID json
-  //
-  //}
 }

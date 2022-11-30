@@ -22,6 +22,7 @@ public class InputPanel extends JPanel {
   public String commissionValue = "";
   public String selectedPath;
   public JButton viewStrategies;
+  public JButton seePerformance;
 
   public InputPanel() {
     super();
@@ -34,7 +35,8 @@ public class InputPanel extends JPanel {
     loadExternalPF = new JButton("Load External Portfolio");
     setCommission = new JButton("Set Commission Fees");
     viewStrategies = new JButton("View Current Strategies");
-    // TODO Give error message to user if sold more/on a weekend
+//    seePerformance = new JButton("View Performance Metrics");
+//    // TODO Give error message to user if sold more/on a weekend
 
     addButtonsToTarget(this,new JComponent[]{createNewPortfolio,createSIP,buyStocks,sellStocks,dollarCost, loadExternalPF, setCommission, viewStrategies});
   }

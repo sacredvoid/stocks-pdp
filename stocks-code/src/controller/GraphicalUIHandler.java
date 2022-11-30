@@ -1,10 +1,18 @@
 package controller;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import model.Orchestrator;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.ui.RectangleInsets;
+import org.jfree.data.time.Month;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import view.gui.JFrameView;
 
 public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFeatures {
@@ -122,6 +130,19 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
       this.jFrameView.displayStatusMessage("Load: File not found!");
     }
     this.jFrameView.displayStatusMessage("Load:"+status);
+  }
+
+  @Override
+  public JFreeChart getChart(String pfID, String startDate, String endDate) {
+    String json = pfID.split("\\.")[0];
+    JFreeChart newChart = this.model.generateTimeSeriesData(json,startDate,endDate);
+    if(newChart == null) {
+      this.jFrameView.displayStatusMessage("Graph: "+this.model.getBuildGUIGraphStatus());
+      return null;
+    }
+    else {
+      return newChart;
+    }
   }
 
   private boolean checkIsEmpty(String data) {
