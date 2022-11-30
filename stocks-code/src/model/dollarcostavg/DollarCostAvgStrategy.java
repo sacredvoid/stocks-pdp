@@ -13,11 +13,11 @@ import model.portfolio.StockData;
 
 public class DollarCostAvgStrategy implements IDollarCostAvg {
 
-  Map<String,Float> stockPercentMap;
-  float recurrInvAmt;
-  String startDate;
-  String endDate;
-  long recurrCycle;
+  private Map<String,Float> stockPercentMap;
+  private float recurrInvAmt;
+  private String startDate;
+  private String endDate;
+  private long recurrCycle;
 
   public DollarCostAvgStrategy(Map<String, Float> stringFloatMap, float recurrInvAmt, String startDate,
       String endDate, long recurrCycle) {
@@ -70,6 +70,40 @@ public class DollarCostAvgStrategy implements IDollarCostAvg {
 
 
 
+  @Override
+  public String dcgStockQtyList(String date, float actualInvestment) {
+
+    List<String> stockQtyList = new ArrayList<>();
+    if( this.stockPercentMap.size()==0){
+      return "No stocks were included in this strategy";
+    }
+//    float actualInvestment = this.recurrInvAmt - (commission * stockPercentMap.size());
+    for (Entry<String,Float> stockPercent: this.stockPercentMap.entrySet()
+    ) {
+      String stockName = stockPercent.getKey();
+      float percent = stockPercent.getValue();
+      double amtPercent = Math.ceil((actualInvestment*percent)/100);
+      StockHandler sh = StockHandler.getBuilder().build();
+      String dcaStatus = sh.DCAHolidayNextWorkingDay(stockName,date);
+      if(dcaStatus.contains("change") || dcaStatus.contains("no further")){
+        return dcaStatus;
+      }
+      float stockPrice = Float.parseFloat(StockHandler.getBuilder()
+                                .name(stockName)
+                                .date(date)
+                                .build()
+                                .fetchByDate()
+          .split(",")[1]);
+
+      float stockQtyPerPercentage = (float) (amtPercent/stockPrice);
+      stockQtyList.add(stockName+","+stockQtyPerPercentage+","+date+",BUY");
+
+    }
+
+    return String.join("\n",stockQtyList);
+  }
+
+
   public static void main(String args[]) throws FileNotFoundException {
 
     Gson g = new Gson();
@@ -85,35 +119,5 @@ public class DollarCostAvgStrategy implements IDollarCostAvg {
 
     System.out.println(cbsMap.dcgStockQtyList("2022-11-10", 2.0F));
 
-  }
-
-  @Override
-  public String dcgStockQtyList(String date, float actualInvestment) {
-
-    List<String> stockQtyList = new ArrayList<>();
-    if( this.stockPercentMap.size()==0){
-      return "No stocks were included in this strategy";
-    }
-//    float actualInvestment = this.recurrInvAmt - (commission * stockPercentMap.size());
-    for (Entry<String,Float> stockPercent: this.stockPercentMap.entrySet()
-    ) {
-      String stockName = stockPercent.getKey();
-      float percent = stockPercent.getValue();
-      double amtPercent = Math.ceil((actualInvestment*percent)/100);
-
-      float stockPrice = Float.parseFloat(StockHandler.getBuilder()
-                                .name(stockName)
-                                .date(date)
-                                .build()
-                                .fetchByDate()
-          .split(",")[1]);
-
-      float stockQtyPerPercentage = (float) (amtPercent/stockPrice);
-      stockQtyList.add(stockName+","+stockQtyPerPercentage);
-
-    }
-//    return
-    return String.join("\n",stockQtyList);
-//    return null;
   }
 }

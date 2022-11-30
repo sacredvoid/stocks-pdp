@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,18 @@ public class DollarCostAveragePortfolio extends PortfolioData{
     this.costBasisStrategy = costBasisStrategy;
   }
 
+
+  public static Map<String,DollarCostAveragePortfolio> portfolioToDCA(Map<String,PortfolioData> pfData, Map<String,DollarCostAvgStrategy> strategyMap){
+    Map<String,DollarCostAveragePortfolio> dcaPortfolio = new HashMap<>();
+    for (Entry<String,PortfolioData> entry : pfData.entrySet()
+    ) {
+      PortfolioData pf = entry.getValue();
+      DollarCostAveragePortfolio dca = new
+          DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),strategyMap);
+      dcaPortfolio.put(entry.getKey(), dca);
+    }
+    return dcaPortfolio;
+  }
   public static void main(String args[]) throws IOException {
     String cbsData = new JSONFileOps().readFile("test.json", "PortfolioData");
     Map<String, DollarCostAvgStrategy> cbs = new LinkedHashMap<>();

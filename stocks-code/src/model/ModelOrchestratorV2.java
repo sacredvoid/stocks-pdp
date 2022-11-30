@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import model.apistockops.PortfolioValue;
+import model.dollarcostavg.DcaStrategyToCSV;
 import model.dollarcostavg.DollarCostAvgStrategy;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
@@ -306,51 +307,42 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     }
   }
 
-  public String createDCAPortfolio(Map<String, DollarCostAvgStrategy> strategyMap)
-      throws IOException {
-    List<StockData> stockDataList = new ArrayList<>();
-    Map<String,Float> tempStockQtyMap = new HashMap<>();
+  public String createDCAPortfolio(Map<String, DollarCostAvgStrategy> strategyMap) {
 
-    float totalInvested =0.0F;
-    float totalCommision = 0.0F;
-
-    for (Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()
-    ) {
+    List<String> allTransactions = new ArrayList<>();
+    for(Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()){
       DollarCostAvgStrategy strategy = strategyRecord.getValue();
-      String stockQtyList  = strategy.dcgStockQtyList(strategy.getStartDate(),
-          strategy.getRecurrInvAmt()-(this.commissionFees * strategy.getStockPercentMap().size()));
 
-      List<String> stockQtyArrayList = List.of(stockQtyList.split("\n"));
-
-      for(String stockQty: stockQtyArrayList){
-        String stockName = stockQty.split(",")[0];
-        Float qty = Float.valueOf(stockQty.split(",")[1]);
-        if(!tempStockQtyMap.containsKey(stockQty.split(",")[0])){
-          tempStockQtyMap.put(stockName, qty);
-        }
-        else{
-          tempStockQtyMap.put(stockName,tempStockQtyMap.get(stockName)+qty);
-        }
-
+      String startDate = strategy.getStartDate();
+      String endData = strategy.getEndDate();
+      long recur = strategy.getRecurrCycle();
+      String transactions="";
+      try {
+        transactions = DcaStrategyToCSV.
+            getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
+      } catch (ParseException e) {
+        //
       }
-
-      totalCommision += this.commissionFees*strategy.getStockPercentMap().size();
-      totalInvested+=strategy.getRecurrInvAmt()-this.commissionFees*strategy.getStockPercentMap().size();
-
+      allTransactions.add(transactions);
     }
+    Map<String,PortfolioData> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
+       String.join("",allTransactions) ,new HashMap<>(),this.commissionFees);
 
-    for (Entry<String,Float> entry: tempStockQtyMap.entrySet()
-    ) {
-      stockDataList.add(new StockData(entry.getKey(),entry.getValue()));
+    try {
+      if (dummyPortfolio.size() > 0) {
+        Map<String, DollarCostAveragePortfolio> dcapf = DollarCostAveragePortfolio.portfolioToDCA(
+            dummyPortfolio, strategyMap);
+        String newPFID = this.generatePortfolioID();
+
+        new JSONFileOps().writeToFile(newPFID + ".json", "DcaPortfolioData",
+            dcapf.toString());
+        return "Created Portfolio with ID: " + newPFID;
+      } else {
+        return "Sorry, no data to create a portfolio with, date entered is invalid(weekend/future)";
+      }
+    }catch(IOException e){
+      return "Sorry, Failed to create portfolio (write op failed)";
     }
-
-    DollarCostAveragePortfolio newDCApf = new DollarCostAveragePortfolio(stockDataList,
-        totalInvested,totalCommision,0.0F,strategyMap);
-
-    String newPFID = this.generatePortfolioID();
-    new JSONFileOps().writeToFile(newPFID+".json","DcaPortfolioData",newDCApf.toString());
-    return "Created Portfolio with ID: " + newPFID;
-
   }
 
   public static void main(String args[]) throws IOException {
@@ -359,13 +351,12 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
     String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
     String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
-    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
+//    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
     strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
     }.getType()));
     strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
     }.getType()));
+    System.out.println(m.createDCAPortfolio(strategyMap));
 
-    strategyMap.put("start3",new Gson().fromJson(test3Data, new TypeToken<DollarCostAvgStrategy>(){}.getType()));
-    m.createDCAPortfolio(strategyMap);
   }
 }
