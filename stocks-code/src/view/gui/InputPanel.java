@@ -19,8 +19,9 @@ public class InputPanel extends JPanel {
   public JButton createSIP;
   public JButton loadExternalPF;
   public JButton setCommission;
-  public String commissionValue;
+  public String commissionValue = "";
   public String selectedPath;
+  public JButton viewStrategies;
 
   public InputPanel() {
     super();
@@ -32,9 +33,10 @@ public class InputPanel extends JPanel {
     dollarCost = new JButton("Add Dollar-Cost Averaging Strategy");
     loadExternalPF = new JButton("Load External Portfolio");
     setCommission = new JButton("Set Commission Fees");
+    viewStrategies = new JButton("View Current Strategies");
     // TODO Give error message to user if sold more/on a weekend
 
-    addButtonsToTarget(this,new JComponent[]{createNewPortfolio,createSIP,buyStocks,sellStocks,dollarCost, loadExternalPF, setCommission});
+    addButtonsToTarget(this,new JComponent[]{createNewPortfolio,createSIP,buyStocks,sellStocks,dollarCost, loadExternalPF, setCommission, viewStrategies});
   }
 
   public void createPortfolioButtonDialog() {
@@ -59,11 +61,16 @@ public class InputPanel extends JPanel {
     commissionValue = JOptionPane.showInputDialog("Enter Commission (only set for this session). Default: $1 per transaction.");
   }
 
-  // TODO: Filepicker to load external portfolio
   public void createLoadExternalPFDialog() {
     JFileChooser jFileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
     jdialogButtonPressed = jFileChooser.showOpenDialog(null);
-    selectedPath = jFileChooser.getSelectedFile().getAbsolutePath();
+    if(jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
+      selectedPath = jFileChooser.getSelectedFile().getAbsolutePath();
+    }
+  }
+
+  public void createDCADialog() {
+    StrategyInputPanel strategyInputPanel = new StrategyInputPanel("Create a new Portfolio with Strategy");
   }
 
   private void addButtonsToTarget(JComponent target, JComponent[] buttons) {

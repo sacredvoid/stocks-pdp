@@ -48,11 +48,6 @@ public class CSVToPortfolioAdapter {
     ) {
       String[] stockQuantity = line.split(",");
       String date = stockQuantity[2];
-      // validate
-      if (!dateCheck.checkData(date)) {
-        // Skip weekends and future dates
-        continue;
-      }
       float totalTransaction;
       float totalCommission = commissionFees;
 

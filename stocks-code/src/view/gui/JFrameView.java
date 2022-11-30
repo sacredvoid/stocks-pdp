@@ -106,6 +106,11 @@ public class JFrameView extends JFrame {
       }
     });
 
+    // Add DCA
+    inputPanel.createSIP.addActionListener(e -> {
+      inputPanel.createDCADialog();
+    });
+
   }
 
   private void executeBuySell(GraphicalUIFeatures features) {

@@ -66,6 +66,10 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
   @Override
   public void createPortfolio(String pfData) {
     String status;
+    if(checkIsEmpty(pfData)) {
+      this.jFrameView.displayStatusMessage("No stock data entered!");
+      return;
+    }
     if(pfData.equals("")) {
       status = this.model.createPortfolio("no data provided");
     }
@@ -78,25 +82,38 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
   @Override
   public void modifyPortfolio(String pfID, String call) {
     String status;
+    if(checkIsEmpty(call)) {
+      this.jFrameView.displayStatusMessage("No stock data entered!");
+      return;
+    }
     String json = pfID.split("\\.")[0];
     status = this.model.editExistingPortfolio(json,call);
-    if(status.equalsIgnoreCase("sorry")) {
-      this.jFrameView.displayStatusMessage(status);
-    }
-    else {
-      String editStatus = "Executed:\n"+ String.join(" ",call.split(","));
-      this.jFrameView.displayStatusMessage(editStatus);
-    }
+//    if(status.equalsIgnoreCase("sorry")) {
+//      this.jFrameView.displayStatusMessage(status);
+//    }
+//    else {
+//      String editStatus = "Executed:\n"+ String.join(" ",call.split(","));
+//      this.jFrameView.displayStatusMessage(editStatus);
+//    }
+    this.jFrameView.displayStatusMessage(status);
   }
 
   @Override
   public void setCommission(String commission) {
+    if(commission.isEmpty()) {
+      this.jFrameView.displayStatusMessage("No commission entered, using default $1!");
+      return;
+    }
     String status = this.model.setCommissionFees(commission);
     this.jFrameView.displayStatusMessage(status);
   }
 
   @Override
   public void loadExternalPortfolio(String path) {
+    if(path.isEmpty()) {
+      this.jFrameView.displayStatusMessage("No file selected!");
+      return;
+    }
     String status = "";
     try {
       status = this.model.loadExternalPortfolio(path);
@@ -105,6 +122,10 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
       this.jFrameView.displayStatusMessage("Load: File not found!");
     }
     this.jFrameView.displayStatusMessage("Load:"+status);
+  }
+
+  private boolean checkIsEmpty(String data) {
+    return data.contains(",,");
   }
 
 }

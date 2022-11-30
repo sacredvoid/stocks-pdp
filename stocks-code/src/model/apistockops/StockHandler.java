@@ -104,6 +104,7 @@ public class StockHandler {
   public String fetchByDate() {
     Map<String, ApiDataStruct> stockData;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     LocalDateTime now = LocalDateTime.now();
     Date stockUpdateTime = null;
@@ -117,9 +118,9 @@ public class StockHandler {
     try {
       stockUpdateTime = sdf.parse(todayDate + " 17:00");
       todayTime = sdf.parse(todayDateAndTime);
-      todayDateObj = sdf.parse(todayDate);
+      todayDateObj = dateSdf.parse(todayDate);
       requiredDate = sdf.parse(this.date + " 23:59");
-      requiredDateObj = sdf.parse(this.date);
+      requiredDateObj = dateSdf.parse(this.date);
     } catch (ParseException ignored) {
       //
     }
@@ -140,15 +141,16 @@ public class StockHandler {
 //      if (!requiredDate.after(todayTime) || todayTime.compareTo(requiredDate) < 0) {
 //        return fetchCurrent(stockData);
 //      }
-      if(!requiredDate.after(todayTime)){
+      if(requiredDate.after(todayTime)){
         return fetchCurrent(stockData);
-      }
-      if(todayDateObj.compareTo(requiredDateObj)==0){
-        return fetchCurrent(stockData);
-      } else{
-        List<String> recentDatelist = dateBeforeList(this.date,stockData);
-        this.date= recentDatelist.get(recentDatelist.size()-1);
-        return fetchByDate();
+      }else {
+        if (todayDateObj.compareTo(requiredDateObj) == 0) {
+          return fetchCurrent(stockData);
+        } else {
+          List<String> recentDatelist = dateBeforeList(this.date, stockData);
+          this.date = recentDatelist.get(recentDatelist.size() - 1);
+          return fetchByDate();
+        }
       }
 //      return "no data found";
     }
