@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringJoiner;
 import model.apistockops.PortfolioValue;
+import model.dollarcostavg.DcaDataAdapter;
 import model.dollarcostavg.DcaStrategyToCSV;
 import model.dollarcostavg.DollarCostAvgStrategy;
 import model.fileops.CSVFileOps;
@@ -331,19 +332,19 @@ public class ModelOrchestratorV2 extends AOrchestrator {
 
     List<String> allTransactions = new ArrayList<>();
     for(Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()){
-      DollarCostAvgStrategy strategy = strategyRecord.getValue();
-
-      String startDate = strategy.getStartDate();
-      String endData = strategy.getEndDate();
-      long recur = strategy.getRecurrCycle();
-      String transactions="";
-      try {
-        transactions = DcaStrategyToCSV.
-            getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
-      } catch (ParseException e) {
-        //
-      }
-      allTransactions.add(transactions);
+//      DollarCostAvgStrategy strategy = strategyRecord.getValue();
+//
+//      String startDate = strategy.getStartDate();
+//      String endData = strategy.getEndDate();
+//      long recur = strategy.getRecurrCycle();
+//      String transactions="";
+//      try {
+//        transactions = DcaStrategyToCSV.
+//            getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
+//      } catch (ParseException e) {
+//        //
+//      }
+      allTransactions.add(getStrategyTransactions(strategyRecord.getValue()));
     }
     Map<String,PortfolioData> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
        String.join("",allTransactions) ,new HashMap<>(),this.commissionFees);
@@ -354,7 +355,7 @@ public class ModelOrchestratorV2 extends AOrchestrator {
             dummyPortfolio, strategyMap);
         String newPFID = this.generatePortfolioID();
 
-        new JSONFileOps().writeToFile(newPFID + ".json", "DcaPortfolioData",
+        new JSONFileOps().writeToFile(newPFID + "-dca.json", "PortfolioData",
             dcapf.toString());
         return "Created Portfolio with ID: " + newPFID;
       } else {
@@ -365,20 +366,43 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     }
   }
 
-  public static void main(String args[]) throws IOException {
-    ModelOrchestratorV2 m = new ModelOrchestratorV2();
-    m.setCommissionFees(String.valueOf(2.0F));
-    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
-    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
-    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
-//    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
-    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
-    }.getType()));
-    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
-    }.getType()));
-    System.out.println(m.createDCAPortfolio(strategyMap));
-
+  private String getStrategyTransactions(DollarCostAvgStrategy strategy){
+    String startDate = strategy.getStartDate();
+    String endData = strategy.getEndDate();
+    long recur = strategy.getRecurrCycle();
+    String transactions="";
+    try {
+      transactions = DcaStrategyToCSV.
+          getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
+    } catch (ParseException e) {
+      //
+    }
+    return transactions;
   }
+//  public String existingPortfolioToDCAPortfolio(String pfId,Map<String,DollarCostAvgStrategy> strategyMap)
+//      throws FileNotFoundException {
+//    String pfJsonData = new JSONFileOps().readFile(pfId+".json","PortfolioData");
+//    Map<String,PortfolioData> readDcaPf = PortfolioDataAdapter.getObject(pfJsonData);
+//    List<String> allTransactions = new ArrayList<>();
+//    String oldestStartingDate = null;
+//    for (Entry<String,DollarCostAvgStrategy> strategyRecord: strategyMap.entrySet()
+//    ) {
+//      DollarCostAvgStrategy strategy = strategyRecord.getValue();
+//      allTransactions.add(getStrategyTransactions(strategy));
+//      if(oldestStartingDate != null){
+//        if(oldestStartingDate.compareTo(strategy.getStartDate())<0){
+//          oldestStartingDate = strategy.getStartDate();
+//        }
+//      }else{
+//        oldestStartingDate = strategy.getStartDate();
+//      }
+//    }
+//    Map<String,>
+//
+//
+//
+//    return null;
+//  }
 
   private String getValidTransactions(String csv) {
     // Go through all rows of the data, get the date and then delete rows that have incorrect dates,
@@ -405,16 +429,20 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     System.out.println(o.toString());
     return null;
   }
-//  public static void main(String[] args) throws FileNotFoundException {
-//    ModelOrchestratorV2 m = new ModelOrchestratorV2();
-//    m.getPredefinedStrategies();
-//  }
-//
-//  // DCA (investment, start, end, map[stock,weight]) {
-//  // strategy key-value pair -> calculate stock amount to be bought (subtract commission)
-//  // stock,quantity,date/n -> editExistingPortfolio()
-//  // append(existing pfid json) -> add strategy -> update the existing pfID json
-//  //
-//  //}
-//>>>>>>> 823e62a8e87f41c733f19ae609f029c4649b8f7c
+
+  public static void main(String args[]) throws IOException {
+    ModelOrchestratorV2 m = new ModelOrchestratorV2();
+    m.setCommissionFees(String.valueOf(2.0F));
+    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
+    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
+    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
+//    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
+    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
+    }.getType()));
+    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
+    }.getType()));
+    System.out.println(m.createDCAPortfolio(strategyMap));
+
+  }
+
 }

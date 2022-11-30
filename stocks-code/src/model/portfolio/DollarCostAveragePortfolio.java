@@ -15,7 +15,7 @@ import model.fileops.JSONFileOps;
 
 public class DollarCostAveragePortfolio extends PortfolioData{
 
-  private Map<String, DollarCostAvgStrategy> costBasisStrategy;
+  private Map<String, DollarCostAvgStrategy> dcaStrategy;
 
   /**
    * PortfolioData() constructor takes in the stock data list, total invested and total commission for
@@ -27,17 +27,17 @@ public class DollarCostAveragePortfolio extends PortfolioData{
    * @param totalEarned
    */
   public DollarCostAveragePortfolio(List<StockData> sd, float totalInvested,
-      float totalCommission, float totalEarned, Map<String, DollarCostAvgStrategy> costBasisStrategy ) {
+      float totalCommission, float totalEarned, Map<String, DollarCostAvgStrategy> dcaStrategy) {
     super(sd, totalInvested, totalCommission, totalEarned);
-    this.costBasisStrategy =costBasisStrategy;
+    this.dcaStrategy = dcaStrategy;
   }
 
-  public Map<String, DollarCostAvgStrategy> getCostBasisStrategy() {
-    return costBasisStrategy;
+  public Map<String, DollarCostAvgStrategy> getDcaStrategy() {
+    return dcaStrategy;
   }
 
-  public void setCostBasisStrategy(Map<String, DollarCostAvgStrategy> costBasisStrategy) {
-    this.costBasisStrategy = costBasisStrategy;
+  public void setDcaStrategy(Map<String, DollarCostAvgStrategy> dcaStrategy) {
+    this.dcaStrategy = dcaStrategy;
   }
 
 
@@ -52,6 +52,19 @@ public class DollarCostAveragePortfolio extends PortfolioData{
     }
     return dcaPortfolio;
   }
+
+  public static Map<String,PortfolioData> dcaToPortfolio(Map<String,DollarCostAveragePortfolio> dcaData){
+    Map<String,PortfolioData> pfData = new HashMap<>();
+    for (Entry<String,DollarCostAveragePortfolio> entry : dcaData.entrySet()
+    ) {
+      DollarCostAveragePortfolio dca = entry.getValue();
+      PortfolioData pf = new
+          PortfolioData(dca.getStockList(),dca.getTotalInvested(),dca.getTotalCommission(),dca.getTotalEarned());
+      pfData.put(entry.getKey(), pf);
+    }
+    return pfData;
+  }
+
   public static void main(String args[]) throws IOException {
     String cbsData = new JSONFileOps().readFile("test.json", "PortfolioData");
     Map<String, DollarCostAvgStrategy> cbs = new LinkedHashMap<>();
