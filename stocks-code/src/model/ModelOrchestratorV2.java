@@ -1,22 +1,30 @@
 package model;
 
+
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.StringJoiner;
 import java.util.TreeMap;
 import model.apistockops.PortfolioValue;
+import model.dollarcostavg.DcaStrategyToCSV;
+import model.dollarcostavg.DollarCostAvgStrategy;
 import model.fileops.CSVFileOps;
 import model.fileops.FileOps;
 import model.fileops.JSONFileOps;
 import model.performance.Performance;
 import model.portfolio.CSVToPortfolioAdapter;
+import model.portfolio.DollarCostAveragePortfolio;
 import model.portfolio.PortfolioData;
 import model.portfolio.PortfolioDataAdapter;
 import model.portfolio.PortfolioToCSVAdapter;
@@ -29,10 +37,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.time.Day;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.XYSeries;
 
 
 /**
@@ -369,6 +373,80 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     }
   }
 
+  public String createDCAPortfolio(Map<String, DollarCostAvgStrategy> strategyMap) {
+
+    List<String> allTransactions = new ArrayList<>();
+    for(Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()){
+      DollarCostAvgStrategy strategy = strategyRecord.getValue();
+
+      String startDate = strategy.getStartDate();
+      String endDate = strategy.getEndDate();
+      long recur = strategy.getRecurrCycle();
+      String transactions="";
+      try {
+        transactions = DcaStrategyToCSV.
+            getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
+      } catch (ParseException e) {
+        //
+      }
+      allTransactions.add(transactions);
+    }
+    Map<String,PortfolioData> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
+       String.join("",allTransactions) ,new HashMap<>(),this.commissionFees);
+
+    try {
+      if (dummyPortfolio.size() > 0) {
+        Map<String, DollarCostAveragePortfolio> dcapf = DollarCostAveragePortfolio.portfolioToDCA(
+            dummyPortfolio, strategyMap);
+        String newPFID = this.generatePortfolioID();
+
+        new JSONFileOps().writeToFile(newPFID + ".json", "DcaPortfolioData",
+            dcapf.toString());
+        return "Created Portfolio with ID: " + newPFID;
+      } else {
+        return "Sorry, no data to create a portfolio with, date entered is invalid(weekend/future)";
+      }
+    }catch(IOException e){
+      return "Sorry, Failed to create portfolio (write op failed)";
+    }
+  }
+
+  @Override
+  public String createDCAMap(String dcaInput) {
+    String[] lines = dcaInput.split("\n");
+    String dcaName = lines[0];
+    float dcaInvestment = Float.parseFloat(lines[1]);
+    long dcaRecurCycle = Long.parseLong(lines[2]);
+    String dcaStartDate = lines[3];
+    String dcaEndDate = lines[4];
+    Map<String, Float> dcaStockPercentage = new HashMap<>();
+    for (int i = 5;i<lines.length; i++) {
+      String stock = lines[i].split(",")[0];
+      String quantity = lines[i].split(",")[1];
+      dcaStockPercentage.put(stock,Float.parseFloat(quantity));
+    }
+    DollarCostAvgStrategy dcaStrategy = new DollarCostAvgStrategy(dcaStockPercentage, dcaInvestment, dcaStartDate, dcaEndDate, dcaRecurCycle);
+    Map<String, DollarCostAvgStrategy> dcaStrategyMap = new HashMap<>();
+    dcaStrategyMap.put(dcaName,dcaStrategy);
+    String status = createDCAPortfolio(dcaStrategyMap);
+    return status;
+  }
+
+  public static void main(String args[]) throws IOException {
+    ModelOrchestratorV2 m = new ModelOrchestratorV2();
+    m.setCommissionFees(String.valueOf(2.0F));
+    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
+    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
+    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
+//    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
+    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
+    }.getType()));
+    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
+    }.getType()));
+    System.out.println(m.createDCAPortfolio(strategyMap));
+
+  }
+
   private String getValidTransactions(String csv) {
     // Go through all rows of the data, get the date and then delete rows that have incorrect dates,
     // return error message to user
@@ -388,9 +466,15 @@ public class ModelOrchestratorV2 extends AOrchestrator {
     return newLines.toString();
   }
 
-  private Map<String, PortfolioData> getPFDataObject(String pfID) throws FileNotFoundException {
-    String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
-    return PortfolioDataAdapter.getObject(pfData);
+  private <T> Map<String, T> getPFDataObject(String pfID) throws FileNotFoundException {
+    if(pfID.contains("-dca")) {
+      // read it like dca
+
+    }
+    else {
+      String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+      return (Map<String, T>) PortfolioDataAdapter.getObject(pfData);
+    }
   }
 
   public String getPredefinedStrategies() throws FileNotFoundException {

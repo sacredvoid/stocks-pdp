@@ -144,4 +144,9 @@ public class ModelOrchestrator extends AOrchestrator {
   public JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate) {
     return null;
   }
+
+  @Override
+  public String createDCAMap(String dcaInput) {
+    return null;
+  }
 }

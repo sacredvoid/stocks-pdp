@@ -23,6 +23,7 @@ public class InputPanel extends JPanel {
   public String selectedPath;
   public JButton viewStrategies;
   public JButton seePerformance;
+  public StrategyInputPanel strategyInputPanel;
 
   public InputPanel() {
     super();
@@ -72,7 +73,7 @@ public class InputPanel extends JPanel {
   }
 
   public void createDCADialog() {
-    StrategyInputPanel strategyInputPanel = new StrategyInputPanel("Create a new Portfolio with Strategy");
+    strategyInputPanel = new StrategyInputPanel("Create a new Portfolio with Strategy");
   }
 
   private void addButtonsToTarget(JComponent target, JComponent[] buttons) {

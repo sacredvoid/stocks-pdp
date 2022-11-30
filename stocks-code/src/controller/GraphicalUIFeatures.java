@@ -17,4 +17,6 @@ public interface GraphicalUIFeatures {
   void loadExternalPortfolio(String path);
 
   JFreeChart getChart(String pfID, String startDate, String endDate);
+
+  void createDCAPortfolio(String dcaData);
 }

@@ -110,6 +110,10 @@ public class JFrameView extends JFrame {
     // Add DCA
     inputPanel.createSIP.addActionListener(e -> {
       inputPanel.createDCADialog();
+      if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
+        this.features.createDCAPortfolio(inputPanel.strategyInputPanel.newPortfolioData);
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+      }
     });
 
     graphPanel.showGraph.addActionListener(e -> {

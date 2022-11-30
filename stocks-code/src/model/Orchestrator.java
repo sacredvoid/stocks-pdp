@@ -87,5 +87,7 @@ public interface Orchestrator extends IModelView {
 
   String setCommissionFees(String commissionFees);
 
-  public abstract JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate);
+  JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate);
+
+  String createDCAMap(String dcaInput);
 }

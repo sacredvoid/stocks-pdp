@@ -1,18 +1,11 @@
 package controller;
 
-import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import model.Orchestrator;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.ui.RectangleInsets;
-import org.jfree.data.time.Month;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
 import view.gui.JFrameView;
 
 public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFeatures {
@@ -147,6 +140,12 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
 
   private boolean checkIsEmpty(String data) {
     return data.contains(",,");
+  }
+
+  @Override
+  public void createDCAPortfolio(String dcaData) {
+    String status = this.model.createDCAMap(dcaData);
+    this.jFrameView.displayStatusMessage(status);
   }
 
 }
