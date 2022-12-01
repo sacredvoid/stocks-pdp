@@ -2,6 +2,7 @@ import controller.Handler;
 import controller.MainController;
 import controller.TextUIHandler;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import model.ModelOrchestratorV2;
 import model.Orchestrator;
 import view.UserInteraction;
@@ -18,7 +19,7 @@ public class ClientRunner {
    */
 
   public static void main(String[] args) {
-    Orchestrator morch = new ModelOrchestratorV2();
+    Orchestrator morch = new ModelOrchestratorV2<>();
     UserInteraction ui = new UserInteraction(System.out,morch);
     Handler ih = new MainController(new InputStreamReader(System.in), morch, ui);
     ih.run();

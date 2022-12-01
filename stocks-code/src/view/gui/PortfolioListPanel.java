@@ -1,6 +1,5 @@
 package view.gui;
 
-import controller.GraphicalUIFeatures;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
@@ -53,7 +52,7 @@ public class PortfolioListPanel extends JPanel {
     add(statusPanel);
   }
 
-  public void setupPortfolioList(String[] portfolios, GraphicalUIFeatures features) {
+  public void setupPortfolioList(String[] portfolios) {
     if(portfolios.length == 0) {
       JLabel emptyList = new JLabel("No Existing Portfolios found, you can create one");
       add(emptyList);
@@ -81,6 +80,7 @@ public class PortfolioListPanel extends JPanel {
     datePicker.getMonthView().setZoomable(true);
     datePicker.setDate(new Date());
     datePicker.setFormats(simpleDateFormat);
+    datePicker.getMonthView().setZoomable(true);
     setCalendarLimits(datePicker.getMonthView().getCalendar());
     selectionPanel.add(datePicker,BorderLayout.SOUTH);
     updateSelectedDateStatus(datePicker.getDate());

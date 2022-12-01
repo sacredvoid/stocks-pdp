@@ -17,13 +17,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 import model.Orchestrator;
 import modelview.IModelView;
 import modelview.ModelView;
+import org.jfree.chart.ui.UIUtils;
 
 public class JFrameView extends JFrame {
 
   private JPanel mainPanel;
   private PortfolioListPanel portfolioPanel;
   private String[] portfolioList = new String[]{};
-  private JPanel graphPanel;
+  private GraphPanel graphPanel;
   private InputPanel inputPanel;
   private JScrollPane mainScrollPane;
   private InfoPanel infoPanel;
@@ -57,7 +58,7 @@ public class JFrameView extends JFrame {
 
   public void populateStockList() {
     portfolioList = modelView.getExistingPortfolios();
-    portfolioPanel.setupPortfolioList(this.portfolioList,this.features);
+    portfolioPanel.setupPortfolioList(this.portfolioList);
   }
 
   public void setFeatures(GraphicalUIFeatures features) {
@@ -109,7 +110,16 @@ public class JFrameView extends JFrame {
     // Add DCA
     inputPanel.createSIP.addActionListener(e -> {
       inputPanel.createDCADialog();
+      if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
+        this.features.createDCAPortfolio(inputPanel.strategyInputPanel.newPortfolioData);
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+      }
     });
+
+    graphPanel.showGraph.addActionListener(e -> {
+      graphPanel.addGraph(features.getChart(portfolioPanel.selected, graphPanel.startDateString, graphPanel.endDateString));
+    });
+
 
   }
 
@@ -153,18 +163,19 @@ public class JFrameView extends JFrame {
 
   private void setupGraphPanel() {
     // TODO Generate stock performance graph here
-    graphPanel = new JPanel();
+    graphPanel = new GraphPanel();
     graphPanel.setBackground(Color.lightGray);
     graphPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     mainPanel.add(graphPanel);
   }
 
   public void startUI() {
-    JFrameView.setDefaultLookAndFeelDecorated(false);
+    JFrameView.setDefaultLookAndFeelDecorated(true);
     setupMainJFrame();
     setupStockListPanel();
     setupPortfolioInfoPanel();
     setupInputPanel();
+    setupGraphPanel();
     swingUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     swingUI.pack();
     swingUI.setVisible(true);
@@ -172,6 +183,7 @@ public class JFrameView extends JFrame {
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
       UIManager.put("OptionPane.minimumSize",new Dimension(480,0));
+      UIUtils.centerFrameOnScreen(swingUI);
     } catch (UnsupportedLookAndFeelException e) {
       throw new RuntimeException(e);
     } catch (ClassNotFoundException e) {

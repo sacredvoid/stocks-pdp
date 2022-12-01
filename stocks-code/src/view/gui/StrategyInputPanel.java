@@ -31,6 +31,7 @@ public class StrategyInputPanel {
   public JXDatePicker startDate;
   public JXDatePicker endDate;
   public JTextField recurringCycle;
+  public JTextField dcaName;
 
 
   public StrategyInputPanel(String title) {
@@ -41,6 +42,8 @@ public class StrategyInputPanel {
     // DCA Inputs
     DCAInputsPanel = new JPanel();
     DCAInputsPanel.setLayout(new GridLayout(0,1,2,2));
+    dcaName = new JTextField();
+    dcaName.setBorder(BorderFactory.createTitledBorder("DCA Strategy Name"));
     recurringAmount = new JTextField();
     recurringAmount.setBorder(BorderFactory.createTitledBorder("Amount to Invest Monthly"));
     startDate = new JXDatePicker();
@@ -51,6 +54,7 @@ public class StrategyInputPanel {
     endDate.setFormats(simpleDateFormat);
     recurringCycle = new JTextField();
     recurringCycle.setBorder(BorderFactory.createTitledBorder("Recurring Cycle"));
+    DCAInputsPanel.add(dcaName);
     DCAInputsPanel.add(recurringAmount);
     DCAInputsPanel.add(recurringCycle);
     DCAInputsPanel.add(startDate);
@@ -107,7 +111,12 @@ public class StrategyInputPanel {
       if(c instanceof JTextField) {
         line.add(((JTextField) c).getText());
       } else if (c instanceof JXDatePicker) {
+        if(((JXDatePicker) c).getDate() != null) {
           line.add(simpleDateFormat.format(((JXDatePicker) c).getDate()));
+        }
+        else {
+          line.add("null\n");
+        }
       }
       else {
         for(Component subC: ((JPanel) c).getComponents()) {

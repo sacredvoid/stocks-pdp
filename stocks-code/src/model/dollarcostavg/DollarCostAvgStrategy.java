@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import model.apistockops.StockHandler;
 import model.fileops.JSONFileOps;
 import model.portfolio.DollarCostAveragePortfolio;
-import model.portfolio.StockData;
 
 public class DollarCostAvgStrategy implements IDollarCostAvg {
 

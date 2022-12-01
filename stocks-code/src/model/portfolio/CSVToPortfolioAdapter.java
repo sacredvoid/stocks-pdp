@@ -37,8 +37,8 @@ public class CSVToPortfolioAdapter {
    * @param commissionFees the commission fees
    * @return the map
    */
-  public static Map<String, PortfolioData> buildPortfolioData(
-      String stockData, Map<String, PortfolioData> pfData, float commissionFees
+  public static <T extends PortfolioData> Map<String, T> buildPortfolioData(
+      String stockData, Map<String, T> pfData, float commissionFees
   ) {
     // Get all dates first, create a set. Iterate again through the data and append
     // stock data by date+commission+totalinvested

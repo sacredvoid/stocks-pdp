@@ -41,9 +41,9 @@ public class DollarCostAveragePortfolio extends PortfolioData{
   }
 
 
-  public static Map<String,DollarCostAveragePortfolio> portfolioToDCA(Map<String,PortfolioData> pfData, Map<String,DollarCostAvgStrategy> strategyMap){
-    Map<String,DollarCostAveragePortfolio> dcaPortfolio = new HashMap<>();
-    for (Entry<String,PortfolioData> entry : pfData.entrySet()
+  public static <T extends PortfolioData> Map<String,T> portfolioToDCA(Map<String,T> pfData, Map<String,DollarCostAvgStrategy> strategyMap){
+    Map<String,T> dcaPortfolio = new HashMap<>();
+    for (Entry<String,T> entry : pfData.entrySet()
     ) {
       PortfolioData pf = entry.getValue();
       Map<String,DollarCostAvgStrategy> individualStrategyMap = new LinkedHashMap<>();
@@ -54,19 +54,19 @@ public class DollarCostAveragePortfolio extends PortfolioData{
           individualStrategyMap.put(singleStrategy.getKey(),singleStrategy.getValue());
         }
       }
-      DollarCostAveragePortfolio dca = new
-          DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),individualStrategyMap );
+      @SuppressWarnings("unchecked") T dca = (T) new
+          DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),strategyMap);
       dcaPortfolio.put(entry.getKey(), dca);
     }
     return dcaPortfolio;
   }
 
-  public static Map<String,PortfolioData> dcaToPortfolio(Map<String,DollarCostAveragePortfolio> dcaData){
-    Map<String,PortfolioData> pfData = new HashMap<>();
-    for (Entry<String,DollarCostAveragePortfolio> entry : dcaData.entrySet()
+  public static <T extends PortfolioData> Map<String,T> dcaToPortfolio(Map<String,T> dcaData){
+    Map<String,T> pfData = new HashMap<>();
+    for (Entry<String,T> entry : dcaData.entrySet()
     ) {
-      DollarCostAveragePortfolio dca = entry.getValue();
-      PortfolioData pf = new
+      T dca = entry.getValue();
+      T pf = (T) new
           PortfolioData(dca.getStockList(),dca.getTotalInvested(),dca.getTotalCommission(),dca.getTotalEarned());
       pfData.put(entry.getKey(), pf);
     }

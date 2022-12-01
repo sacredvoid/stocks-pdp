@@ -8,6 +8,7 @@ import model.apistockops.PortfolioValue;
 import model.fileops.CSVFileOps;
 import model.validation.DateValidator;
 import model.validation.IDataValidator;
+import org.jfree.chart.JFreeChart;
 
 /**
  * Our model orchestrator class, as the name suggests, it is the link for the controller to call the
@@ -136,6 +137,16 @@ public class ModelOrchestrator extends AOrchestrator {
 
   @Override
   public String setCommissionFees(String commissionFees) {
+    return null;
+  }
+
+  @Override
+  public JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate) {
+    return null;
+  }
+
+  @Override
+  public String createDCAMap(String dcaInput) {
     return null;
   }
 }

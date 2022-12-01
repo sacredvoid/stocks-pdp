@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="at.swimmesberger.swingx.core1" type="repository">
+    <properties maven-id="at.swimmesberger:swingx-core:1.6.8" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/swingx-core-1.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/swingx-autocomplete-1.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/swingx-common-1.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/swingx-action-1.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/swingx-plaf-1.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/swingx-graphics-1.6.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/swingx-painters-1.6.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
