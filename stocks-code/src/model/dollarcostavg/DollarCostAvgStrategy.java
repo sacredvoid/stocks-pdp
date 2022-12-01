@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import model.apistockops.StockHandler;
 import model.fileops.JSONFileOps;
+import model.portfolio.DollarCostAveragePortfolio;
 import model.portfolio.StockData;
 
 public class DollarCostAvgStrategy implements IDollarCostAvg {
@@ -77,7 +80,6 @@ public class DollarCostAvgStrategy implements IDollarCostAvg {
     if( this.stockPercentMap.size()==0){
       return "No stocks were included in this strategy";
     }
-//    float actualInvestment = this.recurrInvAmt - (commission * stockPercentMap.size());
     for (Entry<String,Float> stockPercent: this.stockPercentMap.entrySet()
     ) {
       String stockName = stockPercent.getKey();
@@ -107,17 +109,13 @@ public class DollarCostAvgStrategy implements IDollarCostAvg {
   public static void main(String args[]) throws FileNotFoundException {
 
     Gson g = new Gson();
-    String data = new JSONFileOps().readFile("test.json", "PortfolioData");
-    DollarCostAvgStrategy cbsMap = g.fromJson(data, new TypeToken<DollarCostAvgStrategy>() {
+    String data = new JSONFileOps().readFile("718697-dca.json", "PortfolioData");
+    Map<String, DollarCostAveragePortfolio> cbsMap = g.fromJson(data, new TypeToken<HashMap<String,DollarCostAveragePortfolio>>(){
     }.getType());
 
-//    System.out.println(cbsMap.getStockPercentMap());
-//    System.out.println(cbsMap.getRecurrCycle());
-//    System.out.println(cbsMap.getStartDate());
-//    System.out.println(cbsMap.getEndDate());
-//    System.out.println(cbsMap.getRecurrInvAmt());
-
-    System.out.println(cbsMap.dcgStockQtyList("2022-11-10", 2.0F));
+    for(Entry<String,DollarCostAveragePortfolio> e : cbsMap.entrySet()){
+      System.out.println(e.getValue().getDcaStrategy());
+    }
 
   }
 }

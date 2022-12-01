@@ -46,8 +46,16 @@ public class DollarCostAveragePortfolio extends PortfolioData{
     for (Entry<String,PortfolioData> entry : pfData.entrySet()
     ) {
       PortfolioData pf = entry.getValue();
+      Map<String,DollarCostAvgStrategy> individualStrategyMap = new LinkedHashMap<>();
+      for (Entry<String,DollarCostAvgStrategy> singleStrategy: strategyMap.entrySet()
+      ) {
+        if(entry.getKey().compareTo(singleStrategy.getValue().getStartDate())>=0 &&
+        entry.getKey().compareTo(singleStrategy.getValue().getEndDate())<=0){
+          individualStrategyMap.put(singleStrategy.getKey(),singleStrategy.getValue());
+        }
+      }
       DollarCostAveragePortfolio dca = new
-          DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),strategyMap);
+          DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),individualStrategyMap );
       dcaPortfolio.put(entry.getKey(), dca);
     }
     return dcaPortfolio;
