@@ -3,6 +3,7 @@ package model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -43,6 +44,7 @@ import model.validation.DateValidator;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
@@ -350,8 +352,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       stockDataTimeSeries.addValue(entry.getValue(), "Portfolio ID: " + pfID, entry.getKey());
     }
     JFreeChart barChart = ChartFactory.createBarChart("Portfolio Performance", "Date Range",
-        "Value", stockDataTimeSeries,
+        "Value ($)", stockDataTimeSeries,
         PlotOrientation.VERTICAL, true, true, false);
+
+    BarRenderer r = (BarRenderer) barChart.getCategoryPlot().getRenderer();
+    r.setSeriesPaint(0, new Color(0,153,0));
+
     return barChart;
   }
 
@@ -516,31 +522,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       DollarCostAvgStrategy strategy = strategyRecord.getValue();
       allTransactions.add(getStrategyTransactions(strategy,strategy.getStartDate()));
     }
-    Map<String, PortfolioData> tempPFData = DollarCostAveragePortfolio.dcaToPortfolio((Map<String, DollarCostAveragePortfolio>)readDcaPf);
+
     Map<String, T> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
         String.join("", allTransactions), readDcaPf, this.commissionFees);
 
-    Map<String,DollarCostAvgStrategy> previousStrategies = new HashMap<>();
-    Map<String,DollarCostAvgStrategy> finalStrategiesSet = new HashMap<>(strategyMap);
-    if(pfID.contains("-dca")){
-      for (Entry<String,T> entry : readDcaPf.entrySet()
-      ) {
-//        ((DollarCostAveragePortfolio) dollarCostAveragePortfolio.get(
-//            Utility.getLatestDate(dollarCostAveragePortfolio))).getDcaStrategy()
-        DollarCostAveragePortfolio temp = (DollarCostAveragePortfolio) entry.getValue();
-        Map<String,DollarCostAvgStrategy> prevStrategyMap = temp.getDcaStrategy();
-        System.out.println(prevStrategyMap.toString());
-        for (Entry<String,DollarCostAvgStrategy> individualPrevStratMap : prevStrategyMap.entrySet()
-        ) {
-//          String tempStratName = individualPrevStratMap.getKey();
-//          DollarCostAvgStrategy tempStrat = individualPrevStratMap.getValue()
-          previousStrategies.put(individualPrevStratMap.getKey(), individualPrevStratMap.getValue());
-        }
-      }
-      finalStrategiesSet.putAll(previousStrategies);
-    }
     Map<String, T> result = DollarCostAveragePortfolio.portfolioToDCA(
-        updatedPF, finalStrategiesSet);
+        updatedPF, strategyMap);
     try {
       String newFileName;
       if (pfID.contains("-dca")) {
@@ -551,7 +538,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       new JSONFileOps().writeToFile(newFileName + ".json", "PortfolioData",
           result.toString());
 
-      return "Modified Portfolio " + pfID + " to SIP portfolio " + newFileName;
+      return "Modified Portfolio can be found here: " + newFileName;
 
     } catch (IOException e) {
       return "Sorry, Failed to modify portfolio (write op failed)";
@@ -613,7 +600,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       strategies = ((DollarCostAveragePortfolio) dollarCostAveragePortfolio.get(
           Utility.getLatestDate(dollarCostAveragePortfolio))).getDcaStrategy();
     } catch (ClassCastException e) {
-      return "Not a DCA Portfolio!";
+      return "No Strategy found, but you can add one!";
     }
     if (strategies != null) {
       for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategies.entrySet()
