@@ -18,7 +18,6 @@ import model.portfolio.filters.DateAfterPredicate;
 import model.portfolio.filters.DateBeforePredicate;
 
 
-
 /**
  * StockHandler class defines the methods required for fetching the stock data according to the
  * requirement of the user on a passed particular date.
@@ -118,14 +117,13 @@ public class StockHandler {
       requiredDate = sdf.parse(this.date + " 23:59");
       requiredDateObj = dateSdf.parse(this.date);
     } catch (ParseException ignored) {
-      //
     }
 
     String output = "";
     stockData = stockDateReader(this.name);
     if (!stockData.containsKey(this.date) && todayTime.after(stockUpdateTime)) {
-        stockData = stockDataFetcher(this.name);
-      }
+      stockData = stockDataFetcher(this.name);
+    }
 
     if (stockData == null) {
       output = this.status;
@@ -134,12 +132,9 @@ public class StockHandler {
 
     ApiDataStruct stockInfo = stockData.getOrDefault(this.date, null);
     if (stockInfo == null) {
-//      if (!requiredDate.after(todayTime) || todayTime.compareTo(requiredDate) < 0) {
-//        return fetchCurrent(stockData);
-//      }
-      if(requiredDate.after(todayTime)){
+      if (requiredDate.after(todayTime)) {
         return fetchCurrent(stockData);
-      }else {
+      } else {
         if (todayDateObj.compareTo(requiredDateObj) == 0) {
           return fetchCurrent(stockData);
         } else {
@@ -148,7 +143,6 @@ public class StockHandler {
           return fetchByDate();
         }
       }
-//      return "no data found";
     }
     output += this.name + "," + stockInfo.getClose();
     return output;
@@ -171,60 +165,74 @@ public class StockHandler {
 
   }
 
-  private List<String> dateAfterList(String date, Map<String,ApiDataStruct> stockInfo){
+  private List<String> dateAfterList(String date, Map<String, ApiDataStruct> stockInfo) {
     DateAfterPredicate dateAfterPredicate = new DateAfterPredicate(date);
     TreeMap<String, ApiDataStruct> filterdData = new TreeMap<>();
-    stockInfo.entrySet().stream().filter(entry-> dateAfterPredicate.test(entry.getKey()))
-        .forEach(entry-> filterdData.put(entry.getKey(), entry.getValue()));
+    stockInfo.entrySet().stream().filter(entry -> dateAfterPredicate.test(entry.getKey()))
+        .forEach(entry -> filterdData.put(entry.getKey(), entry.getValue()));
     List<String> dateList = new ArrayList<>(filterdData.keySet());
 
     return dateList;
   }
 
-  private List<String> dateBeforeList(String date, Map<String,ApiDataStruct> stockInfo){
+  private List<String> dateBeforeList(String date, Map<String, ApiDataStruct> stockInfo) {
     DateBeforePredicate dateBeforePredicate = new DateBeforePredicate(date);
     TreeMap<String, ApiDataStruct> filterdData = new TreeMap<>();
-    stockInfo.entrySet().stream().filter(entry-> dateBeforePredicate.test(entry.getKey()))
-        .forEach(entry-> filterdData.put(entry.getKey(), entry.getValue()));
+    stockInfo.entrySet().stream().filter(entry -> dateBeforePredicate.test(entry.getKey()))
+        .forEach(entry -> filterdData.put(entry.getKey(), entry.getValue()));
     List<String> dateList = new ArrayList<>(filterdData.keySet());
 
     return dateList;
   }
-  public String DCAHolidayNextWorkingDay(String name,String date){
-    Map<String, ApiDataStruct> stockInfo = stockDateReader(name);
-    DateAfterPredicate dateAfterPredicate ;
-    if(stockInfo.getOrDefault(date,null) == null){
 
-      List<String> dateList = dateAfterList(date,stockInfo);
-      if(dateList.size()==0){
+  /**
+   * This method fetches the next working day (that data is available) for a given date and stock
+   * ticker.
+   *
+   * @param name the name of stock
+   * @param date the date to check with
+   * @return the string
+   */
+  public String DCAHolidayNextWorkingDay(String name, String date) {
+    Map<String, ApiDataStruct> stockInfo = stockDateReader(name);
+    DateAfterPredicate dateAfterPredicate;
+    if (stockInfo.getOrDefault(date, null) == null) {
+
+      List<String> dateList = dateAfterList(date, stockInfo);
+      if (dateList.size() == 0) {
         return "no further dates";
       }
-      return "change date to "+dateList.get(0);
+      return "change date to " + dateList.get(0);
     }
     return date;
 
   }
-  public Map<String,ApiDataStruct> stockDateReader(String name){
-    Map<String,ApiDataStruct> stockData;
+
+  /**
+   * Gets the stock data for a given stock.
+   *
+   * @param name the name of stock
+   * @return the data-map of stock data
+   */
+  public Map<String, ApiDataStruct> stockDateReader(String name) {
+    Map<String, ApiDataStruct> stockData;
     try {
 
       stockData = ApiDataAdapter.getApiObject(
           new JSONFileOps().readFile(name + "Data.json", "StocksJsonData"));
-//      if (!stockData.containsKey(date) && todayTime.after(stockUpdateTime)) {
-//        stockData = stockDataFetcher(name);
-//      }
     } catch (FileNotFoundException e) {
       stockData = stockDataFetcher(name);
     }
     return stockData;
   }
+
   private Map<String, ApiDataStruct> stockDataFetcher(String name) {
 
-    RequestHandler rob = RequestHandler.getBuilder()
+    RequestHandler requestHandler = RequestHandler.getBuilder()
         .stockSymbol(name)
         .build();
-    Map<String, ApiDataStruct> stockData = rob.buildURL().fetch();
-    status = rob.getStatus();
+    Map<String, ApiDataStruct> stockData = requestHandler.buildURL().fetch();
+    status = requestHandler.getStatus();
     return stockData;
   }
 

@@ -31,8 +31,19 @@ public interface IPortfolioData {
    */
   float getQuantity(String stockName);
 
+  /**
+   * Remove stock string.
+   *
+   * @param newStock the new stock
+   * @return the string
+   */
   String removeStock(StockData newStock);
 
+  /**
+   * Sets stock list.
+   *
+   * @param newStockList the new stock list
+   */
   void setStockList(List<StockData> newStockList);
 
   /**
@@ -74,7 +85,17 @@ public interface IPortfolioData {
    */
   void setTotalCommission(float newCommission);
 
+  /**
+   * Gets total earned.
+   *
+   * @return the total earned
+   */
   float getTotalEarned();
 
+  /**
+   * Sets total earned.
+   *
+   * @param newEarning the new earning
+   */
   void setTotalEarned(float newEarning);
 }

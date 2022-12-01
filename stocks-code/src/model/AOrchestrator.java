@@ -10,9 +10,21 @@ import model.validation.OSValidator;
  */
 public abstract class AOrchestrator implements Orchestrator {
 
+  /**
+   * The OS path separator.
+   */
   protected String osSep = OSValidator.getOSSeparator();
+  /**
+   * The Command status used to return application statuses.
+   */
   public String commandStatus = "";
+  /**
+   * The Build gui graph status which gets updated if any GUI graph build fails.
+   */
   public String buildGUIGraphStatus = "";
+  /**
+   * The Portfolio data path in the system.
+   */
   protected final String PORTFOLIO_DATA_PATH = String.format(
       "%sPortfolioData%s", osSep, osSep
   );
@@ -21,6 +33,7 @@ public abstract class AOrchestrator implements Orchestrator {
   public String getBuildGUIGraphStatus() {
     return buildGUIGraphStatus;
   }
+
   @Override
   public String getCommandStatus() {
     return commandStatus;
@@ -64,10 +77,4 @@ public abstract class AOrchestrator implements Orchestrator {
         .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
         .toString();
   }
-
-  public abstract String[] getCostBasis(String pfID, String date);
-
-  // write method to fetch data points
-  // write method to create timeseries data from those datapoints
-  // make a new chart and send that new chart to view
 }
