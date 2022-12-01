@@ -8,6 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="stocks-pdp" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit4">
         <CLASSES>
@@ -18,7 +19,8 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="google.code.gson" level="project" />
-    <orderEntry type="library" name="googlecode.json.simple" level="project" />
+    <orderEntry type="library" name="jfree.jfreechart" level="application" />
+    <orderEntry type="library" name="at.swimmesberger.swingx.core" level="application" />
+    <orderEntry type="library" name="google.code.gson" level="application" />
   </component>
 </module>
