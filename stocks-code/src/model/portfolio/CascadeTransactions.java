@@ -24,9 +24,9 @@ public class CascadeTransactions {
    * @param totalCommission  the total commission
    * @return the map
    */
-  public static Map<String, PortfolioData> updatePortfolio(
+  public static <T extends PortfolioData> Map<String, T> updatePortfolio(
       String operation,
-      Map<String, PortfolioData> currentPF,
+      Map<String, T> currentPF,
       StockData newStockToAdd,
       String givenDate,
       float totalTransaction,
@@ -48,7 +48,7 @@ public class CascadeTransactions {
       } else {
         PortfolioData f = getMostRecentStockList(currentPF, givenDate);
         List<StockData> tempList = deepCopy(f.getStockList());
-        PortfolioData tempP = new PortfolioData(tempList, totalTransaction + f.getTotalInvested(),
+        T tempP = (T) new PortfolioData(tempList, totalTransaction + f.getTotalInvested(),
             totalCommission + f.getTotalCommission(), f.getTotalEarned());
         tempP.addStock(newStockToAdd);
         currentPF.put(givenDate, tempP);
@@ -79,7 +79,7 @@ public class CascadeTransactions {
       } else {
         PortfolioData f = getMostRecentStockList(currentPF, givenDate);
         List<StockData> tempList = deepCopy(f.getStockList());
-        PortfolioData tempP = new PortfolioData(tempList, f.getTotalInvested(),
+        T tempP = (T) new PortfolioData(tempList, f.getTotalInvested(),
             totalCommission + f.getTotalCommission(), totalTransaction + f.getTotalEarned());
         if (tempP.getQuantity(newStockToAdd.getStockName()) >= newStockToAdd.getQuantity()) {
           tempP.removeStock(newStockToAdd);
@@ -102,12 +102,12 @@ public class CascadeTransactions {
     return newList;
   }
 
-  private static PortfolioData getMostRecentStockList(Map<String, PortfolioData> currentPF,
+  private static <T extends PortfolioData> PortfolioData getMostRecentStockList(Map<String, T> currentPF,
       String givenDate) {
     List<StockData> tempList = new ArrayList<>();
-    Map<String, PortfolioData> filteredBeforeDateMap =
+    Map<String, T> filteredBeforeDateMap =
         FilterPortfolio.getPortfolioBeforeDate(currentPF, givenDate);
-    PortfolioData lastPFData = null;
+    T lastPFData = null;
     if (filteredBeforeDateMap.size() > 0) {
       String mostRecentPFBeforeDate = Utility.getLatestDate(filteredBeforeDateMap);
       lastPFData = filteredBeforeDateMap.get(mostRecentPFBeforeDate);
@@ -131,18 +131,18 @@ public class CascadeTransactions {
    * @param totalTransaction the total transaction
    * @param totalCommission  the total commission
    */
-  public static void cascade(
-      Map<String, PortfolioData> currentPF,
+  public static <T extends PortfolioData> void cascade(
+      Map<String, T> currentPF,
       StockData newStock,
       String date,
       String type,
       float totalTransaction,
       float totalCommission
   ) {
-    Map<String, PortfolioData> filteredAfterDateMap =
+    Map<String, T> filteredAfterDateMap =
         FilterPortfolio.getPortfolioAfterDate(currentPF, date);
     if (filteredAfterDateMap.size() > 0) {
-      for (Entry<String, PortfolioData> pfEntry : currentPF.entrySet()) {
+      for (Entry<String, T> pfEntry : currentPF.entrySet()) {
         if (filteredAfterDateMap.containsKey(pfEntry.getKey())) {
           if (type.equals("buy")) {
             pfEntry.getValue().addStock(newStock);

@@ -12,8 +12,7 @@ import java.util.Map;
  */
 public class PortfolioDataAdapter {
 
-  private static Type typeToken = new TypeToken<HashMap<String, PortfolioData>>() {
-  }.getType();
+//  private static Type genericTypeToken = TypeToken.getParameterized(HashMap.class,PortfolioData.class).getType();
 
   /**
    * getObject() method is used to read the Portfolio JSON Data and return it as a dictionary of
@@ -23,8 +22,9 @@ public class PortfolioDataAdapter {
    * @return  Map of date strings as keys and PortfolioData objects mapped to the respective date
    *          keys
    */
-  public static Map<String, PortfolioData> getObject(String jsonData) {
-    return new Gson().fromJson(jsonData, typeToken);
+  public static <T extends PortfolioData> Map<String, T> getObject(String jsonData, Type genericClass) {
+    Type genericType = new TypeToken<HashMap<String, T>>(){}.getType();
+    return new Gson().fromJson(jsonData, genericType);
   }
 
   /**
@@ -35,7 +35,7 @@ public class PortfolioDataAdapter {
    *             respective date keys
    * @return  the whole portfolio data as a string
    */
-  public static String getJSON(Map<String, PortfolioData> data) {
+  public static <T extends PortfolioData> String getJSON(Map<String, T> data) {
     return new Gson().toJson(data);
   }
 

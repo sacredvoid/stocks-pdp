@@ -15,7 +15,7 @@ import model.fileops.JSONFileOps;
 
 public class DollarCostAveragePortfolio extends PortfolioData{
 
-  private Map<String, DollarCostAvgStrategy> costBasisStrategy;
+  private Map<String, DollarCostAvgStrategy> dcaStrategy;
 
   /**
    * PortfolioData() constructor takes in the stock data list, total invested and total commission for
@@ -27,31 +27,44 @@ public class DollarCostAveragePortfolio extends PortfolioData{
    * @param totalEarned
    */
   public DollarCostAveragePortfolio(List<StockData> sd, float totalInvested,
-      float totalCommission, float totalEarned, Map<String, DollarCostAvgStrategy> costBasisStrategy ) {
+      float totalCommission, float totalEarned, Map<String, DollarCostAvgStrategy> dcaStrategy) {
     super(sd, totalInvested, totalCommission, totalEarned);
-    this.costBasisStrategy =costBasisStrategy;
+    this.dcaStrategy = dcaStrategy;
   }
 
-  public Map<String, DollarCostAvgStrategy> getCostBasisStrategy() {
-    return costBasisStrategy;
+  public Map<String, DollarCostAvgStrategy> getDcaStrategy() {
+    return dcaStrategy;
   }
 
-  public void setCostBasisStrategy(Map<String, DollarCostAvgStrategy> costBasisStrategy) {
-    this.costBasisStrategy = costBasisStrategy;
+  public void setDcaStrategy(Map<String, DollarCostAvgStrategy> dcaStrategy) {
+    this.dcaStrategy = dcaStrategy;
   }
 
 
-  public static Map<String,DollarCostAveragePortfolio> portfolioToDCA(Map<String,PortfolioData> pfData, Map<String,DollarCostAvgStrategy> strategyMap){
-    Map<String,DollarCostAveragePortfolio> dcaPortfolio = new HashMap<>();
-    for (Entry<String,PortfolioData> entry : pfData.entrySet()
+  public static <T extends PortfolioData> Map<String,T> portfolioToDCA(Map<String,T> pfData, Map<String,DollarCostAvgStrategy> strategyMap){
+    Map<String,T> dcaPortfolio = new HashMap<>();
+    for (Entry<String,T> entry : pfData.entrySet()
     ) {
       PortfolioData pf = entry.getValue();
-      DollarCostAveragePortfolio dca = new
+      @SuppressWarnings("unchecked") T dca = (T) new
           DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),strategyMap);
       dcaPortfolio.put(entry.getKey(), dca);
     }
     return dcaPortfolio;
   }
+
+  public static <T extends PortfolioData> Map<String,T> dcaToPortfolio(Map<String,T> dcaData){
+    Map<String,T> pfData = new HashMap<>();
+    for (Entry<String,T> entry : dcaData.entrySet()
+    ) {
+      T dca = entry.getValue();
+      T pf = (T) new
+          PortfolioData(dca.getStockList(),dca.getTotalInvested(),dca.getTotalCommission(),dca.getTotalEarned());
+      pfData.put(entry.getKey(), pf);
+    }
+    return pfData;
+  }
+
   public static void main(String args[]) throws IOException {
     String cbsData = new JSONFileOps().readFile("test.json", "PortfolioData");
     Map<String, DollarCostAvgStrategy> cbs = new LinkedHashMap<>();

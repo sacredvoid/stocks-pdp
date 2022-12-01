@@ -1,15 +1,12 @@
 package model.apistockops;
 
-import com.google.gson.internal.LinkedTreeMap;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,10 +14,9 @@ import java.util.TreeMap;
 import model.apidata.ApiDataAdapter;
 import model.apidata.ApiDataStruct;
 import model.fileops.JSONFileOps;
-import model.portfolio.PortfolioData;
 import model.portfolio.filters.DateAfterPredicate;
 import model.portfolio.filters.DateBeforePredicate;
-import model.validation.DateValidator;
+
 
 
 /**

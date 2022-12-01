@@ -17,11 +17,11 @@ public class FilterPortfolio {
    * @param date         the date
    * @return the portfolio after date
    */
-  public static Map<String, PortfolioData> getPortfolioAfterDate(
-      Map<String, PortfolioData> parsedPFData,
+  public static <T> Map<String, T> getPortfolioAfterDate(
+      Map<String, T> parsedPFData,
       String date) {
     DateAfterPredicate dateAfterPredicate = new DateAfterPredicate(date);
-    Map<String, PortfolioData> filteredPFData = new HashMap<>();
+    Map<String, T> filteredPFData = new HashMap<>();
     parsedPFData.entrySet()
         .stream()
         .filter(entry -> dateAfterPredicate.test(entry.getKey())
@@ -37,11 +37,11 @@ public class FilterPortfolio {
    * @param date         the date
    * @return the portfolio before date
    */
-  public static Map<String, PortfolioData> getPortfolioBeforeDate(
-      Map<String, PortfolioData> parsedPFData,
+  public static <T extends PortfolioData> Map<String, T> getPortfolioBeforeDate(
+      Map<String, T> parsedPFData,
       String date) {
     DateBeforePredicate dateBeforePredicate = new DateBeforePredicate(date);
-    Map<String, PortfolioData> filteredPFData = new HashMap<>();
+    Map<String, T> filteredPFData = new HashMap<>();
     parsedPFData.entrySet()
         .stream()
         .filter(entry -> dateBeforePredicate.test(entry.getKey())
