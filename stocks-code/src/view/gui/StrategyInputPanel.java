@@ -111,7 +111,12 @@ public class StrategyInputPanel {
       if(c instanceof JTextField) {
         line.add(((JTextField) c).getText());
       } else if (c instanceof JXDatePicker) {
+        if(((JXDatePicker) c).getDate() != null) {
           line.add(simpleDateFormat.format(((JXDatePicker) c).getDate()));
+        }
+        else {
+          line.add("null\n");
+        }
       }
       else {
         for(Component subC: ((JPanel) c).getComponents()) {

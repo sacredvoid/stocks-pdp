@@ -10,7 +10,7 @@ import java.util.Map;
  * PortfolioAdapter class defines the methods required to perform read and write operations for
  * PortfolioData.
  */
-public class PortfolioDataAdapter {
+public class PortfolioDataAdapter<T extends PortfolioData> {
 
 //  private static Type genericTypeToken = TypeToken.getParameterized(HashMap.class,PortfolioData.class).getType();
 
@@ -22,9 +22,10 @@ public class PortfolioDataAdapter {
    * @return  Map of date strings as keys and PortfolioData objects mapped to the respective date
    *          keys
    */
-  public static <T extends PortfolioData> Map<String, T> getObject(String jsonData, Type genericClass) {
-    Type genericType = new TypeToken<HashMap<String, T>>(){}.getType();
-    return new Gson().fromJson(jsonData, genericType);
+  public static <T extends PortfolioData> Map<String, T> getObject(String jsonData, Type generic) {
+//    Type genericType = new TypeToken<HashMap<String, T>>(){}.getType();
+//    System.out.println(genericClass);
+    return new Gson().fromJson(jsonData, generic);
   }
 
   /**

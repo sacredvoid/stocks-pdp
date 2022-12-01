@@ -56,6 +56,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
   public ModelOrchestratorV2() {
     generic = new TypeToken<HashMap<String, T>>(){}.getType();
+    System.out.println(generic);
   }
 
   @Override
@@ -199,14 +200,14 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     if (filteredCall.isEmpty()) {
       return "Sorry, can make transactions on weekdays only. No changes made to PF ID: " + pfID;
     }
-
+    Map<String, T> existingPFData;
     try {
-      csvPFData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+      existingPFData = getPFDataObject(pfID);
     } catch (FileNotFoundException f) {
       return "Sorry, file not found!";
     }
     Map<String, T> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
-        filteredCall, PortfolioDataAdapter.getObject(csvPFData, generic), this.commissionFees);
+        filteredCall,existingPFData, this.commissionFees);
 
     try {
       jsonParser.writeToFile(pfID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(updatedPF));
@@ -411,6 +412,9 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     long dcaRecurCycle = Long.parseLong(lines[2]);
     String dcaStartDate = lines[3];
     String dcaEndDate = lines[4];
+    if(dcaEndDate.equalsIgnoreCase("null")){
+      dcaEndDate = "";
+    }
     Map<String, Float> dcaStockPercentage = new HashMap<>();
     for (int i = 5;i<lines.length; i++) {
       String stock = lines[i].split(",")[0];
@@ -481,13 +485,17 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     return newLines.toString();
   }
 
-  private <T extends PortfolioData> Map<String, T> getPFDataObject(String pfID) throws FileNotFoundException {
+  private Map<String, T> getPFDataObject(String pfID) throws FileNotFoundException {
+    String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
     if(pfID.contains("-dca")) {
+      Type generic = new TypeToken<HashMap<String, DollarCostAveragePortfolio>>(){}.getType();
       // read it like dca
-      return null;
+
+      return new Gson().fromJson(pfData, generic);
     }
     else {
-      String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
+//      Map<>
+      Type generic = new TypeToken<HashMap<String, PortfolioData>>(){}.getType();
       return PortfolioDataAdapter.getObject(pfData, generic);
     }
   }
@@ -499,18 +507,18 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     return null;
   }
 
-  public static void main(String args[]) throws IOException {
-    ModelOrchestratorV2 m = new ModelOrchestratorV2();
-    m.setCommissionFees(String.valueOf(2.0F));
-    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
-    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
-    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
-//    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
-    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
-    }.getType()));
-    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
-    }.getType()));
-    System.out.println(m.createDCAPortfolio(strategyMap));
-
-  }
+//  public static void main(String args[]) throws IOException {
+//    ModelOrchestratorV2 m = new ModelOrchestratorV2();
+//    m.setCommissionFees(String.valueOf(2.0F));
+//    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
+//    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
+//    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
+////    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
+//    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
+//    }.getType()));
+//    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
+//    }.getType()));
+//    System.out.println(m.createDCAPortfolio(strategyMap));
+//
+//  }
 }

@@ -19,7 +19,7 @@ public class DcaStrategyToCSV {
     LocalDate lTempDate = LocalDate.parse(tempDate,df);
     LocalDate lStartDate = LocalDate.parse(strategy.getStartDate(), df);
     LocalDate lEndDate;
-    if(strategy.getEndDate() == null){
+    if(strategy.getEndDate().isEmpty()){
       lEndDate = LocalDate.now();
     }
     else{
