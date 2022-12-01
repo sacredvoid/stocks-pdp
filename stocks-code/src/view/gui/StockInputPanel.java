@@ -1,22 +1,20 @@
 package view.gui;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.StringJoiner;
-import java.util.stream.Stream;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.jdesktop.swingx.JXDatePicker;
+import view.gui.inputverifiers.quantityVerifier;
+import view.gui.inputverifiers.stockVerifier;
 
 public class StockInputPanel {
   public JPanel tempPanel;
@@ -66,8 +64,10 @@ public class StockInputPanel {
     tempPanel.setLayout(new GridLayout(0,3,2,2));
     JTextField stockName = new JTextField();
     stockName.setBorder(BorderFactory.createTitledBorder("Stock Name"));
+    stockName.setInputVerifier(new stockVerifier());
     JTextField stockQuantity = new JTextField();
     stockQuantity.setBorder(BorderFactory.createTitledBorder("Stock Quantity"));
+    stockQuantity.setInputVerifier(new quantityVerifier());
     JXDatePicker transactionDate = new JXDatePicker(new Date());
     transactionDate.setBorder(BorderFactory.createTitledBorder("Date"));
     transactionDate.getMonthView().setUpperBound(new Date());

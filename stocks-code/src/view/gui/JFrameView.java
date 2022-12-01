@@ -94,7 +94,9 @@ public class JFrameView extends JFrame {
     // Set commission
     inputPanel.setCommission.addActionListener(e -> {
       inputPanel.createCommissionDialog();
-      this.features.setCommission(inputPanel.commissionValue);
+      if(inputPanel.commissionValue !=  null) {
+        this.features.setCommission(inputPanel.commissionValue);
+      }
     });
 
     // Load external portfolio
