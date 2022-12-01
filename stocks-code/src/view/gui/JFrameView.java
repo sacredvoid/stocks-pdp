@@ -3,6 +3,7 @@ package view.gui;
 import controller.GraphicalUIFeatures;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
@@ -42,6 +43,10 @@ public class JFrameView extends JFrame {
   private void setupMainJFrame() {
     setTitle("Aakasam Stock Trading");
     setSize(0,0);
+    setMaximizedBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+    setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
+    this.toFront();
+    this.repaint();
     //TODO Test different layouts
     mainPanel = new JPanel();
     mainPanel.setLayout(new GridLayout(0,2, -1, -1));
@@ -187,12 +192,15 @@ public class JFrameView extends JFrame {
     JFrameView.setDefaultLookAndFeelDecorated(true);
     setupMainJFrame();
     setupStockListPanel();
+    populateStockList();
     setupPortfolioInfoPanel();
     setupInputPanel();
     setupGraphPanel();
     swingUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     swingUI.pack();
     swingUI.setVisible(true);
+//    swingUI.setMaximizedBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
+//    swingUI.setExtendedState(swingUI.getExtendedState() | swingUI.MAXIMIZED_BOTH);
 
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());

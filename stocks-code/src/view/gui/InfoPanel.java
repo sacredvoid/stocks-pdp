@@ -1,6 +1,7 @@
 package view.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -50,6 +51,7 @@ public class InfoPanel extends JPanel {
 //    table = tempTable;
     table.setModel(new DefaultTableModel(dataModel,column));
     table.getTableHeader().setReorderingAllowed(false);
+    table.getTableHeader().setFont(new Font("Arial",Font.BOLD, 15));
     table.setDefaultEditor(Object.class, null);
     panel.add(table.getTableHeader(), BorderLayout.NORTH);
   }

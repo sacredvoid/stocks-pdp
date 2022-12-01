@@ -42,7 +42,7 @@ public class PortfolioListPanel extends JPanel {
     statusPanel.setLayout(new BoxLayout(statusPanel,BoxLayout.PAGE_AXIS));
     appStatusUpdates = new JTextArea(7,0);
     appStatusUpdates.setEditable(false);
-    appStatusUpdates.setText("Welcome! You can start by viewing existing Portfolios or creating a new one.\nCommission set to $1.");
+    appStatusUpdates.setText("Welcome! You can start by viewing existing Portfolios or creating a new one.\nCommission set to $1 per transaction.");
     Border border = BorderFactory.createTitledBorder("Application Status Updates");
     appStatusUpdates.setBorder(border);
     scrollStatusPane = new JScrollPane(appStatusUpdates);

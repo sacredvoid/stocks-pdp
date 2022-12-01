@@ -11,7 +11,7 @@ import model.validation.OSValidator;
 public abstract class AOrchestrator implements Orchestrator {
 
   protected String osSep = OSValidator.getOSSeparator();
-  public String checkDateStatus = "";
+  public String commandStatus = "";
   public String buildGUIGraphStatus = "";
   protected final String PORTFOLIO_DATA_PATH = String.format(
       "%sPortfolioData%s", osSep, osSep
@@ -22,8 +22,8 @@ public abstract class AOrchestrator implements Orchestrator {
     return buildGUIGraphStatus;
   }
   @Override
-  public String getCheckDateStatus() {
-    return checkDateStatus;
+  public String getCommandStatus() {
+    return commandStatus;
   }
 
   /**

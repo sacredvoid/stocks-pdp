@@ -21,7 +21,7 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
   public void run() {
     jFrameView = new JFrameView(model);
     jFrameView.startUI();
-    jFrameView.populateStockList();
+//    jFrameView.populateStockList();
     setGraphicalUIFeatures();
   }
 
