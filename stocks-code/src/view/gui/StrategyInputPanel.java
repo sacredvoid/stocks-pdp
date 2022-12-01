@@ -16,6 +16,7 @@ import org.jdesktop.swingx.JXDatePicker;
 import view.gui.inputverifiers.nameVerifier;
 import view.gui.inputverifiers.quantityVerifier;
 import view.gui.inputverifiers.stockVerifier;
+import view.gui.inputverifiers.weightageVerifier;
 
 public class StrategyInputPanel {
   public JPanel tempPanel;
@@ -102,7 +103,7 @@ public class StrategyInputPanel {
     stockName.setInputVerifier(new stockVerifier());
     JTextField stockQuantity = new JTextField();
     stockQuantity.setBorder(BorderFactory.createTitledBorder("Stock Weightage"));
-    stockQuantity.setInputVerifier(new quantityVerifier());
+    stockQuantity.setInputVerifier(new weightageVerifier());
     tempPanel.add(stockName);
     tempPanel.add(stockQuantity);
     listOfInputPanels.add(tempPanel);
