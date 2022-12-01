@@ -8,6 +8,8 @@ import javax.swing.border.TitledBorder;
 
 public class stockVerifier extends InputVerifier {
 
+
+
   @Override
   public boolean verify(JComponent input) {
     String text = ((JTextField) input).getText().trim();

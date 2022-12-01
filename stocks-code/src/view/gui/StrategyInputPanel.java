@@ -91,7 +91,6 @@ public class StrategyInputPanel {
     if(jdialogButtonPressed == JOptionPane.OK_OPTION) {
       newPortfolioData = extractData(DCAInputsPanel);
       newPortfolioData = newPortfolioData + "\n"+ extractData(listOfInputPanels);
-      System.out.println(newPortfolioData);
     }
   }
 
@@ -122,7 +121,7 @@ public class StrategyInputPanel {
           line.add(simpleDateFormat.format(((JXDatePicker) c).getDate()));
         }
         else {
-          line.add("null\n");
+          line.add("null");
         }
       }
       else {

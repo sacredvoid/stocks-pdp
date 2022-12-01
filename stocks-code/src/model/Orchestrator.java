@@ -49,7 +49,7 @@ public interface Orchestrator extends IModelView {
 
   String getBuildGUIGraphStatus();
 
-  String getCheckDateStatus();
+  String getCommandStatus();
 
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed
