@@ -431,7 +431,7 @@ public class Performance<T extends PortfolioData> implements IPerformance<T> {
 
     if (days >= 1 && days <= 31) {
       dataPoints = showPerformanceByDate(parsedPFData, startDate, endDate);
-    } else if (months >= 5 && months <= 30) {
+    } else if (months >= 1 && months <= 30) {
       dataPoints = showPerformanceByMonth(parsedPFData, startDate, endDate);
     } else if (months >= 15 && months <= 90) {
       dataPoints = showPerformanceByQuarter(parsedPFData, startDate, endDate);

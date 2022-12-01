@@ -27,7 +27,9 @@ public class GraphPanel extends JPanel {
     startDate = new JXDatePicker(new Date());
     endDate = new JXDatePicker(new Date());
     startDate.setFormats(simpleDateFormat);
+    startDate.getMonthView().setUpperBound(new Date());
     endDate.setFormats(simpleDateFormat);
+    endDate.getMonthView().setUpperBound(new Date());
     startDateString = simpleDateFormat.format(startDate.getDate());
     startDate.addActionListener(e -> startDateString = simpleDateFormat.format(startDate.getDate()));
     endDateString = simpleDateFormat.format(endDate.getDate());

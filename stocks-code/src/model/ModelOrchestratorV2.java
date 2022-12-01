@@ -317,8 +317,10 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     for(Map.Entry<String, Float> entry: dataPoints.entrySet()) {
       stockDataTimeSeries.addValue(entry.getValue(), "Portfolio ID: "+pfID, entry.getKey());
     }
-    return ChartFactory.createBarChart("Portfolio Performance", "Date Range", "Value",stockDataTimeSeries,
-        PlotOrientation.VERTICAL , true , true , false);
+    JFreeChart barChart = ChartFactory.createBarChart("Portfolio Performance", "Date Range",
+        "Value", stockDataTimeSeries,
+        PlotOrientation.VERTICAL, true, true, false);
+    return barChart;
   }
 
   public Long[] checkDates(LocalDate localSD, LocalDate localED,
@@ -342,17 +344,17 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     if (days == 0) {
       checkDateStatus = "Sorry, please enter different dates for 2 ranges";
       return null;
-    } else if (days < 5) {
-      checkDateStatus = "Sorry, please enter date range with more than 5 days";
-      return null;
+//    } else if (days < 5) {
+//      checkDateStatus = "Sorry, please enter date range with more than 5 days";
+//      return null;
     } else if (days > 31) {
       months = ChronoUnit.MONTHS.between(localSD, localED);
     }
 
-    if (months <= 5) {
-      checkDateStatus = "Sorry, please enter date range with more than 5 months";
-      return null;
-    }
+//    if (months <= 5) {
+//      checkDateStatus = "Sorry, please enter date range with more than 5 months";
+//      return null;
+//    }
     if (months > 180) {
       years = ChronoUnit.YEARS.between(localSD, localED);
     }
@@ -362,7 +364,13 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
   @Override
   public String setCommissionFees(String commissionFees) {
-    float value = Float.parseFloat(commissionFees);
+    float value;
+    try {
+      value = Float.parseFloat(commissionFees);
+    }
+    catch (NumberFormatException e) {
+      return "Please enter a number";
+    }
     if (value < 0) {
       return "Cannot set negative commission";
     } else {
@@ -407,6 +415,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     long dcaRecurCycle = Long.parseLong(lines[1]);
     String dcaStartDate = lines[3];
     String dcaEndDate = lines[4];
+//    if(dca)
     if(dcaEndDate.equalsIgnoreCase("null")){
       dcaEndDate = "";
     }

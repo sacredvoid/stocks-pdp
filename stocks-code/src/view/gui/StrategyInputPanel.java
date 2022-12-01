@@ -13,6 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import org.jdesktop.swingx.JXDatePicker;
+import view.gui.inputverifiers.nameVerifier;
+import view.gui.inputverifiers.quantityVerifier;
+import view.gui.inputverifiers.stockVerifier;
 
 public class StrategyInputPanel {
   public JPanel tempPanel;
@@ -43,16 +46,19 @@ public class StrategyInputPanel {
     DCAInputsPanel.setLayout(new GridLayout(0,1,2,2));
     dcaName = new JTextField();
     dcaName.setBorder(BorderFactory.createTitledBorder("DCA Strategy Name"));
+    dcaName.setInputVerifier(new nameVerifier());
+    recurringCycle = new JTextField();
+    recurringCycle.setBorder(BorderFactory.createTitledBorder("Recurring Cycle (Days)"));
+    recurringCycle.setInputVerifier(new quantityVerifier());
     recurringAmount = new JTextField();
     recurringAmount.setBorder(BorderFactory.createTitledBorder("Amount to Invest Every Cycle"));
+    recurringAmount.setInputVerifier(new quantityVerifier());
     startDate = new JXDatePicker();
     startDate.setBorder(BorderFactory.createTitledBorder("Strategy Start Date"));
     startDate.setFormats(simpleDateFormat);
     endDate = new JXDatePicker();
     endDate.setBorder(BorderFactory.createTitledBorder("Strategy End Date"));
     endDate.setFormats(simpleDateFormat);
-    recurringCycle = new JTextField();
-    recurringCycle.setBorder(BorderFactory.createTitledBorder("Recurring Cycle"));
     DCAInputsPanel.add(dcaName);
     DCAInputsPanel.add(recurringCycle);
     DCAInputsPanel.add(recurringAmount);
@@ -94,8 +100,10 @@ public class StrategyInputPanel {
     tempPanel.setLayout(new GridLayout(0,2,2,2));
     JTextField stockName = new JTextField();
     stockName.setBorder(BorderFactory.createTitledBorder("Stock Name"));
+    stockName.setInputVerifier(new stockVerifier());
     JTextField stockQuantity = new JTextField();
     stockQuantity.setBorder(BorderFactory.createTitledBorder("Stock Weightage"));
+    stockQuantity.setInputVerifier(new quantityVerifier());
     tempPanel.add(stockName);
     tempPanel.add(stockQuantity);
     listOfInputPanels.add(tempPanel);
