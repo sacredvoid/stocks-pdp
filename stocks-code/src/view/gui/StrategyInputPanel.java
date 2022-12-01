@@ -3,7 +3,6 @@ package view.gui;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.StringJoiner;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -45,7 +44,7 @@ public class StrategyInputPanel {
     dcaName = new JTextField();
     dcaName.setBorder(BorderFactory.createTitledBorder("DCA Strategy Name"));
     recurringAmount = new JTextField();
-    recurringAmount.setBorder(BorderFactory.createTitledBorder("Amount to Invest Monthly"));
+    recurringAmount.setBorder(BorderFactory.createTitledBorder("Amount to Invest Every Cycle"));
     startDate = new JXDatePicker();
     startDate.setBorder(BorderFactory.createTitledBorder("Strategy Start Date"));
     startDate.setFormats(simpleDateFormat);
@@ -55,8 +54,8 @@ public class StrategyInputPanel {
     recurringCycle = new JTextField();
     recurringCycle.setBorder(BorderFactory.createTitledBorder("Recurring Cycle"));
     DCAInputsPanel.add(dcaName);
-    DCAInputsPanel.add(recurringAmount);
     DCAInputsPanel.add(recurringCycle);
+    DCAInputsPanel.add(recurringAmount);
     DCAInputsPanel.add(startDate);
     DCAInputsPanel.add(endDate);
 

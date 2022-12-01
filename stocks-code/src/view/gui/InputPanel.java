@@ -15,14 +15,13 @@ public class InputPanel extends JPanel {
   public String newPortfolioData;
   public JButton buyStocks;
   public JButton sellStocks;
-  public JButton dollarCost;
+  public JButton addDollarCost;
   public JButton createSIP;
   public JButton loadExternalPF;
   public JButton setCommission;
   public String commissionValue = "";
   public String selectedPath;
   public JButton viewStrategies;
-  public JButton seePerformance;
   public StrategyInputPanel strategyInputPanel;
 
   public InputPanel() {
@@ -32,14 +31,14 @@ public class InputPanel extends JPanel {
     createSIP = new JButton("Create New SIP");
     buyStocks = new JButton("Buy Stocks");
     sellStocks = new JButton("Sell Stocks");
-    dollarCost = new JButton("Add Dollar-Cost Averaging Strategy");
+    addDollarCost = new JButton("Add Dollar-Cost Averaging Strategy");
     loadExternalPF = new JButton("Load External Portfolio");
     setCommission = new JButton("Set Commission Fees");
     viewStrategies = new JButton("View Current Strategies");
-//    seePerformance = new JButton("View Performance Metrics");
 //    // TODO Give error message to user if sold more/on a weekend
 
-    addButtonsToTarget(this,new JComponent[]{createNewPortfolio,createSIP,buyStocks,sellStocks,dollarCost, loadExternalPF, setCommission, viewStrategies});
+    addButtonsToTarget(this,new JComponent[]{createNewPortfolio,createSIP,buyStocks,sellStocks,
+        addDollarCost, loadExternalPF, setCommission, viewStrategies});
   }
 
   public void createPortfolioButtonDialog() {
@@ -74,6 +73,10 @@ public class InputPanel extends JPanel {
 
   public void createDCADialog() {
     strategyInputPanel = new StrategyInputPanel("Create a new Portfolio with Strategy");
+  }
+
+  public void addDCAToExistingPFDialog() {
+    strategyInputPanel = new StrategyInputPanel("Add a strategy to selected Portfolio");
   }
 
   private void addButtonsToTarget(JComponent target, JComponent[] buttons) {
