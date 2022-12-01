@@ -15,7 +15,7 @@ import view.UserInteraction;
 /**
  * The type Interaction handler v 2 test.
  */
-public class InteractionHandlerV2Test {
+public class MainControllerTest {
 
   /**
    * The Ih.
@@ -51,7 +51,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -80,7 +80,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -125,7 +125,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -239,7 +239,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -323,7 +323,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -408,7 +408,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -492,7 +492,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -543,7 +543,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -587,7 +587,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -636,7 +636,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -699,7 +699,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -746,7 +746,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view
@@ -805,7 +805,7 @@ public class InteractionHandlerV2Test {
     PrintStream out = new PrintStream(bytes);
     System.setOut(out);
     view = new UserInteraction(out, model);
-    ih = new InteractionHandlerV2(
+    ih = new MainController(
         in,
         model,
         view

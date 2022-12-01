@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import model.Orchestrator;
 
 /**
- * The type Model view.
+ * The Model View implementation which has all the getter methods of the model which are used by the
+ * view to fetch data when asked.
  */
 public class ModelView implements IModelView {
 

@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Random;
 import model.validation.OSValidator;
 
@@ -11,9 +12,20 @@ import model.validation.OSValidator;
 public abstract class AOrchestrator implements Orchestrator {
 
   protected String osSep = OSValidator.getOSSeparator();
+  public String checkDateStatus = "";
+  public String buildGUIGraphStatus = "";
   protected final String PORTFOLIO_DATA_PATH = String.format(
       "%sPortfolioData%s", osSep, osSep
   );
+
+  @Override
+  public String getBuildGUIGraphStatus() {
+    return buildGUIGraphStatus;
+  }
+  @Override
+  public String getCheckDateStatus() {
+    return checkDateStatus;
+  }
 
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed
@@ -55,4 +67,8 @@ public abstract class AOrchestrator implements Orchestrator {
   }
 
   public abstract String[] getCostBasis(String pfID, String date);
+
+  // write method to fetch data points
+  // write method to create timeseries data from those datapoints
+  // make a new chart and send that new chart to view
 }

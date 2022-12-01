@@ -19,29 +19,29 @@ import view.UserInteraction;
  * controller gets the user input, designates the commands from user to the respective functions and
  * passes information to view.
  */
-public class InteractionHandlerV2 extends AbstractHandler {
+public class TextUIHandler extends AbstractHandler {
 
   /**
    * The Model object.
    */
-  Orchestrator morch;
+  private Orchestrator morch;
   /**
    * The Accepted commands hashmap.
    */
-  Map<String, Function<Scanner, IPortfolioCommands>> acceptedCommands = new HashMap<>();
+  private Map<String, Function<Scanner, IPortfolioCommands>> acceptedCommands = new HashMap<>();
 
   /**
    * Constructor class which takes a Readable input and Printstream output, which is used by our
    * view to display outputs from model to console.
    *
-   * @param input Readable type input object
+   * @param scanner Scanner type input object
    * @param morch Prinstream type output object
    * @param ui    the ui
    */
-  public InteractionHandlerV2(Readable input, Orchestrator morch, UserInteraction ui) {
+  public TextUIHandler(Scanner scanner, Orchestrator morch, UserInteraction ui) {
     super.ui = ui;
     this.morch = morch;
-    this.scan = new Scanner(input);
+    this.scan = scanner;
     this.initializeCommands();
   }
 

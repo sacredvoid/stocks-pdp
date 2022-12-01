@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class ApiDataAdapter {
 
-  private static Type typeToken = new TypeToken<LinkedHashMap<String, ApiDataStruct>>() {
+  private static final Type typeToken = new TypeToken<LinkedHashMap<String, ApiDataStruct>>() {
   }.getType();
 
   /**

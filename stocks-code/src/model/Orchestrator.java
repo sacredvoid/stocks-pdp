@@ -3,6 +3,7 @@ package model;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import modelview.IModelView;
+import org.jfree.chart.JFreeChart;
 
 /**
  * The base model class for our application which defines the basic methods which other model like
@@ -44,7 +45,11 @@ public interface Orchestrator extends IModelView {
    * @return CSV Data (Stock,Quantity,Value) in string format/ null if date is weekend
    * @throws ParseException throws when it's unable to read the given date/data
    */
-  String getPortfolioValue(String pfId, String date) throws ParseException;
+  String getPortfolioValue(String date, String pfId) throws ParseException;
+
+  String getBuildGUIGraphStatus();
+
+  String getCheckDateStatus();
 
   /**
    * Shows the existing portfolios in './app_data/PortfolioData' where our application is programmed
@@ -80,5 +85,9 @@ public interface Orchestrator extends IModelView {
 
   String[] getCostBasis(String pfID, String date);
 
-  void setCommissionFees(String commissionFees);
+  String setCommissionFees(String commissionFees);
+
+  JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate);
+
+  String createDCAMap(String dcaInput);
 }

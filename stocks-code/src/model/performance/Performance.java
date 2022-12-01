@@ -1,6 +1,5 @@
 package model.performance;
 
-import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +21,7 @@ import model.validation.DateValidator;
  * Performance is responsible for creating and displaying performance graph of the portfolio<p></p>
  * based on the date ranges.
  */
-public class Performance implements IPerformance {
+public class Performance<T extends PortfolioData> implements IPerformance<T> {
 
   private String pfId;
 
@@ -69,7 +68,7 @@ public class Performance implements IPerformance {
   }
 
   @Override
-  public String showPerformanceByDate(Map<String, PortfolioData> pfData, String startDate,
+  public TreeMap<String, Float> showPerformanceByDate(Map<String, T> pfData, String startDate,
       String endDate) {
 
     List<String> dates = new ArrayList<>();
@@ -81,18 +80,14 @@ public class Performance implements IPerformance {
     String stockCountList;
     for (String date : dates
     ) {
-      try {
-        if (!new DateValidator().checkData(date)) {
-          continue;
-        }
-      } catch (ParseException e) {
-        //
+      if (!new DateValidator().checkData(date)) {
+        continue;
       }
 
-      TreeMap<String, PortfolioData> sortedSubMapByDate = fetchSubMap(pfData, date);
+      TreeMap<String, T> sortedSubMapByDate = fetchSubMap(pfData, date);
 
       if (sortedSubMapByDate.size() != 0) {
-        PortfolioData lastEntry = sortedSubMapByDate.get(sortedSubMapByDate.lastKey());
+        T lastEntry = sortedSubMapByDate.get(sortedSubMapByDate.lastKey());
         stockCountList = PortfolioToCSVAdapter.buildStockQuantityList(lastEntry.getStockList());
         prevStockCountList = stockCountList;
 
@@ -110,12 +105,12 @@ public class Performance implements IPerformance {
       dateValueDict.put(date, portfolioValue);
     }
 
-    return printGraph(dateValueDict);
+    return dateValueDict;
 
   }
 
   @Override
-  public String showPerformanceByMonth(Map<String, PortfolioData> pfData, String startDate,
+  public TreeMap<String, Float> showPerformanceByMonth(Map<String, T> pfData, String startDate,
       String endDate) {
     List<String> yearAndMonths;
     TreeMap<String, Float> yearAndMonthValueDict = new TreeMap<String, Float>();
@@ -129,7 +124,7 @@ public class Performance implements IPerformance {
     for (String yearAndMonth : yearAndMonths
     ) {
 
-      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
+      TreeMap<String, T> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
           yearAndMonth);
 
       if (sortedSubMapByYearAndMonth.size() != 0) {
@@ -151,11 +146,11 @@ public class Performance implements IPerformance {
       yearAndMonthValueDict.put(yearAndMonth, portfolioValue);
     }
 
-    return printGraph(yearAndMonthValueDict);
+    return yearAndMonthValueDict;
   }
 
   @Override
-  public String showPerformanceByQuarter(Map<String, PortfolioData> pfData, String startDate,
+  public TreeMap<String, Float> showPerformanceByQuarter(Map<String, T> pfData, String startDate,
       String endDate) {
     List<String> yearAndMonths;
     TreeMap<String, Float> yearAndMonthValueDict = new TreeMap<String, Float>();
@@ -168,7 +163,7 @@ public class Performance implements IPerformance {
     String stockCountList = null;
     for (String yearAndMonth : yearAndMonths
     ) {
-      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
+      TreeMap<String, T> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
           yearAndMonth);
 
       if (sortedSubMapByYearAndMonth.size() != 0) {
@@ -188,7 +183,7 @@ public class Performance implements IPerformance {
         boolean flag = false;
         for (String subYearAndMonth : subYearAndMonths
         ) {
-          TreeMap<String, PortfolioData> mostRecentSortedSubMap = fetchSubMap(pfData,
+          TreeMap<String, T> mostRecentSortedSubMap = fetchSubMap(pfData,
               subYearAndMonth);
 
           if (mostRecentSortedSubMap.size() != 0) {
@@ -214,12 +209,11 @@ public class Performance implements IPerformance {
 
       yearAndMonthValueDict.put(yearAndMonth, portfolioValue);
     }
-
-    return printGraph(yearAndMonthValueDict);
+    return yearAndMonthValueDict;
   }
 
   @Override
-  public String showPerformanceByHalfYear(Map<String, PortfolioData> pfData, String startDate,
+  public TreeMap<String, Float> showPerformanceByHalfYear(Map<String, T> pfData, String startDate,
       String endDate) {
     List<String> yearAndMonths;
     TreeMap<String, Float> yearAndMonthValueDict = new TreeMap<String, Float>();
@@ -233,7 +227,7 @@ public class Performance implements IPerformance {
     for (String yearAndMonth : yearAndMonths
     ) {
 
-      TreeMap<String, PortfolioData> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
+      TreeMap<String, T> sortedSubMapByYearAndMonth = fetchSubMap(pfData,
           yearAndMonth);
 
       if (sortedSubMapByYearAndMonth.size() != 0) {
@@ -252,7 +246,7 @@ public class Performance implements IPerformance {
         boolean flag = false;
         for (String subYearAndMonth : subYearAndMonths
         ) {
-          TreeMap<String, PortfolioData> mostRecentSortedSubMap = fetchSubMap(pfData,
+          TreeMap<String, T> mostRecentSortedSubMap = fetchSubMap(pfData,
               subYearAndMonth);
 
           if (mostRecentSortedSubMap.size() != 0) {
@@ -280,11 +274,11 @@ public class Performance implements IPerformance {
       yearAndMonthValueDict.put(yearAndMonth, portfolioValue);
     }
 
-    return printGraph(yearAndMonthValueDict);
+    return yearAndMonthValueDict;
   }
 
   @Override
-  public String showPerformanceByYear(Map<String, PortfolioData> pfData, String startDate,
+  public TreeMap<String, Float> showPerformanceByYear(Map<String, T> pfData, String startDate,
       String endDate) {
     String startYear = startDate.substring(0, 4);
     String endYear = endDate.substring(0, 4);
@@ -303,7 +297,7 @@ public class Performance implements IPerformance {
     for (String year : years
     ) {
 
-      TreeMap<String, PortfolioData> sortedSubMapByYear = fetchSubMap(pfData, year);
+      TreeMap<String, T> sortedSubMapByYear = fetchSubMap(pfData, year);
 
       if (sortedSubMapByYear.size() != 0) {
 
@@ -324,15 +318,15 @@ public class Performance implements IPerformance {
 
       yearValueDict.put(year, portfolioValue);
     }
-    return printGraph(yearValueDict);
+    return yearValueDict;
   }
 
-  private String getLastEntryStockList(TreeMap<String, PortfolioData> subMap) {
-    PortfolioData lastEntry = subMap.get(subMap.lastKey());
+  private String getLastEntryStockList(TreeMap<String, T> subMap) {
+    T lastEntry = subMap.get(subMap.lastKey());
     return PortfolioToCSVAdapter.buildStockQuantityList(lastEntry.getStockList());
   }
 
-  private TreeMap<String, PortfolioData> fetchSubMap(Map<String, PortfolioData> pfData,
+  private TreeMap<String, T> fetchSubMap(Map<String, T> pfData,
       String timeSnap) {
     return pfData.entrySet().stream()
         .filter(x -> x.getKey().contains(timeSnap))
@@ -404,7 +398,7 @@ public class Performance implements IPerformance {
     return allDates;
   }
 
-  private String printGraph(TreeMap<String, Float> sequenceData) {
+  public String printGraph(TreeMap<String, Float> sequenceData) {
     String graph = "";
     String startTimeSpan = sequenceData.firstKey();
     String endTimeSpan = sequenceData.lastKey();
@@ -431,5 +425,23 @@ public class Performance implements IPerformance {
     }
     return stars;
   }
+  public TreeMap<String,Float> getGraphDataPoints(Map<String,T> parsedPFData,
+      long days, long months, long years, String startDate, String endDate){
+    TreeMap<String, Float> dataPoints;
 
+    if (days >= 1 && days <= 31) {
+      dataPoints = showPerformanceByDate(parsedPFData, startDate, endDate);
+    } else if (months >= 5 && months <= 30) {
+      dataPoints = showPerformanceByMonth(parsedPFData, startDate, endDate);
+    } else if (months >= 15 && months <= 90) {
+      dataPoints = showPerformanceByQuarter(parsedPFData, startDate, endDate);
+    } else if (months >= 30 && months <= 180) {
+      dataPoints = showPerformanceByHalfYear(parsedPFData, startDate, endDate);
+    } else if (years <= 30) {
+      dataPoints = showPerformanceByYear(parsedPFData, startDate, endDate);
+    } else {
+      dataPoints = null;
+    }
+    return dataPoints;
+  }
 }

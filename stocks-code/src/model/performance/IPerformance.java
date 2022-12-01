@@ -1,12 +1,13 @@
 package model.performance;
 
 import java.util.Map;
+import java.util.TreeMap;
 import model.portfolio.PortfolioData;
 
 /**
  * Performance Interface defines the method signatures to build charts for different timespans.
  */
-public interface IPerformance {
+public interface IPerformance<T extends PortfolioData> {
 
   /**
    * showPerformanceByDate is used to create a barchart with timespan for only 30 days.
@@ -16,7 +17,7 @@ public interface IPerformance {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and every day of the timespan provided
    */
-  String showPerformanceByDate(Map<String, PortfolioData> pfData, String startDate, String endDate);
+  TreeMap<String, Float> showPerformanceByDate(Map<String, T> pfData, String startDate, String endDate);
 
   /**
    * showPerformanceByMonth is used to create a barchart with timespan for only 30 months.
@@ -26,7 +27,7 @@ public interface IPerformance {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and every month of the timespan provided
    */
-  String showPerformanceByMonth(Map<String, PortfolioData> pfData, String startDate,
+  TreeMap<String, Float> showPerformanceByMonth(Map<String, T> pfData, String startDate,
       String endDate);
 
   /**
@@ -37,7 +38,7 @@ public interface IPerformance {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and quarter of the timespan provided
    */
-  String showPerformanceByQuarter(Map<String, PortfolioData> pfData, String startDate,
+  TreeMap<String, Float> showPerformanceByQuarter(Map<String, T> pfData, String startDate,
       String endDate);
 
   /**
@@ -48,7 +49,7 @@ public interface IPerformance {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and every half year of the timespan provided
    */
-  String showPerformanceByHalfYear(Map<String, PortfolioData> pfData, String startDate,
+  TreeMap<String, Float> showPerformanceByHalfYear(Map<String, T> pfData, String startDate,
       String endDate);
 
   /**
@@ -59,5 +60,5 @@ public interface IPerformance {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and every year of the timespan provided
    */
-  String showPerformanceByYear(Map<String, PortfolioData> pfData, String startDate, String endDate);
+  TreeMap<String, Float> showPerformanceByYear(Map<String, T> pfData, String startDate, String endDate);
 }
