@@ -6,9 +6,6 @@ package model.dollarcostavg;
  */
 public interface IDollarCostAvg {
 
-//  Map<String,Float> getCostBasisStockQtyList(Map<String, Float> stockPercentage, double invAmount);
-//
-
   /**
    * dcgStockQtyList() takes in a date and generates the stock quantity list according to the stock
    * percentage strategy.

@@ -24,14 +24,14 @@ public interface Orchestrator extends IModelView {
    * data) in a file.
    *
    * @param portfolioData CSV data as string containing Stock,Quantity
-   * @return success/error message
+   * @return success /error message
    */
   String createPortfolio(String portfolioData);
 
   /**
    * generate a 6 digit random portfolio number for the application.
    *
-   * @return 6-digit long string
+   * @return 6 -digit long string
    */
   String generatePortfolioID();
 
@@ -47,8 +47,18 @@ public interface Orchestrator extends IModelView {
    */
   String getPortfolioValue(String date, String pfId) throws ParseException;
 
+  /**
+   * Gets build gui graph status.
+   *
+   * @return the build gui graph status
+   */
   String getBuildGUIGraphStatus();
 
+  /**
+   * Gets command status.
+   *
+   * @return the command status
+   */
   String getCommandStatus();
 
   /**
@@ -64,32 +74,77 @@ public interface Orchestrator extends IModelView {
    * './app_data/PortfolioData' directory with a generated Portfolio ID.
    *
    * @param path path to CSV existing on your file system
-   * @return Success/error message depending on if the CSV load was successful or not
+   * @return Success /error message depending on if the CSV load was successful or not
    * @throws FileNotFoundException throws when the given CSV file is not found/unable to reach it
    */
   String loadExternalPortfolio(String path) throws FileNotFoundException;
 
+  /**
+   * Edit existing portfolio string.
+   *
+   * @param pfID the pf id
+   * @param call the call
+   * @return the string
+   */
   String editExistingPortfolio(String pfID, String call);
 
   /**
    * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
    * the user.
    *
-   * @param pfId        Portfolio id of the portfolio
-   * @param startDate   Starting date of the timespan
-   * @param endDate     Ending date of the timespan
-   * @return            performance of the portfolio for each timestamp in the form of stars
+   * @param pfId      Portfolio id of the portfolio
+   * @param startDate Starting date of the timespan
+   * @param endDate   Ending date of the timespan
+   * @return performance of the portfolio for each timestamp in the form of stars
+   * @throws FileNotFoundException the file not found exception
    */
   String showPerformance(String pfId, String startDate, String endDate)
       throws FileNotFoundException;
 
   String[] getCostBasis(String pfID, String date);
 
+  /**
+   * Sets commission fees.
+   *
+   * @param commissionFees the commission fees
+   * @return the commission fees
+   */
   String setCommissionFees(String commissionFees);
 
+  /**
+   * Generate time series data and add it to a JFreeChart for a given portfolio ID, start date and
+   * end date.
+   *
+   * @param pfID      the pf id
+   * @param startDate the start date
+   * @param endDate   the end date
+   * @return the JFreeChart containing the new performance graph
+   */
   JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate);
 
-  public String existingPortfolioToDCAPortfolio(String pfID, String dcaData);
+  /**
+   * Method which adds a strategy to an existing portfolio.
+   *
+   * @param pfID    the pf id
+   * @param dcaData the dca data (user input about the strategy [DCA])
+   * @return the string
+   */
+  String existingPortfolioToDCAPortfolio(String pfID, String dcaData);
 
-  public String createDCAPortfolio(String dcaInput);
+  /**
+   * Creates a new dca portfolio using user input about strategy.
+   *
+   * @param dcaInput the dca strategy csv input
+   * @return the string
+   */
+  String createDCAPortfolio(String dcaInput);
+
+  /**
+   * Gets predefined strategies that are applied on an existing portfolio.
+   *
+   * @param pfID the pf id
+   * @return the predefined strategies
+   * @throws FileNotFoundException the file not found exception
+   */
+  String getPredefinedStrategies(String pfID) throws FileNotFoundException;
 }

@@ -69,8 +69,7 @@ public class JFrameView extends JFrame {
     this.features = features;
     // Get portfolio composition and cost-basis for given date
     portfolioPanel.selectedButton.addActionListener(e -> {
-      features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
-      features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      updateInformation();
     });
 
     // Create new portfolio
@@ -133,6 +132,11 @@ public class JFrameView extends JFrame {
         this.features.addDCAToExistingPF(portfolioPanel.selected,inputPanel.strategyInputPanel.newPortfolioData);
         updateInformation();
       }
+    });
+
+    // View applied DCA Strategies
+    inputPanel.viewStrategies.addActionListener(e -> {
+      this.features.viewAppliedDCA(portfolioPanel.selected);
     });
 
   }

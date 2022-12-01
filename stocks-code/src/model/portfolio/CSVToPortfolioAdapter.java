@@ -1,10 +1,8 @@
 package model.portfolio;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import model.apistockops.PortfolioValue;
-import model.validation.DateValidator;
 
 /**
  * CSVToPortfolioAdapter class defines methods for converting data from CSV format to Portfolio
@@ -24,7 +22,6 @@ public class CSVToPortfolioAdapter {
       String date,
       PortfolioData pfData,
       Map<String, PortfolioData> fullPortfolio) {
-    // Probably add logic to handle date clashes
     fullPortfolio.put(date, pfData);
     return fullPortfolio;
   }
@@ -40,9 +37,6 @@ public class CSVToPortfolioAdapter {
   public static <T extends PortfolioData> Map<String, T> buildPortfolioData(
       String stockData, Map<String, T> pfData, float commissionFees
   ) {
-    // Get all dates first, create a set. Iterate again through the data and append
-    // stock data by date+commission+totalinvested
-    DateValidator dateCheck = new DateValidator();
     String[] dataPerLine = stockData.split("\n");
     for (String line : dataPerLine
     ) {

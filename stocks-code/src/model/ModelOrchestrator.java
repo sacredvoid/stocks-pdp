@@ -154,4 +154,9 @@ public class ModelOrchestrator extends AOrchestrator {
   public String createDCAPortfolio(String dcaInput) {
     return null;
   }
+
+  @Override
+  public String getPredefinedStrategies(String pfID) throws FileNotFoundException {
+    return null;
+  }
 }

@@ -1,7 +1,6 @@
 package model.apistockops;
 
 import java.net.URL;
-//import model.apistockops.StockHandler.StockHandlerBuilder;
 
 /**
  * The type Yahoo stock api.

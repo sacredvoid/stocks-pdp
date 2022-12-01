@@ -2,12 +2,7 @@ package model.validation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -17,7 +12,8 @@ import java.util.Locale;
  */
 public class DateValidator implements IDataValidator {
 
-  private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+  private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",
+      Locale.ENGLISH);
 
   /**
    * Checks if the given date (YYYY-MM-DD) is a weekend and returns true if it is, false otherwise.
@@ -37,8 +33,7 @@ public class DateValidator implements IDataValidator {
     Date baseDate;
     try {
       baseDate = formatter.parse(String.valueOf(now));
-    }
-    catch (ParseException e) {
+    } catch (ParseException e) {
       return false;
     }
     return input.after(baseDate);
@@ -50,21 +45,25 @@ public class DateValidator implements IDataValidator {
     Date inputDate;
     try {
       inputDate = formatter.parse(date);
-    }
-    catch (ParseException e) {
+    } catch (ParseException e) {
       return false;
     }
-    return !(isWeekend(inputDate) || isFuture(inputDate)) ;
+    return !(isWeekend(inputDate) || isFuture(inputDate));
   }
 
-  public static boolean checkDateFormat (String date) {
+  /**
+   * Check date format and returns a boolean true if date is not in proper format, false otherwise.
+   *
+   * @param date the date
+   * @return the boolean
+   */
+  public static boolean checkDateFormat(String date) {
     try {
       formatter.parse(date);
+    } catch (ParseException e) {
+      return true;
     }
-    catch (ParseException e) {
-      return false;
-    }
-    return true;
+    return false;
   }
 
 

@@ -20,6 +20,8 @@ import model.validation.DateValidator;
 /**
  * Performance is responsible for creating and displaying performance graph of the portfolio<p></p>
  * based on the date ranges.
+ *
+ * @param <T> the type parameter which represents the Portfolio Type (normal/DCA)
  */
 public class Performance<T extends PortfolioData> implements IPerformance<T> {
 
@@ -30,10 +32,10 @@ public class Performance<T extends PortfolioData> implements IPerformance<T> {
   }
 
   /**
-   * getBuilder() is a static method which returns a new PerfromanceBuilder object for <p></p>
-   * building the Performance object.
+   * getBuilder() is a static method which returns a new PerfromanceBuilder object for building the
+   * Performance object.
    *
-   * @return PerformanceBuilder
+   * @return PerformanceBuilder builder
    */
   public static PerformanceBuilder getBuilder() {
     return new PerformanceBuilder();
@@ -398,6 +400,12 @@ public class Performance<T extends PortfolioData> implements IPerformance<T> {
     return allDates;
   }
 
+  /**
+   * Prints the graph in terms of stars for the Text based UI.
+   *
+   * @param sequenceData the sequence data
+   * @return the string
+   */
   public String printGraph(TreeMap<String, Float> sequenceData) {
     String graph = "";
     String startTimeSpan = sequenceData.firstKey();
@@ -425,8 +433,20 @@ public class Performance<T extends PortfolioData> implements IPerformance<T> {
     }
     return stars;
   }
-  public TreeMap<String,Float> getGraphDataPoints(Map<String,T> parsedPFData,
-      long days, long months, long years, String startDate, String endDate){
+
+  /**
+   * Gets graph data points required to plot the GUI Bar Chart.
+   *
+   * @param parsedPFData the parsed pf data
+   * @param days         the days
+   * @param months       the months
+   * @param years        the years
+   * @param startDate    the start date
+   * @param endDate      the end date
+   * @return the graph data points (day, value of portfolio)
+   */
+  public TreeMap<String, Float> getGraphDataPoints(Map<String, T> parsedPFData,
+      long days, long months, long years, String startDate, String endDate) {
     TreeMap<String, Float> dataPoints;
 
     if (days >= 1 && days <= 31) {

@@ -1,9 +1,7 @@
 package model.portfolio;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -11,9 +9,6 @@ import java.util.Map;
  * PortfolioData.
  */
 public class PortfolioDataAdapter<T extends PortfolioData> {
-
-//  private static Type genericTypeToken = TypeToken.getParameterized(HashMap.class,PortfolioData.class).getType();
-
   /**
    * getObject() method is used to read the Portfolio JSON Data and return it as a dictionary of
    * dates and PortfolioData objects.
@@ -23,8 +18,6 @@ public class PortfolioDataAdapter<T extends PortfolioData> {
    *          keys
    */
   public static <T extends PortfolioData> Map<String, T> getObject(String jsonData, Type generic) {
-//    Type genericType = new TypeToken<HashMap<String, T>>(){}.getType();
-//    System.out.println(genericClass);
     return new Gson().fromJson(jsonData, generic);
   }
 
@@ -32,9 +25,9 @@ public class PortfolioDataAdapter<T extends PortfolioData> {
    * getJSON() method is used to read portfolio Json data as a dictionary of dates and PortfolioData
    * objects and return as a string.
    *
-   * @param data  the whole pora Map of date Strings and PortfolioData objects mapped to the
+   * @param data the whole pora Map of date Strings and PortfolioData objects mapped to the
    *             respective date keys
-   * @return  the whole portfolio data as a string
+   * @return the whole portfolio data as a string
    */
   public static <T extends PortfolioData> String getJSON(Map<String, T> data) {
     return new Gson().toJson(data);
