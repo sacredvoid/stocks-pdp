@@ -1,6 +1,6 @@
 # stocks-pdp
 
-Assignment: Stocks-2
+Assignment: Stocks-3
 
 ## Our Program Features
 
@@ -8,11 +8,13 @@ Assignment: Stocks-2
 
 - [x] User Input (Stocks,Quantity, Date) into console
 - [x] User Input (path to external CSV) into console
+- [x] User Input (Stocks, Quantity, Date) into the GUI
+- [x] User Input (path to external CSV) into GUI 
 
 2. **View existing Portfolios**
 
 - [x] User input (portfolio ID) into console
-- [x] No option to update existing portfolios
+- [x] Selecting a Portfolio ID from existing list from GUI
 
 3. **Determine Total Portfolio Value**
 
@@ -22,13 +24,13 @@ Assignment: Stocks-2
 
 4. **Portfolio persistance**
 
-- [x] Portfolio data saved as JSON file in `./app_data/PortfolioData`
+- [x] Portfolio data saved as JSON file in `./app_data/PortfolioData`. Portfolios with Dollar Cost Averaging are stored with an additional "-dca"
 
 5. **Portfolio Updation**
 
 - [x] Update the given portfolio depending on user operation ie. BUY/SELL
 - [x] Does not update the transaction if executed on a weekend/future
-- [x] Also handles if there's no entry of a stock, won't be able to sell.
+- [x] Also handles if there's no entry of a stock/selling more than present. won't be able to sell.
 
 6. **Stock Data API Modification**
 
@@ -37,10 +39,14 @@ Assignment: Stocks-2
 
 7. **Cost Basis + Commission**
 - [x] Calculates the stock data cost basis (total invested + commission)
-- [x] Commission can be entered by the user and cannot be negative or zero
+- [x] Commission can be entered by the user and cannot be negative
 
 8. **Performance of Portfolio**
-- [x] The performance graph needs a minimum of 5 days, and can render maximum upto 30 years graph
+- [x] The performance graph can render maximum upto 30 years graph
+
+9. **Dollar Cost Averaging**
+- [x] Can create a new portfolio with DCA Applied
+- [x] Can apply DCA to an existing normal portfolio
 
 9. **Extras**
 
