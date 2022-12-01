@@ -19,4 +19,6 @@ public interface GraphicalUIFeatures {
   JFreeChart getChart(String pfID, String startDate, String endDate);
 
   void createDCAPortfolio(String dcaData);
+
+  void addDCAToExistingPF(String pfID, String dcaData);
 }

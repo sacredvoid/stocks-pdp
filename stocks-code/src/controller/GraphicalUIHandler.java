@@ -144,7 +144,14 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
 
   @Override
   public void createDCAPortfolio(String dcaData) {
-    String status = this.model.createDCAMap(dcaData);
+    String status = this.model.createDCAPortfolio(dcaData);
+    this.jFrameView.displayStatusMessage(status);
+  }
+
+  @Override
+  public void addDCAToExistingPF(String pfID, String dcaData) {
+    String json = pfID.split("\\.")[0];
+    String status = this.model.existingPortfolioToDCAPortfolio(json, dcaData);
     this.jFrameView.displayStatusMessage(status);
   }
 

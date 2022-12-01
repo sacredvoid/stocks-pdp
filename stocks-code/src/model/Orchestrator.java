@@ -89,5 +89,7 @@ public interface Orchestrator extends IModelView {
 
   JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate);
 
-  String createDCAMap(String dcaInput);
+  public String existingPortfolioToDCAPortfolio(String pfID, String dcaData);
+
+  public String createDCAPortfolio(String dcaInput);
 }

@@ -4,7 +4,6 @@ import controller.GraphicalUIFeatures;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -103,7 +102,7 @@ public class JFrameView extends JFrame {
       inputPanel.createLoadExternalPFDialog();
       if(inputPanel.jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
         this.features.loadExternalPortfolio(inputPanel.selectedPath);
-        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+        updateInformation();
       }
     });
 
@@ -112,7 +111,7 @@ public class JFrameView extends JFrame {
       inputPanel.createDCADialog();
       if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
         this.features.createDCAPortfolio(inputPanel.strategyInputPanel.newPortfolioData);
-        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+        updateInformation();
       }
     });
 
@@ -120,6 +119,14 @@ public class JFrameView extends JFrame {
       graphPanel.addGraph(features.getChart(portfolioPanel.selected, graphPanel.startDateString, graphPanel.endDateString));
     });
 
+    // Add DCA to existing portfolio
+    inputPanel.addDollarCost.addActionListener(e -> {
+      inputPanel.addDCAToExistingPFDialog();
+      if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
+        this.features.addDCAToExistingPF(portfolioPanel.selected,inputPanel.strategyInputPanel.newPortfolioData);
+        updateInformation();
+      }
+    });
 
   }
 
@@ -127,10 +134,15 @@ public class JFrameView extends JFrame {
     if(inputPanel.jdialogButtonPressed != -3) {
       if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
         features.modifyPortfolio(portfolioPanel.selected, inputPanel.newPortfolioData);
-        features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
-        features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+        updateInformation();
       }
     }
+  }
+
+  public void updateInformation() {
+    portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
+    features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
+    features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
   }
 
   private void setupPortfolioInfoPanel() {

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jdesktop.swingx.JXDatePicker;
 import org.jfree.chart.ChartPanel;
@@ -33,7 +34,9 @@ public class GraphPanel extends JPanel {
     endDate.addActionListener(e -> endDateString = simpleDateFormat.format(endDate.getDate()));
     showGraph = new JButton("Show Graph");
     add(buttonPanel);
+    buttonPanel.add(new JLabel("View Performance between (start date)"));
     buttonPanel.add(startDate);
+    buttonPanel.add(new JLabel("and (end date)"));
     buttonPanel.add(endDate);
     buttonPanel.add(showGraph);
   }
@@ -55,7 +58,4 @@ public class GraphPanel extends JPanel {
       repaint();
     }
   }
-
-
-
 }
