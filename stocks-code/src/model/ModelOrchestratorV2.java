@@ -94,12 +94,29 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       return "Sorry! Invalid date format!";
     }
     Map<String, T> pfJsonData;
+
     try {
        pfJsonData = getPFDataObject(pfID);
     } catch (FileNotFoundException e) {
       return "Sorry, could not find the portfolio with id " + pfID;
     }
+    String recentPurchaseDate = Utility.getLatestDate(pfJsonData);
+    if(pfID.contains("-dca")){
+      T mostRecentDcaRecord =  pfJsonData.get(recentPurchaseDate);
+      Map<String,DollarCostAvgStrategy> recentRecordStrategyMap = ((DollarCostAveragePortfolio)mostRecentDcaRecord).getDcaStrategy();
+      if(recentRecordStrategyMap!=null) {
+        List<String> transactionsToUpdate = new ArrayList<>();
+        for (Entry<String, DollarCostAvgStrategy> strategyRecord : recentRecordStrategyMap.entrySet()) {
+          if(strategyRecord.getValue().getEndDate()==null || date.compareTo(strategyRecord.getValue().getEndDate())<=0){
+            transactionsToUpdate.add(getStrategyTransactions(strategyRecord.getValue(),
+                date));
 
+          }
+        }
+        Map<String,T> updatedPf = CSVToPortfolioAdapter.buildPortfolioData(
+            String.join("",transactionsToUpdate),pfJsonData,this.commissionFees);
+      }
+    }
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
@@ -376,7 +393,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
     List<String> allTransactions = new ArrayList<>();
     for(Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()){
-      allTransactions.add(getStrategyTransactions(strategyRecord.getValue()));
+      allTransactions.add(getStrategyTransactions(strategyRecord.getValue(),strategyRecord.getValue().getStartDate()));
     }
     Map<String,T> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
        String.join("",allTransactions) ,new HashMap<>(),this.commissionFees);
@@ -389,7 +406,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
         new JSONFileOps().writeToFile(newPFID + "-dca.json", "PortfolioData",
             dcapf.toString());
-        return "Created Portfolio with ID: " + newPFID;
+        return "Created SIP Portfolio with ID: " + newPFID +"-dca";
       } else {
         return "Sorry, no data to create a portfolio with, date entered is invalid(weekend/future)";
       }
@@ -422,14 +439,14 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     return status;
   }
 
-  private String getStrategyTransactions(DollarCostAvgStrategy strategy){
-    String startDate = strategy.getStartDate();
-    String endData = strategy.getEndDate();
+  private String getStrategyTransactions(DollarCostAvgStrategy strategy, String reqDate){
+//    String startDate = strategy.getStartDate();
+//    String endData = strategy.getEndDate();
     long recur = strategy.getRecurrCycle();
     String transactions="";
     try {
       transactions = DcaStrategyToCSV.
-          getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
+          getAllTransactions(strategy,reqDate,recur,this.commissionFees,"");
     } catch (ParseException e) {
       //
     }
@@ -447,7 +464,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()
     ) {
       DollarCostAvgStrategy strategy = strategyRecord.getValue();
-      allTransactions.add(getStrategyTransactions(strategy));
+      allTransactions.add(getStrategyTransactions(strategy,strategy.getStartDate()));
     }
     Map<String, T> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
         String.join("", allTransactions), readDcaPf, this.commissionFees);
@@ -456,7 +473,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     try {
       new JSONFileOps().writeToFile(pfId + "-dca.json", "PortfolioData",
           result.toString());
-      return "Modified Portfolio " + pfId;
+      return "Modified Portfolio " + pfId + " to SIP portfolio " + pfId +"-dca";
     } catch (IOException e) {
 //      return "Sorry, Failed to modify portfolio (write op failed)";
       return e.getMessage();
