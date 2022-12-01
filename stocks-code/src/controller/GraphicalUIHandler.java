@@ -150,7 +150,7 @@ public class GraphicalUIHandler extends AbstractHandler implements GraphicalUIFe
     } catch (FileNotFoundException e) {
       status = "File not found!";
     }
-    this.jFrameView.displayStatusMessage(status);
+    this.jFrameView.displayInfoPopUp(status);
   }
 
 }

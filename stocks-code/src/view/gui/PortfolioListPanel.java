@@ -1,12 +1,12 @@
 package view.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -37,6 +37,7 @@ public class PortfolioListPanel extends JPanel {
     super();
     setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
     selectionPanel = new JPanel();
+    selectionPanel.setLayout(new GridLayout(0,1,30,30));
     add(selectionPanel);
     statusPanel = new JPanel();
     statusPanel.setLayout(new BoxLayout(statusPanel,BoxLayout.PAGE_AXIS));
@@ -48,17 +49,19 @@ public class PortfolioListPanel extends JPanel {
     scrollStatusPane = new JScrollPane(appStatusUpdates);
     scrollStatusPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     statusPanel.add(scrollStatusPane);
-    add(Box.createRigidArea(new Dimension(0,300)));
+//    add(Box.createRigidArea(new Dimension(0,300)));
     add(statusPanel);
   }
 
   public void setupPortfolioList(String[] portfolios) {
-    if(portfolios.length == 0) {
-      JLabel emptyList = new JLabel("No Existing Portfolios found, you can create one");
-      add(emptyList);
-    }
-    else {
-      selectionPanel.add(new JLabel("Select One of The Portfolios"),BorderLayout.LINE_START);
+//    if(portfolios.length == 0) {
+//      JLabel emptyList = new JLabel("No Existing Portfolios found, you can create one");
+//      selectionPanel.add(emptyList);
+//    }
+//    else {
+      JLabel text = new JLabel("Select One of The Portfolios");
+      text.setFont(new Font("Arial",Font.BOLD, 15));
+      selectionPanel.add(text,BorderLayout.LINE_START);
       showSelectedDate = new JLabel();
       portfolioOptions = new JComboBox<>(portfolios);
       selected = portfolioOptions.getItemAt(0);
@@ -66,9 +69,9 @@ public class PortfolioListPanel extends JPanel {
       selectedButton = new JButton("Show Portfolio Info");
       selectionPanel.add(portfolioOptions, BorderLayout.CENTER);
       setDatePicker();
-      selectionPanel.add(selectedButton,BorderLayout.LINE_END);
       selectionPanel.add(showSelectedDate);
-    }
+      selectionPanel.add(selectedButton,BorderLayout.LINE_END);
+//    }
   }
 
   public void updatePortfolioList(String[] portfolios) {

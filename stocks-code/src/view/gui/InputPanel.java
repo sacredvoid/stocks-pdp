@@ -1,6 +1,6 @@
 package view.gui;
 
-import javax.swing.BoxLayout;
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -26,12 +26,12 @@ public class InputPanel extends JPanel {
 
   public InputPanel() {
     super();
-    setLayout(new BoxLayout(this,BoxLayout.PAGE_AXIS));
+    setLayout(new GridLayout(0,2,30,30));
     createNewPortfolio = new JButton("Create New Portfolio");
-    createSIP = new JButton("Create New SIP");
+    createSIP = new JButton("Create New Dollar Cost Averaging (DCA) Portfolio");
     buyStocks = new JButton("Buy Stocks");
     sellStocks = new JButton("Sell Stocks");
-    addDollarCost = new JButton("Add Dollar-Cost Averaging Strategy");
+    addDollarCost = new JButton("Add DCA Strategy");
     loadExternalPF = new JButton("Load External Portfolio");
     setCommission = new JButton("Set Commission Fees");
     viewStrategies = new JButton("View Current Strategies");

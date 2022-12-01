@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import model.Orchestrator;
@@ -69,7 +70,8 @@ public class JFrameView extends JFrame {
     this.features = features;
     // Get portfolio composition and cost-basis for given date
     portfolioPanel.selectedButton.addActionListener(e -> {
-      updateInformation();
+      features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
     });
 
     // Create new portfolio
@@ -109,14 +111,16 @@ public class JFrameView extends JFrame {
       if(inputPanel.jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
         this.features.loadExternalPortfolio(inputPanel.selectedPath);
         updateInformation();
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
       }
     });
 
-    // Add DCA
+    // create DCA
     inputPanel.createSIP.addActionListener(e -> {
       inputPanel.createDCADialog();
       if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
         this.features.createDCAPortfolio(inputPanel.strategyInputPanel.newPortfolioData);
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
         updateInformation();
       }
     });
@@ -130,6 +134,7 @@ public class JFrameView extends JFrame {
       inputPanel.addDCAToExistingPFDialog();
       if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
         this.features.addDCAToExistingPF(portfolioPanel.selected,inputPanel.strategyInputPanel.newPortfolioData);
+        portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
         updateInformation();
       }
     });
@@ -151,7 +156,6 @@ public class JFrameView extends JFrame {
   }
 
   public void updateInformation() {
-    portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
     features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
     features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
   }
@@ -184,6 +188,13 @@ public class JFrameView extends JFrame {
     vertical.setValue(vertical.getMaximum());
   }
 
+  public void displayInfoPopUp(String message) {
+    JTextArea messageArea = new JTextArea(message);
+    messageArea.setEditable(false);
+    messageArea.setPreferredSize(messageArea.getPreferredSize());
+    JOptionPane.showMessageDialog(this, messageArea);
+  }
+
   private void setupGraphPanel() {
     // TODO Generate stock performance graph here
     graphPanel = new GraphPanel();
@@ -203,8 +214,6 @@ public class JFrameView extends JFrame {
     swingUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     swingUI.pack();
     swingUI.setVisible(true);
-//    swingUI.setMaximizedBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
-//    swingUI.setExtendedState(swingUI.getExtendedState() | swingUI.MAXIMIZED_BOTH);
 
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
