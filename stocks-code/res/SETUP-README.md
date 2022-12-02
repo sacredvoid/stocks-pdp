@@ -4,50 +4,30 @@
 
 - Gson Library for JSON Parsing and reading.
   License: https://github.com/google/gson/blob/master/LICENSE
+  
+- SwingX Core Library for JXDatePicker. Used to show the calendar date picker.
+  License: https://github.com/cuba-platform/swingx-core/blob/master/src/main/java/org/jdesktop/swingx/JXDatePicker.java
 
-The Gson library is packaged with our jar.
+- JFreeChart Library for drawing charts.
+  License: https://www.jfree.org/lgpl.php
+
+The libaries are packaged with our jar.
 
 ## Running our Application via JAR
 
 - Open a terminal and `cd` into the `res` folder from our project.
-- Run our JAR file with the command: `java -jar STOCKS2-PDP-AAKASH-SAMANVYA.jar`
-- Follow the prompts to create/update portfolios and view performance
+- Run our JAR file with the command: `java -jar STOCKS3-PDP-AAKASH-SAMANVYA.jar`
+- Follow the prompts to pick either Text Based (with lesser features) or Graphical UI (with DCA Strategy feature).
 
-## Creating Portfolio with 3 stocks
-
-- Enter "5" after running the application and hit enter. This should prompt you to enter the
-  STOCK,QUANTITY,DATE into the command prompt.
-- Enter:
-  - "AAPL,20,2022-10-10" then hit enter, followed by 
-  - "TSLA,10,2022-11-02" and hit enter followed
-    by 
-  - "GOOG,15,2021-07-15" and then
-  - "q" and hit enter.
-- This would create the portfolio and display the portfolio ID.
-- Now enter "4" to see the Portfolio Value, then enter the portfolio ID which you just got for your portfolio.
-- Then hit enter, and you'll be prompted to enter a date. Enter lets say "2022-11-17" and then hit enter.
-- This will then display the portfolio value in a table with:
-  - AAPL: 3014.40
-  - TSLA: 1831.70
-  - GOOG:1477.50
-  - Total: 6323.60.
-- Now enter "7" to see the Cost-basis, and then when prompted enter your portfolio ID, followed by a date, let's say "2022-11-17", then hit enter.
-- You'll see that it prints the cost-basis like: 
-  - Total Amount Invested: $44338.15
-  - Total Commission Charged: $3.0
-  - Total Amount+Commission: $44341.15
-  - Total Earned by Selling: $0.0
-- Now to Portfolio Value and Cost-basis for another date, repeat by entering "4" option and entering your portfolio ID.
-- This time try with a different date let's say "2021-08-15", you'll see:
-  - GOOG:1477.50
-- There was no other buy transaction before this date.
-- Now onto Cost-basis, enter "7" and then when prompted enter the same date "2021-08-15", you'll see:
-  - Total Amount Invested: $39379.95
-  - Total Commission Charged: $1.0
-  - Total Amount+Commission: $39380.95
-  - Total Earned by Selling: $0.0
-- As expected, commission fees is $1 since only GOOG transaction took place before the entered date.
+## What to Expect
+- You will have to start by creating a new portfolio. It's as simple as clicking the button on the bottom right panel "Create Portfolio" and it will ask you to enter stocks, quantity, date that you want to execute the purchase on. Once it's done and you click 'OK' you'll see the stock list (on the first panel) update and you can go ahead and select it (note: you have to select it from drop-down) and pick the date and then click on "Show Portfolio". This should display the Portfolio Value and Cost-Basis of your portfolio till that date.
+- All application status updates are visible on the panel and you can refer it to see the actions executed.
+- There's a button to change the cost-basis in the buttons panel (bottom right).
+- You can also get graphs for a given date range in the bottom right panel. 
+- For the best experience, please maximize the Application Window!
+- You can create a new portfolio with DCA strategy or use an existing (normal/dca) portfolio and add/update the strategy that's currently applied. You can also view the existing applied strategy using the "View Current Strategies" in the bottom left panel.
+- You can also load an existing portfolio into the application (CSV File with format: Stock,Quantity,Date(yyyy-MM-dd)\nStock,Quantity,Date(yyyy-MM-dd)... and so on. 
 
 
 ## Stock Support
-We support all the stocks that are supported by AlphaVantage API. If there's no data/market was closed on that day, we return "0" value for that stock.
+We support all the stocks that are supported by AlphaVantage API. If there's no data/market was closed on that day, we get the most recent stock data for that date if we are showing you the PF Value, and if we are trying to buy and it's a holiday, we get the next available Stock Data from the API.
