@@ -383,7 +383,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     if (days == 0) {
       commandStatus = "Sorry, please enter different dates for 2 ranges";
       return null;
-    } else if (days > 31) {
+    }
+    else if(days<5) {
+      commandStatus = "Sorry, please enter date range of atleast 5 days.";
+      return null;
+    }
+    else if (days > 31) {
       months = ChronoUnit.MONTHS.between(localSD, localED);
     }
     if (months > 180) {
