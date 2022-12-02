@@ -1,12 +1,21 @@
 # Design Changes
 
-1. We were required to implement a new view with Swing, so we wrote respective GUI code which extends `JFrame` and `JPanel` and sorted it in classes. Our `view` package now has `gui` as a sub-package containing all the required code. Text UI remains unchanged.
-2. We also used `features interface` implemented by our (new) `GUIHandler`(controller) to define the features of our GUI, this `GUIHandler` talks to our model class and passes info from the model to the view. This (`features`) results in no coupling between view(Swing) and controller.
-3. Our model changed a bit to accomodate the new features ie. Dollar Cost Averaging and GUI Graph, we implemented the required methods that need to be called from the `GUIHandler` when required.
-4. Apart from these changes to our `ModelOrchestratorV2`, we added some more helper methods to simplify other complex functions.
-5. Our `PortfolioData` class (which stored the Portfolio Data as a Java Object) remains unchanged, we created another data class called `DollarCostAveragePortfolio` which extends this PortfolioData class and adds the required attributes and methods. This (extending and implementing) helps us add support for any other type of strategy in the future. To determine which portfolio is currently being accessed, we are using `Generics` (`T extends PortfolioData`) and all the methods which contained/required `PortfolioData` were refactored to accept this generic type `T`. Although quite a bit of code change was involved, this brings in the feature of easily implementing other portfolio strategies.
-6. We still use the `ModelView` design where the View can directly "pull" data using a model object.
+1. As we were allowed to use external libraries, we used the GSON Parser and converted our
+   persistent portfolio type from CSV to JSON which can be handled in a better way via objects.
+2. We remodelled the Model to incorporate these CSV->JSON changes, added some more helper methods
+   that we would need to read/write a JSON Object/file.
+3. We refactored the Controller completely to use Command Design Pattern as the previous code was
+   getting bloated with loops. The command design pattern helped us segregate functions into their
+   command classes and make the controller light.
+4. We implemented ModelView design where the View can directly "pull" data using a model object.
    This helped us reduce commands that we need to include in the controller thereby making the
    controller lighter.
-7. For our Swing GUI design, we wanted the user to be able to see all the panels on the screen and see the changes take place real-time upon interaction. We also added a status box which tells the user the command that was executed, the response and possible errors/corrections that they can make to get the expected output.
-8. We also used `InputVerifier` class to validate user input and highlight it to red if the input is not as expected. There's also a second-time data validation on the model side which performs the final checks and processes input. We wanted the business-logic of the application to sit in the view/controller hence the decision to verify inputs before it's sent to model.
+5. When we were using the CSV, we did not map the incoming data to a Java Object, which now we do
+   for both PortfolioData and APIData (from Alphavantage). This helped us write elegant methods to
+   parse and edit the API Responses and portfolio data. We still keep the functionality where the
+   user can provide us a CSV with their existing portfolio and we map it to our JSON Object.
+6. Add some more methods to our Model Interface which are used to to show Performance, Edit the
+   portfolio, Cost-basis.
+7. Added a way to set commission fees for the current app-lifecycle, the user cannot enter a
+   negative or 0 value.
+8. We just put the Classes into their respective packages to help organize the code.

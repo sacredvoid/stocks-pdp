@@ -74,7 +74,7 @@ public class DollarCostAveragePortfolio extends PortfolioData {
       }
       @SuppressWarnings("unchecked") T dca = (T) new
           DollarCostAveragePortfolio(pf.getStockList(), pf.getTotalInvested(),
-          pf.getTotalCommission(), pf.getTotalEarned(), strategyMap);
+          pf.getTotalCommission(), pf.getTotalEarned(), individualStrategyMap);
       dcaPortfolio.put(entry.getKey(), dca);
     }
     return dcaPortfolio;

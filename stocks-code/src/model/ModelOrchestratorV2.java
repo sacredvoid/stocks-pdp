@@ -99,12 +99,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       return "Sorry! Invalid date format!";
     }
     Map<String, T> pfJsonData;
+
     try {
       pfJsonData = getPFDataObject(pfID);
     } catch (FileNotFoundException e) {
       return "Sorry, could not find the portfolio with id " + pfID;
     }
-
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
@@ -316,6 +316,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     }
   }
 
+  /**
+   * @param pfID      the pf id
+   * @param startDate the start date
+   * @param endDate   the end date
+   * @return
+   */
   @Override
   public JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate) {
     Map<String, T> parsedPFData;
@@ -355,12 +361,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
   }
 
   /**
-   * Check dates long [ ].
+   * checkDates method gets the respective values of days, months and years between a date range.
    *
-   * @param localSD      the local sd
-   * @param localED      the local ed
-   * @param parsedPFData the parsed pf data
-   * @return the long [ ]
+   * @param localSD      the start date of the date range
+   * @param localED      the end date of the date range
+   * @param parsedPFData the portfolio data
+   * @return the list of days,months,years
    */
   public Long[] checkDates(LocalDate localSD, LocalDate localED,
       Map<String, T> parsedPFData) {
@@ -414,7 +420,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     }
   }
 
-  @Override
+  /**
+   * createDCAPortfolio() creates a new Dollar Cost Average Portfolio for a given strategy.
+   *
+   * @param dcaInput strategy
+   * @return status of the operation as a string
+   */
   public String createDCAPortfolio(String dcaInput) {
 
     Map<String, DollarCostAvgStrategy> strategyMap = createDCAMap(dcaInput);
@@ -424,7 +435,9 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
     List<String> allTransactions = new ArrayList<>();
     for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()) {
-      allTransactions.add(getStrategyTransactions(strategyRecord.getValue()));
+      allTransactions.add(getStrategyTransactions(strategyRecord.getValue(),
+          strategyRecord.getValue().getStartDate()));
+
     }
     Map<String, T> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
         String.join("", allTransactions), new HashMap<>(), this.commissionFees);
@@ -437,7 +450,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
         new JSONFileOps().writeToFile(newPFID + "-dca.json", "PortfolioData",
             dcapf.toString());
-        return "Created Portfolio with ID: " + newPFID;
+        return "Created SIP Portfolio with ID: " + newPFID + "-dca";
       } else {
         return "Sorry, no data to create a portfolio with, date entered is invalid(weekend/future)";
       }
@@ -494,21 +507,27 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     return dcaStrategyMap;
   }
 
-  private String getStrategyTransactions(DollarCostAvgStrategy strategy) {
-    String startDate = strategy.getStartDate();
-    String endData = strategy.getEndDate();
+  private String getStrategyTransactions(DollarCostAvgStrategy strategy, String reqDate) {
     long recur = strategy.getRecurrCycle();
     String transactions = "";
     try {
       transactions = DcaStrategyToCSV.
-          getAllTransactions(strategy, startDate, recur, this.commissionFees, "");
+          getAllTransactions(strategy, reqDate, recur, this.commissionFees, "");
+
     } catch (ParseException ignored) {
       //
     }
     return transactions;
   }
 
-  @Override
+  /**
+   * existingPortfolioToDCAPortfolio() methods apply a strategy to regular flexible portfolio and
+   * creates a Dollar Cost Average Portfolio.
+   *
+   * @param pfID    the flexible portfolioID
+   * @param dcaData the strategy
+   * @return status of the operation
+   */
   public String existingPortfolioToDCAPortfolio(String pfID, String dcaData) {
     Map<String, DollarCostAvgStrategy> strategyMap = createDCAMap(dcaData);
     if (strategyMap == null) {
@@ -525,10 +544,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()
     ) {
       DollarCostAvgStrategy strategy = strategyRecord.getValue();
-      allTransactions.add(getStrategyTransactions(strategy));
+      allTransactions.add(getStrategyTransactions(strategy, strategy.getStartDate()));
     }
+
     Map<String, T> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
         String.join("", allTransactions), readDcaPf, this.commissionFees);
+
     Map<String, T> result = DollarCostAveragePortfolio.portfolioToDCA(
         updatedPF, strategyMap);
     try {
@@ -540,15 +561,16 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       }
       new JSONFileOps().writeToFile(newFileName + ".json", "PortfolioData",
           result.toString());
+
       return "Modified Portfolio can be found here: " + newFileName;
+
     } catch (IOException e) {
       return "Sorry, Failed to modify portfolio (write op failed)";
     }
   }
 
   private String getValidTransactions(String csv, T pfData) {
-    // Go through all rows of the data, get the date and then delete rows that have incorrect dates,
-    // return error message to user
+
     String[] lines = csv.split("\n");
     StringJoiner newLines = new StringJoiner("\n");
     StringJoiner rejectedTrades = new StringJoiner("\n");
@@ -591,7 +613,14 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     }
   }
 
-  @Override
+  /**
+   * getPredefinedStrategies() returns the strategy for the most recent transaction in a Dollar Cost
+   * Average portfolio.
+   *
+   * @param pfID id of the portfolio
+   * @return strategy as a string
+   * @throws FileNotFoundException
+   */
   public String getPredefinedStrategies(String pfID) throws FileNotFoundException {
     // Read the strategies json file and get the strategy names and things
     StringJoiner strategyInfo = new StringJoiner("\n");

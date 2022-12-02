@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>E:/NEU Academics/1ST SEM - PDP/CS 5010/Projects/stocks-pdp</OriginalElement>
+  <nodes>
+    <node x="2537.1150043105504" y="1611.8850264307546">model.performance.Performance</node>
+    <node x="3837.5078312198184" y="-5.250460348740205">view.ViewHandler</node>
+    <node x="1295.5625101015744" y="229.76241204238846">model.ModelOrchestratorV2</node>
+    <node x="2654.388362708148" y="22.02934150033917">controller.InteractionHandler</node>
+    <node x="2687.8401240945955" y="633.6557496730723">controller.commands.CreatePortfolio</node>
+    <node x="1316.78240341496" y="1015.2923190215104">model.validation.StockValidator</node>
+    <node x="3214.411551151309" y="1149.2417698264007">model.ModelOrchestratorV2Test</node>
+    <node x="2548.550246720189" y="1357.349184970202">model.performance.IPerformance</node>
+    <node x="1331.5595054492815" y="622.7828292579597">controller.ValidateData</node>
+    <node x="1709.9527467577036" y="-259.2858462742068">model.Orchestrator</node>
+    <node x="1385.9843557333145" y="1721.8850264307546">model.apistockops.RequestHandler</node>
+    <node x="2842.462129237861" y="711.9721640432679">controller.commands.ModifyPortfolio</node>
+    <node x="2129.714854822311" y="633.6557496730723">controller.commands.LoadExternalPortfolio</node>
+    <node x="1178.438391282363" y="902.5271414558771">model.validation.QuantityValidator</node>
+    <node x="2333.137324219901" y="318.0191803246342">controller.commands.APortfolioCommands</node>
+    <node x="748.0445587054749" y="1434.3806354121962">model.portfolio.CSVToPortfolioAdapter</node>
+    <node x="1500.7367387896" y="1917.678823631577">model.portfolio.filters.FilterPortfolio</node>
+    <node x="2421.2896598120224" y="1109.8649403799554">model.fileops.CSVFileOps</node>
+    <node x="1524.953479287824" y="880.5271414558771">model.validation.DateValidator</node>
+    <node x="2667.888362708148" y="-228.79986131477295">ClientRunner</node>
+    <node x="3798.007831219819" y="929.2417698264005">controller.InteractionHandlerV2Test</node>
+    <node x="3282.048038931904" y="-44.245300009235734">modelview.ModelView</node>
+    <node x="1814.6349790468598" y="883.2923190215104">model.portfolio.PortfolioData</node>
+    <node x="804.35847326865" y="1196.0521539111378">model.portfolio.PortfolioToCSVAdapter</node>
+    <node x="3282.048038931904" y="-228.79986131477295">modelview.IModelView</node>
+    <node x="1782.2084876935114" y="1482.0912292299322">model.apistockops.YahooStockAPI</node>
+    <node x="1316.78240341496" y="763.4737669112537">model.validation.IDataValidator</node>
+    <node x="927.9515554073912" y="708.4737669112537">model.validation.OSValidator</node>
+    <node x="804.3584732686495" y="1699.8850264307546">model.portfolio.StockData</node>
+    <node x="2200.34655660786" y="1482.0912292299322">model.apistockops.AlphaVantageAPI</node>
+    <node x="2689.888362708148" y="-153.77343918432533">controller.Handler</node>
+    <node x="1046.3906025614601" y="1732.8850264307548">model.portfolio.IStockData</node>
+    <node x="2111.8058187305273" y="1109.8649403799554">model.fileops.JSONFileOps</node>
+    <node x="804.35847326865" y="1315.216394661667">model.portfolio.PortfolioDataAdapter</node>
+    <node x="1738.9527467577036" y="42.87784948873565">model.AOrchestrator</node>
+    <node x="3827.0078312198184" y="165.50569866506947">view.UserInteraction</node>
+    <node x="2431.7896598120224" y="633.6557496730723">controller.commands.GetPortfolioValue</node>
+    <node x="1351.6111566564957" y="1537.4884940954037">model.apistockops.StockHandler</node>
+    <node x="1462.7355236358524" y="2045.955954941152">model.portfolio.filters.DateAfterPredicate</node>
+    <node x="2626.888362708148" y="-78.7470170538777">controller.AbstractHandler</node>
+    <node x="1691.9527467577034" y="212.01914543439233">model.ModelOrchestrator</node>
+    <node x="1793.5781089051688" y="1743.8850264307546">model.portfolio.Utility</node>
+    <node x="1843.0606025370573" y="2045.955954941152">model.portfolio.filters.DateBeforePredicate</node>
+    <node x="2129.714854822311" y="468.7034566273014">controller.commands.GetPortfolioComposition</node>
+    <node x="1374.975621234809" y="1331.0919617600528">model.apistockops.PortfolioValue</node>
+    <node x="2333.137324219901" y="127.78965070040721">controller.commands.IPortfolioCommands</node>
+    <node x="2222.3024486546633" y="883.2923190215104">model.fileops.FileOps</node>
+    <node x="2031.2825146787595" y="1297.2571765905866">model.apistockops.ApiHandler</node>
+    <node x="895.7340233404736" y="1955.8342758745393">model.portfolio.CascadeTransactions</node>
+    <node x="2997.084134381126" y="633.6557496730723">controller.commands.PortfolioPerformance</node>
+    <node x="1814.6349790468598" y="521.4737669112537">model.portfolio.IPortfolioData</node>
+    <node x="2231.3024486546633" y="969.2004141868035">model.fileops.AFileOps</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="model.AOrchestrator" target="model.Orchestrator" relationship="REALIZATION">
+      <point x="0.0" y="-49.0" />
+      <point x="0.0" y="126.0" />
+    </edge>
+    <edge source="view.UserInteraction" target="view.ViewHandler" relationship="REALIZATION">
+      <point x="15.000168780181411" y="-137.0" />
+      <point x="15.000168780181411" y="49.0" />
+    </edge>
+    <edge source="model.apistockops.YahooStockAPI" target="model.apistockops.ApiHandler" relationship="REALIZATION">
+      <point x="-4.8769351133159944E-4" y="-82.0002292299323" />
+      <point x="1898.208" y="1461.0" />
+      <point x="2119.283" y="1461.0" />
+      <point x="4.853212403759244E-4" y="70.99982340941347" />
+    </edge>
+    <edge source="controller.commands.GetPortfolioComposition" target="controller.commands.APortfolioCommands" relationship="GENERALIZATION">
+      <point x="1.4517768931909814E-4" y="26.999543372698554" />
+      <point x="2241.715" y="579.0" />
+      <point x="2460.637" y="579.0" />
+      <point x="-3.2421990090369945E-4" y="59.99981967536581" />
+    </edge>
+    <edge source="controller.InteractionHandlerV2Test" target="controller.Handler" relationship="TO_ONE">
+      <point x="-152.5" y="18.123170553554928" />
+      <point x="3253.584134381126" y="1117.3649403799554" />
+      <point x="3253.584134381126" y="-126.77343918432533" />
+      <point x="52.5" y="0.0" />
+    </edge>
+    <edge source="model.ModelOrchestratorV2Test" target="model.fileops.JSONFileOps" relationship="TO_ONE">
+      <point x="-121.0" y="38.1231705535547" />
+      <point x="2234.3058187305273" y="1247.3649403799554" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="controller.InteractionHandlerV2Test" target="view.UserInteraction" relationship="TO_ONE">
+      <point x="-140.99983121981904" y="-169.99976982640055" />
+      <point x="3809.508" y="140.0" />
+      <point x="3950.508" y="140.0" />
+      <point x="1.6878018141142093E-4" y="-136.99969866506947" />
+    </edge>
+    <edge source="controller.commands.LoadExternalPortfolio" target="controller.commands.APortfolioCommands" relationship="GENERALIZATION">
+      <point x="1.4517768931909814E-4" y="27.0002503269277" />
+      <point x="2241.715" y="742.0" />
+      <point x="2112.215" y="742.0" />
+      <point x="2112.215" y="579.0" />
+      <point x="2460.637" y="579.0" />
+      <point x="-3.2421990090369945E-4" y="59.99981967536581" />
+    </edge>
+    <edge source="controller.InteractionHandler" target="view.UserInteraction" relationship="TO_ONE">
+      <point x="14.99963729185174" y="26.999658499660825" />
+      <point x="2757.388" y="140.0" />
+      <point x="3950.508" y="140.0" />
+      <point x="1.6878018141142093E-4" y="-136.99969866506947" />
+    </edge>
+    <edge source="model.ModelOrchestrator" target="model.AOrchestrator" relationship="GENERALIZATION">
+      <point x="2.532422965941805E-4" y="-115.00014543439232" />
+      <point x="2.5324229636680684E-4" y="49.00015051126434" />
+    </edge>
+    <edge source="model.validation.DateValidator" target="model.validation.IDataValidator" relationship="REALIZATION">
+      <point x="-99.50047928782396" y="-1.4145587704206264E-4" />
+      <point x="1384.938" y="929.527" />
+      <point x="1384.938" y="877.0" />
+      <point x="1411.282" y="877.0" />
+      <point x="-4.034149601466197E-4" y="27.000233088746313" />
+    </edge>
+    <edge source="view.UserInteraction" target="modelview.ModelView" relationship="TO_ONE">
+      <point x="123.5" y="0.0" />
+      <point x="4120.507831219818" y="302.5056986650695" />
+      <point x="4120.507831219818" y="-22.750460348740205" />
+      <point x="164.0" y="-49.50516033950447" />
+    </edge>
+    <edge source="controller.AbstractHandler" target="view.UserInteraction" relationship="TO_ONE">
+      <point x="105.49963729185174" y="38.0000170538777" />
+      <point x="2847.888" y="140.0" />
+      <point x="3950.508" y="140.0" />
+      <point x="1.6878018141142093E-4" y="-136.99969866506947" />
+    </edge>
+    <edge source="controller.commands.CreatePortfolio" target="controller.commands.APortfolioCommands" relationship="GENERALIZATION">
+      <point x="-1.240945953213668E-4" y="27.0002503269277" />
+      <point x="2799.84" y="742.0" />
+      <point x="2112.215" y="742.0" />
+      <point x="2112.215" y="579.0" />
+      <point x="2460.637" y="579.0" />
+      <point x="-3.2421990090369945E-4" y="59.99981967536581" />
+    </edge>
+    <edge source="controller.InteractionHandler" target="model.Orchestrator" relationship="TO_ONE">
+      <point x="-3.6270814825911657E-4" y="26.999658499660825" />
+      <point x="2742.388" y="113.0" />
+      <point x="1995.5" y="113.0" />
+      <point x="139.5472532422964" y="125.99984627420679" />
+    </edge>
+    <edge source="controller.AbstractHandler" target="controller.Handler" relationship="REALIZATION">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="model.ModelOrchestratorV2" target="model.AOrchestrator" relationship="GENERALIZATION">
+      <point x="4.898984257124539E-4" y="-115.00041204238846" />
+      <point x="1459.563" y="177.0" />
+      <point x="1855.953" y="177.0" />
+      <point x="2.5324229636680684E-4" y="49.00015051126434" />
+    </edge>
+    <edge source="controller.commands.ModifyPortfolio" target="controller.commands.APortfolioCommands" relationship="GENERALIZATION">
+      <point x="-1.292378610742162E-4" y="-27.000164043267887" />
+      <point x="2954.462" y="579.0" />
+      <point x="2460.637" y="579.0" />
+      <point x="-3.2421990090369945E-4" y="59.99981967536581" />
+    </edge>
+    <edge source="model.Orchestrator" target="modelview.IModelView" relationship="INTERFACE_GENERALIZATION">
+      <point x="146.0" y="-113.01401504056616" />
+      <point x="3446.048038931904" y="-246.29986131477295" />
+      <point x="0.0" y="-71.0" />
+    </edge>
+    <edge source="model.apistockops.AlphaVantageAPI" target="model.apistockops.ApiHandler" relationship="REALIZATION">
+      <point x="4.433921403688146E-4" y="-82.0002292299323" />
+      <point x="2321.847" y="1461.0" />
+      <point x="2119.283" y="1461.0" />
+      <point x="4.853212403759244E-4" y="70.99982340941347" />
+    </edge>
+    <edge source="model.ModelOrchestrator" target="model.fileops.CSVFileOps" relationship="TO_ONE">
+      <point x="164.0" y="0.0" />
+      <point x="2079.13497904686" y="327.0191454343923" />
+      <point x="2079.13497904686" y="757.0" />
+      <point x="2558.79" y="757.0" />
+      <point x="15.0003401879776" y="-60.0" />
+    </edge>
+    <edge source="modelview.ModelView" target="modelview.IModelView" relationship="REALIZATION">
+      <point x="0.0" y="-71.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="model.validation.QuantityValidator" target="model.validation.IDataValidator" relationship="REALIZATION">
+      <point x="-3.9128236289798224E-4" y="-27.000141455877042" />
+      <point x="1272.938" y="877.0" />
+      <point x="1411.282" y="877.0" />
+      <point x="-4.034149601466197E-4" y="27.000233088746313" />
+    </edge>
+    <edge source="model.performance.Performance" target="model.performance.IPerformance" relationship="REALIZATION">
+      <point x="-22.564757590361296" y="-170.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="model.fileops.CSVFileOps" target="model.validation.IDataValidator" relationship="TO_ONE">
+      <point x="3.401879775992711E-4" y="-59.99994037995543" />
+      <point x="2543.79" y="848.0" />
+      <point x="1426.282" y="848.0" />
+      <point x="14.999596585039853" y="27.000233088746313" />
+    </edge>
+    <edge source="model.ModelOrchestratorV2" target="model.fileops.FileOps" relationship="TO_ONE">
+      <point x="-164.0" y="0.0" />
+      <point x="1145.938" y="344.76241204238846" />
+      <point x="1145.938" y="1247.3649403799554" />
+      <point x="2079.13497904686" y="1247.3649403799554" />
+      <point x="2079.13497904686" y="921.2923190215104" />
+      <point x="-122.5" y="0.0" />
+    </edge>
+    <edge source="controller.InteractionHandler" target="controller.AbstractHandler" relationship="GENERALIZATION">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="model.fileops.CSVFileOps" target="model.fileops.AFileOps" relationship="GENERALIZATION">
+      <point x="-14.9996598120224" y="-59.99994037995543" />
+      <point x="2528.79" y="1078.0" />
+      <point x="2344.802" y="1078.0" />
+      <point x="-4.486546631596866E-4" y="37.99958581319652" />
+    </edge>
+    <edge source="model.validation.StockValidator" target="model.validation.IDataValidator" relationship="REALIZATION">
+      <point x="-94.50040341496015" y="-3.190215104496019E-4" />
+      <point x="1160.938" y="1042.292" />
+      <point x="1160.938" y="877.0" />
+      <point x="1411.282" y="877.0" />
+      <point x="-4.034149601466197E-4" y="27.000233088746313" />
+    </edge>
+    <edge source="model.fileops.AFileOps" target="model.fileops.FileOps" relationship="REALIZATION">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="model.fileops.CSVFileOps" target="model.validation.QuantityValidator" relationship="TO_ONE">
+      <point x="-24.17465550147199" y="60.0" />
+      <point x="2519.6150043105504" y="1271.5054312500317" />
+      <point x="1279.0733046524626" y="1271.5054312500317" />
+      <point x="1279.0733046524626" y="929.5271414558771" />
+      <point x="-94.5" y="0.0" />
+    </edge>
+    <edge source="controller.commands.GetPortfolioValue" target="controller.commands.APortfolioCommands" relationship="GENERALIZATION">
+      <point x="3.401879775992711E-4" y="27.0002503269277" />
+      <point x="2543.79" y="742.0" />
+      <point x="2112.215" y="742.0" />
+      <point x="2112.215" y="579.0" />
+      <point x="2460.637" y="579.0" />
+      <point x="-3.2421990090369945E-4" y="59.99981967536581" />
+    </edge>
+    <edge source="controller.commands.APortfolioCommands" target="controller.commands.IPortfolioCommands" relationship="REALIZATION">
+      <point x="0.0" y="-60.0" />
+      <point x="0.0" y="71.0" />
+    </edge>
+    <edge source="model.portfolio.PortfolioData" target="model.portfolio.StockData" relationship="TO_MANY">
+      <point x="-116.0" y="44.5" />
+      <point x="730.5445587054749" y="1086.7923190215104" />
+      <point x="730.5445587054749" y="1781.8850264307546" />
+      <point x="-86.0" y="0.0" />
+    </edge>
+    <edge source="model.ModelOrchestratorV2Test" target="model.Orchestrator" relationship="TO_ONE">
+      <point x="121.00044884869067" y="2.3017359922050673E-4" />
+      <point x="3705.0" y="1209.242" />
+      <point x="3705.0" y="113.0" />
+      <point x="1995.5" y="113.0" />
+      <point x="139.5472532422964" y="125.99984627420679" />
+    </edge>
+    <edge source="controller.InteractionHandlerV2Test" target="model.Orchestrator" relationship="TO_ONE">
+      <point x="-152.49983121981904" y="2.301735994478804E-4" />
+      <point x="3705.0" y="1099.242" />
+      <point x="3705.0" y="113.0" />
+      <point x="1995.5" y="113.0" />
+      <point x="139.5472532422964" y="125.99984627420679" />
+    </edge>
+    <edge source="model.ModelOrchestrator" target="model.validation.IDataValidator" relationship="TO_ONE">
+      <point x="-58.81774675770339" y="114.99985456560768" />
+      <point x="1797.135" y="848.0" />
+      <point x="1426.282" y="848.0" />
+      <point x="14.999596585039853" y="27.000233088746313" />
+    </edge>
+    <edge source="model.portfolio.PortfolioData" target="model.portfolio.IPortfolioData" relationship="REALIZATION">
+      <point x="0.0" y="-159.0" />
+      <point x="0.0" y="148.0" />
+    </edge>
+    <edge source="controller.commands.PortfolioPerformance" target="controller.commands.APortfolioCommands" relationship="GENERALIZATION">
+      <point x="-1.3438112637231825E-4" y="-26.9997496730723" />
+      <point x="3109.084" y="579.0" />
+      <point x="2460.637" y="579.0" />
+      <point x="-3.2421990090369945E-4" y="59.99981967536581" />
+    </edge>
+    <edge source="model.fileops.JSONFileOps" target="model.fileops.AFileOps" relationship="GENERALIZATION">
+      <point x="1.812694727050257E-4" y="-37.99994037995543" />
+      <point x="2234.306" y="1078.0" />
+      <point x="2344.802" y="1078.0" />
+      <point x="-4.486546631596866E-4" y="37.99958581319652" />
+    </edge>
+    <edge source="model.portfolio.StockData" target="model.portfolio.IStockData" relationship="REALIZATION">
+      <point x="86.0" y="2.2737367544323206E-13" />
+      <point x="-84.5" y="0.0" />
+    </edge>
+    <edge source="modelview.ModelView" target="model.Orchestrator" relationship="TO_ONE">
+      <point x="-3.893190432791016E-5" y="71.00030000923573" />
+      <point x="3446.048" y="113.0" />
+      <point x="1995.5" y="113.0" />
+      <point x="139.5472532422964" y="125.99984627420679" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.4004618937644342" showDependencies="true" x="2496.5000000000005" y="822.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
