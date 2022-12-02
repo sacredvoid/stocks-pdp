@@ -157,7 +157,7 @@ public class DollarCostAvgStrategy implements IDollarCostAvg {
       float percent = stockPercent.getValue();
       double amtPercent = Math.ceil((actualInvestment * percent) / 100);
       StockHandler sh = StockHandler.getBuilder().build();
-      String dcaStatus = sh.DCAHolidayNextWorkingDay(stockName, date);
+      String dcaStatus = sh.dcaHolidayNextWorkingDay(stockName, date);
       if (dcaStatus.contains("change") || dcaStatus.contains("no further")) {
         return dcaStatus;
       }

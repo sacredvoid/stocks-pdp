@@ -38,7 +38,6 @@ public class DcaStrategyToCSV {
     } else {
       lEndDate = LocalDate.parse(strategy.getEndDate(), df);
     }
-//    LocalDate lEndDate = LocalDate.parse(strategy.getEndDate(), df);
 
     if (lTempDate.isBefore(lStartDate)) {
       return finalTransactions;

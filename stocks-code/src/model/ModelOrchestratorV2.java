@@ -54,7 +54,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
   private final DateValidator dateValidator = new DateValidator();
   private float commissionFees = 1;
   /**
-   * The Rejected/invalid transactions (future/selling more than present)
+   * The Rejected/invalid transactions (future/selling more than present).
    */
   public String rejectedTransactions;
 
@@ -349,7 +349,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
         PlotOrientation.VERTICAL, true, true, false);
 
     BarRenderer r = (BarRenderer) barChart.getCategoryPlot().getRenderer();
-    r.setSeriesPaint(0, new Color(0,153,0));
+    r.setSeriesPaint(0, new Color(0, 153, 0));
 
     return barChart;
   }
@@ -478,7 +478,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       sumOfWeightage += currentWeightage;
       dcaStockPercentage.put(stock, currentWeightage);
     }
-    if(sumOfWeightage != 100) {
+    if (sumOfWeightage != 100) {
       commandStatus = "Stock Weights didn't add up to 100! Please retry.";
       return null;
     }

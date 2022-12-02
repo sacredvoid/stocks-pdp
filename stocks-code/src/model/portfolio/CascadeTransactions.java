@@ -95,14 +95,15 @@ public class CascadeTransactions {
 
   private static List<StockData> deepCopy(List<StockData> oldStockList) {
     List<StockData> newList = new ArrayList<>();
-    for (StockData s: oldStockList
+    for (StockData s : oldStockList
     ) {
-      newList.add(new StockData(s.getStockName(),s.getQuantity()));
+      newList.add(new StockData(s.getStockName(), s.getQuantity()));
     }
     return newList;
   }
 
-  private static <T extends PortfolioData> PortfolioData getMostRecentStockList(Map<String, T> currentPF,
+  private static <T extends PortfolioData> PortfolioData getMostRecentStockList(
+      Map<String, T> currentPF,
       String givenDate) {
     List<StockData> tempList = new ArrayList<>();
     Map<String, T> filteredBeforeDateMap =

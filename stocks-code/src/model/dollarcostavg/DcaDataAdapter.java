@@ -12,8 +12,8 @@ import model.portfolio.DollarCostAveragePortfolio;
  */
 public class DcaDataAdapter {
 
-  private static final Type typeToken = new TypeToken<HashMap<String, DollarCostAveragePortfolio>>() {
-  }.getType();
+  private static final Type typeToken =
+      new TypeToken<HashMap<String, DollarCostAveragePortfolio>>() {}.getType();
 
 
   /**

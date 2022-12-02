@@ -20,14 +20,16 @@ import modelview.IModelView;
 import modelview.ModelView;
 import org.jfree.chart.ui.UIUtils;
 
+/**
+ * Our main JFrameView class which extends JFrame and is the main frame of our swing application.
+ * All the panels (and sub-panels) are initialized here.
+ */
 public class JFrameView extends JFrame {
 
   private JPanel mainPanel;
   private PortfolioListPanel portfolioPanel;
-  private String[] portfolioList = new String[]{};
   private GraphPanel graphPanel;
   private InputPanel inputPanel;
-  private JScrollPane mainScrollPane;
   private InfoPanel infoPanel;
   private GraphicalUIFeatures features;
 
@@ -35,6 +37,11 @@ public class JFrameView extends JFrame {
 
   private JFrameView swingUI;
 
+  /**
+   * Instantiates a new JFrameView with a model object to use ViewModel design.
+   *
+   * @param model the model object
+   */
   public JFrameView(Orchestrator model) {
     super();
     this.modelView = new ModelView(model);
@@ -43,15 +50,15 @@ public class JFrameView extends JFrame {
 
   private void setupMainJFrame() {
     setTitle("Aakasam Stock Trading");
-    setSize(0,0);
+    setSize(0, 0);
     setMaximizedBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds());
     setExtendedState(this.getExtendedState() | MAXIMIZED_BOTH);
     this.toFront();
     this.repaint();
     //TODO Test different layouts
     mainPanel = new JPanel();
-    mainPanel.setLayout(new GridLayout(0,2, -1, -1));
-    mainScrollPane = new JScrollPane(mainPanel);
+    mainPanel.setLayout(new GridLayout(0, 2, -1, -1));
+    JScrollPane mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
   }
 
@@ -61,24 +68,34 @@ public class JFrameView extends JFrame {
     mainPanel.add(portfolioPanel);
   }
 
+  /**
+   * Populate stock list for our JComboBox drop down.
+   */
   public void populateStockList() {
-    portfolioList = modelView.getExistingPortfolios();
-    portfolioPanel.setupPortfolioList(this.portfolioList);
+    String[] portfolioList = modelView.getExistingPortfolios();
+    portfolioPanel.setupPortfolioList(portfolioList);
   }
 
+  /**
+   * Sets features objects from the GraphicalUIHandler to our JFrameView. These features act as
+   * methods called whenever a button's actionListener gets an event.
+   *
+   * @param features the features
+   */
   public void setFeatures(GraphicalUIFeatures features) {
     this.features = features;
     // Get portfolio composition and cost-basis for given date
     portfolioPanel.selectedButton.addActionListener(e -> {
-      features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
-      features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+      features.getPortfolioInformation(
+          portfolioPanel.selectedPfID, portfolioPanel.selectedDateString);
+      features.getCostBasis(portfolioPanel.selectedPfID, portfolioPanel.selectedDateString);
     });
 
     // Create new portfolio
     inputPanel.createNewPortfolio.addActionListener(e -> {
       inputPanel.createPortfolioButtonDialog();
-      if(inputPanel.jdialogButtonPressed != -3) {
-        if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
+      if (inputPanel.jdialogButtonPressed != -3) {
+        if (inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
           features.createPortfolio(inputPanel.newPortfolioData);
           portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
         }
@@ -100,7 +117,7 @@ public class JFrameView extends JFrame {
     // Set commission
     inputPanel.setCommission.addActionListener(e -> {
       inputPanel.createCommissionDialog();
-      if(inputPanel.commissionValue !=  null) {
+      if (inputPanel.commissionValue != null) {
         this.features.setCommission(inputPanel.commissionValue);
       }
     });
@@ -108,7 +125,7 @@ public class JFrameView extends JFrame {
     // Load external portfolio
     inputPanel.loadExternalPF.addActionListener(e -> {
       inputPanel.createLoadExternalPFDialog();
-      if(inputPanel.jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
+      if (inputPanel.jdialogButtonPressed == JFileChooser.APPROVE_OPTION) {
         this.features.loadExternalPortfolio(inputPanel.selectedPath);
         updateInformation();
         portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
@@ -118,7 +135,7 @@ public class JFrameView extends JFrame {
     // create DCA
     inputPanel.createSIP.addActionListener(e -> {
       inputPanel.createDCADialog();
-      if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
+      if (!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
         this.features.createDCAPortfolio(inputPanel.strategyInputPanel.newPortfolioData);
         portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
         updateInformation();
@@ -126,14 +143,16 @@ public class JFrameView extends JFrame {
     });
 
     graphPanel.showGraph.addActionListener(e -> {
-      graphPanel.addGraph(features.getChart(portfolioPanel.selected, graphPanel.startDateString, graphPanel.endDateString));
+      graphPanel.addGraph(features.getChart(portfolioPanel.selectedPfID, graphPanel.startDateString,
+          graphPanel.endDateString));
     });
 
     // Add DCA to existing portfolio
     inputPanel.addDollarCost.addActionListener(e -> {
       inputPanel.addDCAToExistingPFDialog();
-      if(!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
-        this.features.addDCAToExistingPF(portfolioPanel.selected,inputPanel.strategyInputPanel.newPortfolioData);
+      if (!inputPanel.strategyInputPanel.newPortfolioData.isEmpty()) {
+        this.features.addDCAToExistingPF(portfolioPanel.selectedPfID,
+            inputPanel.strategyInputPanel.newPortfolioData);
         portfolioPanel.updatePortfolioList(modelView.getExistingPortfolios());
         updateInformation();
       }
@@ -141,23 +160,27 @@ public class JFrameView extends JFrame {
 
     // View applied DCA Strategies
     inputPanel.viewStrategies.addActionListener(e -> {
-      this.features.viewAppliedDCA(portfolioPanel.selected);
+      this.features.viewAppliedDCA(portfolioPanel.selectedPfID);
     });
 
   }
 
   private void executeBuySell(GraphicalUIFeatures features) {
-    if(inputPanel.jdialogButtonPressed != -3) {
-      if(inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
-        features.modifyPortfolio(portfolioPanel.selected, inputPanel.newPortfolioData);
+    if (inputPanel.jdialogButtonPressed != -3) {
+      if (inputPanel.jdialogButtonPressed == JOptionPane.OK_OPTION) {
+        features.modifyPortfolio(portfolioPanel.selectedPfID, inputPanel.newPortfolioData);
         updateInformation();
       }
     }
   }
 
+  /**
+   * Update information in our JFrameView whenever an action on portfolio is called.
+   */
   public void updateInformation() {
-    features.getPortfolioInformation(portfolioPanel.selected, portfolioPanel.selectedDateString);
-    features.getCostBasis(portfolioPanel.selected, portfolioPanel.selectedDateString);
+    features.getPortfolioInformation(portfolioPanel.selectedPfID,
+        portfolioPanel.selectedDateString);
+    features.getCostBasis(portfolioPanel.selectedPfID, portfolioPanel.selectedDateString);
   }
 
   private void setupPortfolioInfoPanel() {
@@ -167,10 +190,20 @@ public class JFrameView extends JFrame {
     // Create date and table panel
   }
 
+  /**
+   * Sets info panel data to our panel with the right data from the model.
+   *
+   * @param csv the csv
+   */
   public void setInfoPanelData(String csv) {
     infoPanel.setPortfolioInformationTable(csv);
   }
 
+  /**
+   * Sets cost basis data to our panel with the right data from the model.
+   *
+   * @param costBasisData the cost basis data
+   */
   public void setCostBasisData(String[] costBasisData) {
     infoPanel.setCostBasisData(costBasisData);
   }
@@ -181,13 +214,23 @@ public class JFrameView extends JFrame {
     mainPanel.add(inputPanel);
   }
 
+  /**
+   * Display status message in our status panel for quick info from the application.
+   *
+   * @param message the message to be displayed in the status panel
+   */
   public void displayStatusMessage(String message) {
-    portfolioPanel.appStatusUpdates.append("\n"+message);
+    portfolioPanel.appStatusUpdates.append("\n" + message);
     portfolioPanel.appStatusUpdates.validate();
     JScrollBar vertical = portfolioPanel.scrollStatusPane.getVerticalScrollBar();
     vertical.setValue(vertical.getMaximum());
   }
 
+  /**
+   * Display info pop up about any information requested from the user.
+   *
+   * @param message the message to be popped up
+   */
   public void displayInfoPopUp(String message) {
     JTextArea messageArea = new JTextArea(message);
     messageArea.setEditable(false);
@@ -203,6 +246,9 @@ public class JFrameView extends JFrame {
     mainPanel.add(graphPanel);
   }
 
+  /**
+   * Calls all the panel init methods and frame setup required for our GUI.
+   */
   public void startUI() {
     JFrameView.setDefaultLookAndFeelDecorated(true);
     setupMainJFrame();
@@ -217,7 +263,7 @@ public class JFrameView extends JFrame {
 
     try {
       UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-      UIManager.put("OptionPane.minimumSize",new Dimension(480,0));
+      UIManager.put("OptionPane.minimumSize", new Dimension(480, 0));
       UIUtils.centerFrameOnScreen(swingUI);
     } catch (UnsupportedLookAndFeelException e) {
       throw new RuntimeException(e);

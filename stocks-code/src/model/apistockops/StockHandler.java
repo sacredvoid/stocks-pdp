@@ -193,7 +193,7 @@ public class StockHandler {
    * @param date the date to check with
    * @return the string
    */
-  public String DCAHolidayNextWorkingDay(String name, String date) {
+  public String dcaHolidayNextWorkingDay(String name, String date) {
     Map<String, ApiDataStruct> stockInfo = stockDateReader(name);
     DateAfterPredicate dateAfterPredicate;
     if (stockInfo.getOrDefault(date, null) == null) {

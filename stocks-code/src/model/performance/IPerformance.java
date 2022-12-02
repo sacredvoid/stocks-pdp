@@ -17,7 +17,8 @@ public interface IPerformance<T extends PortfolioData> {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and every day of the timespan provided
    */
-  TreeMap<String, Float> showPerformanceByDate(Map<String, T> pfData, String startDate, String endDate);
+  TreeMap<String, Float> showPerformanceByDate(Map<String, T> pfData, String startDate,
+      String endDate);
 
   /**
    * showPerformanceByMonth is used to create a barchart with timespan for only 30 months.
@@ -60,5 +61,6 @@ public interface IPerformance<T extends PortfolioData> {
    * @param endDate   End Date of the timespan
    * @return a Performance bar chart for each and every year of the timespan provided
    */
-  TreeMap<String, Float> showPerformanceByYear(Map<String, T> pfData, String startDate, String endDate);
+  TreeMap<String, Float> showPerformanceByYear(Map<String, T> pfData, String startDate,
+      String endDate);
 }

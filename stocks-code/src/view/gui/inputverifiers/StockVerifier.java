@@ -7,20 +7,21 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 /**
- * The nameVerifier that checks the JTextField input for quantity (any non-zero, positive number).
+ * The nameVerifier that checks the JTextField input for stock name (atleast one capital alphabet).
  */
-public class quantityVerifier extends InputVerifier {
+public class StockVerifier extends InputVerifier {
+
 
   @Override
   public boolean verify(JComponent input) {
     String text = ((JTextField) input).getText().trim();
-    TitledBorder titledBorder = (TitledBorder) input.getBorder();
-    if (text.matches("^[1-9]\\d*$")) {
-      titledBorder.setTitleColor(Color.black);
+    TitledBorder border = (TitledBorder) input.getBorder();
+    if (text.matches("([A-Z])+")) {
+      border.setTitleColor(Color.BLACK);
       input.repaint();
       return true;
     } else {
-      titledBorder.setTitleColor(Color.red);
+      border.setTitleColor(Color.RED);
       input.repaint();
       return false;
     }

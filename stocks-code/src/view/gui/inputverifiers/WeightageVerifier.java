@@ -6,7 +6,10 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-public class weightageVerifier extends InputVerifier {
+/**
+ * The type Weightage verifier that checks the JTextField input for non-zero positive float values.
+ */
+public class WeightageVerifier extends InputVerifier {
 
   @Override
   public boolean verify(JComponent input) {
