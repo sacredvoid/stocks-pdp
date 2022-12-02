@@ -9,7 +9,7 @@ import javax.swing.border.TitledBorder;
 /**
  * The nameVerifier that checks the JTextField input for quantity (any non-zero, positive number).
  */
-public class quantityVerifier extends InputVerifier {
+public class QuantityVerifier extends InputVerifier {
 
   @Override
   public boolean verify(JComponent input) {

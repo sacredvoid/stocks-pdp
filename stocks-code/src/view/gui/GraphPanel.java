@@ -37,15 +37,15 @@ public class GraphPanel extends JPanel {
    */
   public String endDateString;
   /**
-   * The Chart panel
+   * The Chart panel used to render the JFreechart.
    */
   public ChartPanel chartPanel = null;
   /**
-   * The Button panel.
+   * The Button panel which stores the buttons.
    */
   public JPanel buttonPanel;
   /**
-   * The Simple date format.
+   * The Simple date format used to format JXDatePicker dates.
    */
   public final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -77,7 +77,7 @@ public class GraphPanel extends JPanel {
   }
 
   /**
-   * Add graph.
+   * Add a JFreeChart to the given chart panel.
    *
    * @param chart the chart
    */

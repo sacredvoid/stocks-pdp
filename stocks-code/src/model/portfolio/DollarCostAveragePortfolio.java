@@ -67,8 +67,8 @@ public class DollarCostAveragePortfolio extends PortfolioData {
       Map<String, DollarCostAvgStrategy> individualStrategyMap = new LinkedHashMap<>();
       for (Entry<String, DollarCostAvgStrategy> singleStrategy : strategyMap.entrySet()
       ) {
-        if (entry.getKey().compareTo(singleStrategy.getValue().getStartDate()) >= 0 &&
-            entry.getKey().compareTo(singleStrategy.getValue().getEndDate()) <= 0) {
+        if (entry.getKey().compareTo(singleStrategy.getValue().getStartDate()) >= 0
+            && entry.getKey().compareTo(singleStrategy.getValue().getEndDate()) <= 0) {
           individualStrategyMap.put(singleStrategy.getKey(), singleStrategy.getValue());
         }
       }
@@ -81,7 +81,7 @@ public class DollarCostAveragePortfolio extends PortfolioData {
   }
 
   /**
-   * Converts a DCA portfolio to a normal portfolio
+   * Converts a DCA portfolio to a normal portfolio.
    *
    * @param <T>     the type parameter of type PortfolioData (the pf data basically)
    * @param dcaData the dca data

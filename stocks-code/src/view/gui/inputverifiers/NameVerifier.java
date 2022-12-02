@@ -9,7 +9,7 @@ import javax.swing.border.TitledBorder;
 /**
  * The nameVerifier that checks the JTextField input for stock name (atleast one alphabet).
  */
-public class nameVerifier extends InputVerifier {
+public class NameVerifier extends InputVerifier {
 
   @Override
   public boolean verify(JComponent input) {
