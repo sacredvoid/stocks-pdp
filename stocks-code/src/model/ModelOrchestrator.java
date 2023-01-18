@@ -146,7 +146,17 @@ public class ModelOrchestrator extends AOrchestrator {
   }
 
   @Override
-  public String createDCAMap(String dcaInput) {
+  public String existingPortfolioToDCAPortfolio(String pfID, String dcaData) {
+    return null;
+  }
+
+  @Override
+  public String createDCAPortfolio(String dcaInput) {
+    return null;
+  }
+
+  @Override
+  public String getPredefinedStrategies(String pfID) throws FileNotFoundException {
     return null;
   }
 }

@@ -1,30 +1,29 @@
 package model.portfolio;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import model.apistockops.StockHandler;
 import model.dollarcostavg.DollarCostAvgStrategy;
-import model.fileops.JSONFileOps;
 
-public class DollarCostAveragePortfolio extends PortfolioData{
+/**
+ * The DollarCostAveragePortfolio class which holds data of a strategic (DCA) portfolio and extends
+ * the existing portfolio data class.
+ */
+public class DollarCostAveragePortfolio extends PortfolioData {
 
   private Map<String, DollarCostAvgStrategy> dcaStrategy;
 
   /**
-   * PortfolioData() constructor takes in the stock data list, total invested and total commission for
-   * a particular record creates a new PortfolioData object.
+   * PortfolioData() constructor takes in the stock data list, total invested and total commission
+   * for a particular record creates a new PortfolioData object.
    *
    * @param sd              a list of stock data
    * @param totalInvested   the total amount invested by the user
    * @param totalCommission the total amount of commission taken by the application
-   * @param totalEarned
+   * @param totalEarned     this is the total amount earned by selling stocks in a portfolio
+   * @param dcaStrategy     the dca strategy
    */
   public DollarCostAveragePortfolio(List<StockData> sd, float totalInvested,
       float totalCommission, float totalEarned, Map<String, DollarCostAvgStrategy> dcaStrategy) {
@@ -32,76 +31,72 @@ public class DollarCostAveragePortfolio extends PortfolioData{
     this.dcaStrategy = dcaStrategy;
   }
 
+  /**
+   * Gets dca strategy map.
+   *
+   * @return the dca strategy
+   */
   public Map<String, DollarCostAvgStrategy> getDcaStrategy() {
     return dcaStrategy;
   }
 
+  /**
+   * Sets dca strategy.
+   *
+   * @param dcaStrategy the dca strategy
+   */
   public void setDcaStrategy(Map<String, DollarCostAvgStrategy> dcaStrategy) {
     this.dcaStrategy = dcaStrategy;
   }
 
 
-  public static <T extends PortfolioData> Map<String,T> portfolioToDCA(Map<String,T> pfData, Map<String,DollarCostAvgStrategy> strategyMap){
-    Map<String,T> dcaPortfolio = new HashMap<>();
-    for (Entry<String,T> entry : pfData.entrySet()
+  /**
+   * Method to convert a normal Portfolio to a Strategic (DCA) portfolio.
+   *
+   * @param <T>         the type parameter
+   * @param pfData      the pf data
+   * @param strategyMap the strategy map
+   * @return the map
+   */
+  public static <T extends PortfolioData> Map<String, T> portfolioToDCA(Map<String, T> pfData,
+      Map<String, DollarCostAvgStrategy> strategyMap) {
+    Map<String, T> dcaPortfolio = new HashMap<>();
+    for (Entry<String, T> entry : pfData.entrySet()
     ) {
       PortfolioData pf = entry.getValue();
-      Map<String,DollarCostAvgStrategy> individualStrategyMap = new LinkedHashMap<>();
-      for (Entry<String,DollarCostAvgStrategy> singleStrategy: strategyMap.entrySet()
+      Map<String, DollarCostAvgStrategy> individualStrategyMap = new LinkedHashMap<>();
+      for (Entry<String, DollarCostAvgStrategy> singleStrategy : strategyMap.entrySet()
       ) {
-        if(entry.getKey().compareTo(singleStrategy.getValue().getStartDate())>=0 &&
-        entry.getKey().compareTo(singleStrategy.getValue().getEndDate())<=0){
-          individualStrategyMap.put(singleStrategy.getKey(),singleStrategy.getValue());
+        if (entry.getKey().compareTo(singleStrategy.getValue().getStartDate()) >= 0
+            && entry.getKey().compareTo(singleStrategy.getValue().getEndDate()) <= 0) {
+          individualStrategyMap.put(singleStrategy.getKey(), singleStrategy.getValue());
         }
       }
       @SuppressWarnings("unchecked") T dca = (T) new
-          DollarCostAveragePortfolio(pf.getStockList(),pf.getTotalInvested(),pf.getTotalCommission(),pf.getTotalEarned(),strategyMap);
+          DollarCostAveragePortfolio(pf.getStockList(), pf.getTotalInvested(),
+          pf.getTotalCommission(), pf.getTotalEarned(), individualStrategyMap);
       dcaPortfolio.put(entry.getKey(), dca);
     }
     return dcaPortfolio;
   }
 
-  public static <T extends PortfolioData> Map<String,T> dcaToPortfolio(Map<String,T> dcaData){
-    Map<String,T> pfData = new HashMap<>();
-    for (Entry<String,T> entry : dcaData.entrySet()
+  /**
+   * Converts a DCA portfolio to a normal portfolio.
+   *
+   * @param <T>     the type parameter of type PortfolioData (the pf data basically)
+   * @param dcaData the dca data
+   * @return the new PortfolioData map
+   */
+  public static <T extends PortfolioData> Map<String, T> dcaToPortfolio(Map<String, T> dcaData) {
+    Map<String, T> pfData = new HashMap<>();
+    for (Entry<String, T> entry : dcaData.entrySet()
     ) {
       T dca = entry.getValue();
       T pf = (T) new
-          PortfolioData(dca.getStockList(),dca.getTotalInvested(),dca.getTotalCommission(),dca.getTotalEarned());
+          PortfolioData(dca.getStockList(), dca.getTotalInvested(), dca.getTotalCommission(),
+          dca.getTotalEarned());
       pfData.put(entry.getKey(), pf);
     }
     return pfData;
-  }
-
-  public static void main(String args[]) throws IOException {
-    String cbsData = new JSONFileOps().readFile("test.json", "PortfolioData");
-    Map<String, DollarCostAvgStrategy> cbs = new LinkedHashMap<>();
-    cbs.put("strategy1",new Gson().fromJson(cbsData, new TypeToken<DollarCostAvgStrategy>() {
-    }.getType()));
-
-    DollarCostAvgStrategy cbs1 = cbs.getOrDefault("strategy1",null);
-    List<StockData> lStockData = new ArrayList<>();
-    float totalInvest  = cbs1.getRecurrInvAmt();
-    for (Entry<String,Float> e: cbs1.getStockPercentMap().entrySet()
-    ) {
-      String stock_name = e.getKey();
-      float percentage = e.getValue();
-      int amt_per_stock = (int)(totalInvest*percentage)/100;
-      String stockPriceString = StockHandler.getBuilder().name(stock_name)
-          .date("2022-11-10")
-          .build().fetchByDate();
-      float value = Float.parseFloat(stockPriceString.split(",")[1]);
-      float qty =  amt_per_stock/value;
-
-      lStockData.add(new StockData(stock_name,qty));
-
-//      StockData sd = new StockData(stock_name,nttotalInvest/)
-    }
-
-    DollarCostAveragePortfolio pfd = new DollarCostAveragePortfolio(lStockData,totalInvest, 2.0F, 0.0F,cbs);
-
-    new JSONFileOps().writeToFile("testCostBasisPF.json","PortfolioData",pfd.toString());
-
-
   }
 }

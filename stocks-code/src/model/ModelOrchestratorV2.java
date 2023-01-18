@@ -3,15 +3,16 @@ package model;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,11 +33,11 @@ import model.portfolio.PortfolioToCSVAdapter;
 import model.portfolio.StockData;
 import model.portfolio.Utility;
 import model.portfolio.filters.FilterPortfolio;
-import java.time.temporal.ChronoUnit;
 import model.validation.DateValidator;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 
@@ -44,14 +45,18 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * Our model orchestrator class, as the name suggests, it is the link for the controller to call the
  * internal model classes and provide abstraction to the functionalities of our application. It
  * implements the Orchestrator interface.
+ *
+ * @param <T> the type parameter which extends PortfolioData class
  */
 public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator {
 
   private FileOps jsonParser = new JSONFileOps();
   private final DateValidator dateValidator = new DateValidator();
   private float commissionFees = 1;
+  /**
+   * The Rejected/invalid transactions (future/selling more than present).
+   */
   public String rejectedTransactions;
-//  private final Type genericType = new TypeToken<HashMap<String, T>>(){}.getType();
 
   @Override
   public String getLatestPortfolioComposition(String portfolioID) throws FileNotFoundException {
@@ -65,8 +70,8 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
   @Override
   public String createPortfolio(String portfolioData) {
-    if (portfolioData.equals("no data provided")) {
-      return "Sorry, No data provided. No portfolio was created";
+    if (checkEmptyDataCSV(portfolioData)) {
+      return commandStatus;
     }
     String newPFID = this.generatePortfolioID();
     try {
@@ -94,12 +99,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       return "Sorry! Invalid date format!";
     }
     Map<String, T> pfJsonData;
+
     try {
-       pfJsonData = getPFDataObject(pfID);
+      pfJsonData = getPFDataObject(pfID);
     } catch (FileNotFoundException e) {
       return "Sorry, could not find the portfolio with id " + pfID;
     }
-
     LocalDate oldestPurchaseDate = LocalDate.parse(Utility.getOldestDate(pfJsonData));
 
     if (reqDate.isBefore(oldestPurchaseDate)) {
@@ -129,7 +134,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
   @Override
   public String getPortfolioCompositionByDate(String date, String pfID)
       throws FileNotFoundException {
-    if (!DateValidator.checkDateFormat(date)) {
+    if (DateValidator.checkDateFormat(date)) {
       return "Sorry! Invalid date entered!";
     }
     Map<String, T> parsedPFData = getPFDataObject(pfID);
@@ -154,6 +159,22 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
       return "Sorry, no stocks for given date.";
     }
 
+  }
+
+  private boolean checkEmptyDataCSV(String csv) {
+    String[] lines = csv.split("\n");
+    for (String line : lines
+    ) {
+      String[] columns = line.split(",");
+      for (String column : columns
+      ) {
+        if (column.isEmpty()) {
+          commandStatus = "Missing data found!";
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   @Override
@@ -187,21 +208,25 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
   @Override
   public String editExistingPortfolio(String pfID, String call) {
-    String csvPFData;
-//    String date = call.spl
-
-    String filteredCall = getValidTransactions(call);
-    if (filteredCall.isEmpty()) {
-      return "Sorry, can make transactions on weekdays only. No changes made to PF ID: " + pfID;
+    if (checkEmptyDataCSV(call)) {
+      return commandStatus;
     }
+
     Map<String, T> existingPFData;
     try {
       existingPFData = getPFDataObject(pfID);
     } catch (FileNotFoundException f) {
       return "Sorry, file not found!";
     }
+    String filteredCall = getValidTransactions(call,
+        existingPFData.get(Utility.getLatestDate(existingPFData)));
+    if (filteredCall.isEmpty()) {
+      return
+          "Sorry, invalid transaction (weekend/sold more than current). No changes made to PF ID: "
+              + pfID;
+    }
     Map<String, T> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
-        filteredCall,existingPFData, this.commissionFees);
+        filteredCall, existingPFData, this.commissionFees);
 
     try {
       jsonParser.writeToFile(pfID + ".json", PORTFOLIO_DATA_PATH, new Gson().toJson(updatedPF));
@@ -213,19 +238,19 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     } else {
       return "Executed transactions:\n" + filteredCall + "\nFailed transactions:\n"
           + rejectedTransactions
-          + "\n since they were executed on a weekend. Please retry with a weekday!";
+          + "\n since you tried to sell more than present/weekend. Please retry!";
     }
 
   }
 
   @Override
   public String[] getCostBasis(String pfID, String date) {
-    if (!DateValidator.checkDateFormat(date)) {
+    if (DateValidator.checkDateFormat(date)) {
       return new String[]{"Sorry! Invalid date entered!"};
     }
     Map<String, T> loadedPF;
     try {
-       loadedPF = getPFDataObject(pfID);
+      loadedPF = getPFDataObject(pfID);
     } catch (FileNotFoundException f) {
       return new String[]{"File not found!"};
     }
@@ -257,7 +282,7 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
   /**
    * Shows the line chart performance of a specified portfolio over the timespan provided<p></p> by
-   * the user.
+   * the user (Text UI).
    *
    * @param pfId      Portfolio id of the portfolio
    * @param startDate Starting date of the timespan
@@ -275,13 +300,14 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     LocalDate localSD = LocalDate.parse(startDate);
     LocalDate localED = LocalDate.parse(endDate);
 
-    Long[] units = checkDates(localSD,localED,parsedPFData);
-    if(units == null) {
-      return checkDateStatus;
+    Long[] units = checkDates(localSD, localED, parsedPFData);
+    if (units == null) {
+      return commandStatus;
     }
 
     Performance performance = Performance.getBuilder().portfolioId(pfId).build();
-    dataPoints = performance.getGraphDataPoints(parsedPFData, units[0], units[1], units[2], startDate,
+    dataPoints = performance.getGraphDataPoints(parsedPFData, units[0], units[1], units[2],
+        startDate,
         endDate);
     if (dataPoints == null) {
       return "Sorry, time range too big to display as graph. (More than 30 years)";
@@ -290,48 +316,68 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     }
   }
 
+  /**
+   * @param pfID      the pf id
+   * @param startDate the start date
+   * @param endDate   the end date
+   * @return
+   */
   @Override
   public JFreeChart generateTimeSeriesData(String pfID, String startDate, String endDate) {
     Map<String, T> parsedPFData;
     try {
-       parsedPFData = getPFDataObject(pfID);
-    }
-    catch (FileNotFoundException e) {
+      parsedPFData = getPFDataObject(pfID);
+    } catch (FileNotFoundException e) {
       buildGUIGraphStatus = "Sorry, file not found!";
       return null;
     }
 
-    Long[] units = checkDates(LocalDate.parse(startDate),LocalDate.parse(endDate),parsedPFData);
-    if(units == null) {
-      buildGUIGraphStatus = checkDateStatus;
+    Long[] units = checkDates(LocalDate.parse(startDate), LocalDate.parse(endDate), parsedPFData);
+    if (units == null) {
+      buildGUIGraphStatus = commandStatus;
       return null;
     }
 
     Performance performance = Performance.getBuilder().portfolioId(pfID).build();
-    TreeMap<String, Float> dataPoints = performance.getGraphDataPoints(parsedPFData, units[0],units[1],units[2], startDate, endDate);
-    if(dataPoints == null) {
+    TreeMap<String, Float> dataPoints = performance.getGraphDataPoints(parsedPFData, units[0],
+        units[1], units[2], startDate, endDate);
+    if (dataPoints == null) {
       buildGUIGraphStatus = "Sorry, enough data not available";
       return null;
     }
 
     DefaultCategoryDataset stockDataTimeSeries = new DefaultCategoryDataset();
-    for(Map.Entry<String, Float> entry: dataPoints.entrySet()) {
-      stockDataTimeSeries.addValue(entry.getValue(), "Portfolio ID: "+pfID, entry.getKey());
+    for (Map.Entry<String, Float> entry : dataPoints.entrySet()) {
+      stockDataTimeSeries.addValue(entry.getValue(), "Portfolio ID: " + pfID, entry.getKey());
     }
-    return ChartFactory.createBarChart("Portfolio Performance", "Date Range", "Value",stockDataTimeSeries,
-        PlotOrientation.VERTICAL , true , true , false);
+    JFreeChart barChart = ChartFactory.createBarChart("Portfolio Performance", "Date Range",
+        "Value ($)", stockDataTimeSeries,
+        PlotOrientation.VERTICAL, true, true, false);
+
+    BarRenderer r = (BarRenderer) barChart.getCategoryPlot().getRenderer();
+    r.setSeriesPaint(0, new Color(0, 153, 0));
+
+    return barChart;
   }
 
+  /**
+   * checkDates method gets the respective values of days, months and years between a date range.
+   *
+   * @param localSD      the start date of the date range
+   * @param localED      the end date of the date range
+   * @param parsedPFData the portfolio data
+   * @return the list of days,months,years
+   */
   public Long[] checkDates(LocalDate localSD, LocalDate localED,
       Map<String, T> parsedPFData) {
 
     if (localSD.isAfter(localED)) {
-      checkDateStatus = "Sorry, start date cannot be after end date";
+      commandStatus = "Sorry, start date cannot be after end date";
       return null;
     }
     String firstMostDate = Utility.getOldestDate(parsedPFData);
     if (localED.isBefore(LocalDate.parse(firstMostDate))) {
-      checkDateStatus = "Sorry, end date is not in the portfolio. "
+      commandStatus = "Sorry, end date is not in the portfolio. "
           + "Kindly try giving end date on or after " + Utility.getOldestDate(parsedPFData);
       return null;
 
@@ -341,18 +387,15 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     long days = ChronoUnit.DAYS.between(localSD, localED);
 
     if (days == 0) {
-      checkDateStatus = "Sorry, please enter different dates for 2 ranges";
+      commandStatus = "Sorry, please enter different dates for 2 ranges";
       return null;
-    } else if (days < 5) {
-      checkDateStatus = "Sorry, please enter date range with more than 5 days";
-      return null;
-    } else if (days > 31) {
-      months = ChronoUnit.MONTHS.between(localSD, localED);
     }
-
-    if (months <= 5) {
-      checkDateStatus = "Sorry, please enter date range with more than 5 months";
+    else if(days<5) {
+      commandStatus = "Sorry, please enter date range of atleast 5 days.";
       return null;
+    }
+    else if (days > 31) {
+      months = ChronoUnit.MONTHS.between(localSD, localED);
     }
     if (months > 180) {
       years = ChronoUnit.YEARS.between(localSD, localED);
@@ -363,7 +406,12 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
   @Override
   public String setCommissionFees(String commissionFees) {
-    float value = Float.parseFloat(commissionFees);
+    float value;
+    try {
+      value = Float.parseFloat(commissionFees);
+    } catch (NumberFormatException e) {
+      return "Please enter a number";
+    }
     if (value < 0) {
       return "Cannot set negative commission";
     } else {
@@ -372,14 +420,27 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     }
   }
 
-  public String createDCAPortfolio(Map<String, DollarCostAvgStrategy> strategyMap) {
+  /**
+   * createDCAPortfolio() creates a new Dollar Cost Average Portfolio for a given strategy.
+   *
+   * @param dcaInput strategy
+   * @return status of the operation as a string
+   */
+  public String createDCAPortfolio(String dcaInput) {
+
+    Map<String, DollarCostAvgStrategy> strategyMap = createDCAMap(dcaInput);
+    if (strategyMap == null) {
+      return commandStatus;
+    }
 
     List<String> allTransactions = new ArrayList<>();
-    for(Entry<String,DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()){
-      allTransactions.add(getStrategyTransactions(strategyRecord.getValue()));
+    for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()) {
+      allTransactions.add(getStrategyTransactions(strategyRecord.getValue(),
+          strategyRecord.getValue().getStartDate()));
+
     }
-    Map<String,T> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
-       String.join("",allTransactions) ,new HashMap<>(),this.commissionFees);
+    Map<String, T> dummyPortfolio = CSVToPortfolioAdapter.buildPortfolioData(
+        String.join("", allTransactions), new HashMap<>(), this.commissionFees);
 
     try {
       if (dummyPortfolio.size() > 0) {
@@ -389,89 +450,142 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
 
         new JSONFileOps().writeToFile(newPFID + "-dca.json", "PortfolioData",
             dcapf.toString());
-        return "Created Portfolio with ID: " + newPFID;
+        return "Created SIP Portfolio with ID: " + newPFID + "-dca";
       } else {
         return "Sorry, no data to create a portfolio with, date entered is invalid(weekend/future)";
       }
-    }catch(IOException e){
+    } catch (IOException e) {
       return "Sorry, Failed to create portfolio (write op failed)";
     }
   }
 
-  @Override
-  public String createDCAMap(String dcaInput) {
+  private Map<String, DollarCostAvgStrategy> createDCAMap(String dcaInput) {
     String[] lines = dcaInput.split("\n");
+    for (int i = 0; i < lines.length; i++) {
+      if (lines[i].isEmpty()) {
+        commandStatus = "Missing data for DCA!";
+      } else if (lines[i].contains(",")) {
+        String[] stockWeightageSplit = lines[i].split(",");
+        if (stockWeightageSplit.length == 0) {
+          commandStatus = "Missing stock-weight data!";
+          return null;
+        }
+      }
+    }
     String dcaName = lines[0];
-    float dcaInvestment = Float.parseFloat(lines[1]);
-    long dcaRecurCycle = Long.parseLong(lines[2]);
+    float dcaInvestment;
+    long dcaRecurCycle;
+    try {
+      dcaInvestment = Float.parseFloat(lines[2]);
+      dcaRecurCycle = Long.parseLong(lines[1]);
+    } catch (NumberFormatException e) {
+      commandStatus = "Investment/Cycle not a number!";
+      return null;
+    }
     String dcaStartDate = lines[3];
     String dcaEndDate = lines[4];
-    if(dcaEndDate.equalsIgnoreCase("null")){
+    if (dcaEndDate.equalsIgnoreCase("null")) {
       dcaEndDate = "";
     }
     Map<String, Float> dcaStockPercentage = new HashMap<>();
-    for (int i = 5;i<lines.length; i++) {
+    float sumOfWeightage = 0;
+    for (int i = 5; i < lines.length; i++) {
       String stock = lines[i].split(",")[0];
-      String quantity = lines[i].split(",")[1];
-      dcaStockPercentage.put(stock,Float.parseFloat(quantity));
+      String weightage = lines[i].split(",")[1];
+      float currentWeightage = Float.parseFloat(weightage);
+      sumOfWeightage += currentWeightage;
+      dcaStockPercentage.put(stock, currentWeightage);
     }
-    DollarCostAvgStrategy dcaStrategy = new DollarCostAvgStrategy(dcaStockPercentage, dcaInvestment, dcaStartDate, dcaEndDate, dcaRecurCycle);
+    if (sumOfWeightage != 100) {
+      commandStatus = "Stock Weights didn't add up to 100! Please retry.";
+      return null;
+    }
+    DollarCostAvgStrategy dcaStrategy = new DollarCostAvgStrategy(dcaStockPercentage, dcaInvestment,
+        dcaStartDate, dcaEndDate, dcaRecurCycle);
     Map<String, DollarCostAvgStrategy> dcaStrategyMap = new HashMap<>();
-    dcaStrategyMap.put(dcaName,dcaStrategy);
-    String status = createDCAPortfolio(dcaStrategyMap);
-    return status;
+    dcaStrategyMap.put(dcaName, dcaStrategy);
+    return dcaStrategyMap;
   }
 
-  private String getStrategyTransactions(DollarCostAvgStrategy strategy){
-    String startDate = strategy.getStartDate();
-    String endData = strategy.getEndDate();
+  private String getStrategyTransactions(DollarCostAvgStrategy strategy, String reqDate) {
     long recur = strategy.getRecurrCycle();
-    String transactions="";
+    String transactions = "";
     try {
       transactions = DcaStrategyToCSV.
-          getAllTransactions(strategy,startDate,recur,this.commissionFees,"");
-    } catch (ParseException e) {
+          getAllTransactions(strategy, reqDate, recur, this.commissionFees, "");
+
+    } catch (ParseException ignored) {
       //
     }
     return transactions;
   }
-  public String existingPortfolioToDCAPortfolio(String pfId,Map<String,DollarCostAvgStrategy> strategyMap) {
+
+  /**
+   * existingPortfolioToDCAPortfolio() methods apply a strategy to regular flexible portfolio and
+   * creates a Dollar Cost Average Portfolio.
+   *
+   * @param pfID    the flexible portfolioID
+   * @param dcaData the strategy
+   * @return status of the operation
+   */
+  public String existingPortfolioToDCAPortfolio(String pfID, String dcaData) {
+    Map<String, DollarCostAvgStrategy> strategyMap = createDCAMap(dcaData);
+    if (strategyMap == null) {
+      return commandStatus;
+    }
+
     Map<String, T> readDcaPf;
     try {
-    readDcaPf = getPFDataObject(pfId);
-    }
-    catch (FileNotFoundException e) {
+      readDcaPf = getPFDataObject(pfID);
+    } catch (FileNotFoundException e) {
       return "File not found!";
     }
     List<String> allTransactions = new ArrayList<>();
     for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategyMap.entrySet()
     ) {
       DollarCostAvgStrategy strategy = strategyRecord.getValue();
-      allTransactions.add(getStrategyTransactions(strategy));
+      allTransactions.add(getStrategyTransactions(strategy, strategy.getStartDate()));
     }
+
     Map<String, T> updatedPF = CSVToPortfolioAdapter.buildPortfolioData(
         String.join("", allTransactions), readDcaPf, this.commissionFees);
+
     Map<String, T> result = DollarCostAveragePortfolio.portfolioToDCA(
         updatedPF, strategyMap);
     try {
-      new JSONFileOps().writeToFile(pfId + "-dca.json", "PortfolioData",
+      String newFileName;
+      if (pfID.contains("-dca")) {
+        newFileName = pfID;
+      } else {
+        newFileName = pfID + "-dca";
+      }
+      new JSONFileOps().writeToFile(newFileName + ".json", "PortfolioData",
           result.toString());
-      return "Modified Portfolio " + pfId;
+
+      return "Modified Portfolio can be found here: " + newFileName;
+
     } catch (IOException e) {
-//      return "Sorry, Failed to modify portfolio (write op failed)";
-      return e.getMessage();
+      return "Sorry, Failed to modify portfolio (write op failed)";
     }
   }
 
-  private String getValidTransactions(String csv) {
-    // Go through all rows of the data, get the date and then delete rows that have incorrect dates,
-    // return error message to user
+  private String getValidTransactions(String csv, T pfData) {
+
     String[] lines = csv.split("\n");
     StringJoiner newLines = new StringJoiner("\n");
     StringJoiner rejectedTrades = new StringJoiner("\n");
     for (String line : lines
     ) {
       String date = line.split(",")[2];
+      String call = line.split(",")[3];
+      String stockName = line.split(",")[0];
+      String quantity = line.split(",")[1];
+      if (call.equals("SELL")) {
+        if (!checkSharesForSell(pfData, stockName, Float.parseFloat(quantity))) {
+          rejectedTrades.add(line);
+          continue;
+        }
+      }
       if (dateValidator.checkData(date)) {
         newLines.add(line);
       } else {
@@ -482,36 +596,52 @@ public class ModelOrchestratorV2<T extends PortfolioData> extends AOrchestrator 
     return newLines.toString();
   }
 
+  private boolean checkSharesForSell(T data, String stockName, float quantityToCheck) {
+    return data.getQuantity(stockName) >= quantityToCheck;
+  }
+
   private Map<String, T> getPFDataObject(String pfID) throws FileNotFoundException {
     String pfData = jsonParser.readFile(pfID + ".json", PORTFOLIO_DATA_PATH);
-    if(pfID.contains("-dca")) {
-      Type generic = new TypeToken<HashMap<String, DollarCostAveragePortfolio>>(){}.getType();
+    if (pfID.contains("-dca")) {
+      Type generic = new TypeToken<HashMap<String, DollarCostAveragePortfolio>>() {
+      }.getType();
       return new Gson().fromJson(pfData, generic);
-    }
-    else {
-      Type generic = new TypeToken<HashMap<String, PortfolioData>>(){}.getType();
+    } else {
+      Type generic = new TypeToken<HashMap<String, PortfolioData>>() {
+      }.getType();
       return PortfolioDataAdapter.getObject(pfData, generic);
     }
   }
 
-  public String getPredefinedStrategies() throws FileNotFoundException {
+  /**
+   * getPredefinedStrategies() returns the strategy for the most recent transaction in a Dollar Cost
+   * Average portfolio.
+   *
+   * @param pfID id of the portfolio
+   * @return strategy as a string
+   * @throws FileNotFoundException
+   */
+  public String getPredefinedStrategies(String pfID) throws FileNotFoundException {
     // Read the strategies json file and get the strategy names and things
-    Object o = jsonParser.readFile(".\\app_data\\strategies.json", "");
-    System.out.println(o.toString());
-    return null;
-  }
-  public static void main(String args[]) throws IOException {
-    ModelOrchestratorV2 m = new ModelOrchestratorV2();
-    m.setCommissionFees(String.valueOf(2.0F));
-    Map<String,DollarCostAvgStrategy> strategyMap = new LinkedHashMap<>();
-    String test1Data =   new JSONFileOps().readFile("test.json", "PortfolioData");
-//    String test2Data = new JSONFileOps().readFile("test2.json", "PortfolioData");
-//    String test3Data = new JSONFileOps().readFile("test3.json", "PortfolioData");
-    strategyMap.put("strat1",new Gson().fromJson(test1Data, new TypeToken<DollarCostAvgStrategy>() {
-    }.getType()));
-//    strategyMap.put("start2",new Gson().fromJson(test2Data, new TypeToken<DollarCostAvgStrategy>() {
-//    }.getType()));
-    System.out.println(m.existingPortfolioToDCAPortfolio("718697",strategyMap));
-//    System.out.println(m.createDCAPortfolio(strategyMap));
+    StringJoiner strategyInfo = new StringJoiner("\n");
+    Map<String, T> dollarCostAveragePortfolio = getPFDataObject(pfID);
+    Map<String, DollarCostAvgStrategy> strategies;
+    try {
+      strategies = ((DollarCostAveragePortfolio) dollarCostAveragePortfolio.get(
+          Utility.getLatestDate(dollarCostAveragePortfolio))).getDcaStrategy();
+    } catch (ClassCastException e) {
+      return "No Strategy found, but you can add one!";
+    }
+    if (strategies != null) {
+      for (Entry<String, DollarCostAvgStrategy> strategyRecord : strategies.entrySet()
+      ) {
+        strategyInfo.add("Strategy Name: " + strategyRecord.getKey());
+        DollarCostAvgStrategy strategy = strategyRecord.getValue();
+        strategyInfo.add(strategy.toString());
+      }
+      return strategyInfo.toString();
+    } else {
+      return "No strategies found!";
+    }
   }
 }

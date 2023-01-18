@@ -6,7 +6,7 @@ package controller;
 public class ValidateData {
 
   /**
-   * Gets regex.
+   * Gets regex for whatever input validation is required.
    *
    * @param type the type
    * @return the regex

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="stocks-code:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/stocks_code_jar</output-path>
-    <root id="archive" name="stocks-code.jar">
-      <element id="module-output" name="stocks-code" />
-    </root>
-  </artifact>
-</component>

@@ -12,7 +12,7 @@ public class ModelView implements IModelView {
   private Orchestrator morch;
 
   /**
-   * Instantiates a new Model view.
+   * Instantiates a new Model view which is used by the view to pull data from model.
    *
    * @param modelOrchestrator the model orchestrator
    */
